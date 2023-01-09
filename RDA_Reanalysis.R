@@ -351,6 +351,9 @@ write_csv(bioclim_normy_snps,
 #           'AC_bioclim_partial_RDA_outlier_data_08.06.2022.csv')
 #
 
+
+##Chromosome 9 and 16 have >20 outliers which is different 
+## than what I found before
 bioclim_partial_outs %>% 
   arrange(Chromosome) %>% 
   group_by(Chromosome) %>% 
