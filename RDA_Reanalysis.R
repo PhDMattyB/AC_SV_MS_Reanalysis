@@ -125,7 +125,7 @@ summary(eigenvals(bioclim_partial_RDA,
                   model = "constrained"))
 
 vif.cca(bioclim_partial_RDA)
-bioclim_sig = anova.cca(bioclim_partial_RDA) 
+# bioclim_sig = anova.cca(bioclim_partial_RDA) 
 
 bioclim_partial_sum = summary(bioclim_partial_RDA)
 
@@ -155,9 +155,12 @@ bioclim_partial_RDA_scores = scores(bioclim_partial_RDA,
 
 ## Pulling out the outlier loci for each significant axis
 ## Outliers are 3 standard deviations from the axis mean
+
+## The first axis explains almost 90% variation
+## only using the outliers on the first axis
 bioclim_partial_RDA_outliers_axis1 = outliers(bioclim_partial_RDA_scores[,1],3)
-bioclim_partial_RDA_outliers_axis2 = outliers(bioclim_partial_RDA_scores[,2],3)
-bioclim_partial_RDA_outliers_axis3 = outliers(bioclim_partial_RDA_scores[,3],3)
+# bioclim_partial_RDA_outliers_axis2 = outliers(bioclim_partial_RDA_scores[,2],3)
+# bioclim_partial_RDA_outliers_axis3 = outliers(bioclim_partial_RDA_scores[,3],3)
 
 ## Creating a cleaned data frame for outiers on each axis
 bioclim_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
@@ -168,34 +171,35 @@ bioclim_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
   dplyr::rename(Axis = 1,
                 SNP = 2,
                 RDA_score = 3)
-bioclim_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
-                                                     times = length(bioclim_partial_RDA_outliers_axis2)),
-                                                 names(bioclim_partial_RDA_outliers_axis2),
-                                                 unname(bioclim_partial_RDA_outliers_axis2)) %>%
-  as_tibble() %>%
-  dplyr::rename(Axis = 1,
-                SNP = 2,
-                RDA_score = 3) 
-
-bioclim_partial_RDA_out_axis3 = cbind.data.frame(rep(3,
-                                                     times = length(bioclim_partial_RDA_outliers_axis3)),
-                                                 names(bioclim_partial_RDA_outliers_axis3),
-                                                 unname(bioclim_partial_RDA_outliers_axis3)) %>%
-  as_tibble() %>%
-  dplyr::rename(Axis = 1,
-                SNP = 2,
-                RDA_score = 3) 
+# bioclim_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
+#                                                      times = length(bioclim_partial_RDA_outliers_axis2)),
+#                                                  names(bioclim_partial_RDA_outliers_axis2),
+#                                                  unname(bioclim_partial_RDA_outliers_axis2)) %>%
+#   as_tibble() %>%
+#   dplyr::rename(Axis = 1,
+#                 SNP = 2,
+#                 RDA_score = 3) 
+# 
+# bioclim_partial_RDA_out_axis3 = cbind.data.frame(rep(3,
+#                                                      times = length(bioclim_partial_RDA_outliers_axis3)),
+#                                                  names(bioclim_partial_RDA_outliers_axis3),
+#                                                  unname(bioclim_partial_RDA_outliers_axis3)) %>%
+#   as_tibble() %>%
+#   dplyr::rename(Axis = 1,
+#                 SNP = 2,
+#                 RDA_score = 3) 
 
 ## Full cleaned data frame with all outliers
 ## used all three axes in the RDA
 
-bioclim_partial_RDA_out_total = bind_rows(bioclim_partial_RDA_out_axis1, 
-                                          bioclim_partial_RDA_out_axis2, 
-                                          bioclim_partial_RDA_out_axis3)
+# bioclim_partial_RDA_out_total = bind_rows(bioclim_partial_RDA_out_axis1, 
+#                                           bioclim_partial_RDA_out_axis2, 
+#                                           bioclim_partial_RDA_out_axis3)
 
 
 ## the rda scores for all snps, not just the outliers
-bioclim_all_snps = bioclim_partial_RDA_scores[,1:3]
+bioclim_all_snps = bioclim_partial_RDA_scores[,1] %>% 
+  as.data.frame()
 
 ## data frame for the normy snps
 bioclim_partial_RDA_normy = cbind.data.frame(rep(0,
@@ -207,24 +211,22 @@ bioclim_partial_RDA_normy = bioclim_partial_RDA_normy %>%
   as_tibble() %>%
   dplyr::rename(Axis = 1,
                 SNP = 2,
-                RDA_score_axis1 = 3,
-                RDA_score_axis2 = 4,
-                RDA_score_axis3 = 5)
+                RDA_score_axis1 = 3)
 
 
 ## If this doesn't work, you might need to load the data.table R package
 ## this pulls out the outlier snps from the full snp data frame
 ## we only want the normal nonoutlier snps
 bioclim_partial_RDA_normy = bioclim_partial_RDA_normy[!bioclim_partial_RDA_normy$SNP %in% bioclim_partial_RDA_out_axis1$SNP,]
-bioclim_partial_RDA_normy = bioclim_partial_RDA_normy[!bioclim_partial_RDA_normy$SNP %in% bioclim_partial_RDA_out_axis2$SNP,]
-bioclim_partial_RDA_normy = bioclim_partial_RDA_normy[!bioclim_partial_RDA_normy$SNP %in% bioclim_partial_RDA_out_axis3$SNP,]
+# bioclim_partial_RDA_normy = bioclim_partial_RDA_normy[!bioclim_partial_RDA_normy$SNP %in% bioclim_partial_RDA_out_axis2$SNP,]
+# bioclim_partial_RDA_normy = bioclim_partial_RDA_normy[!bioclim_partial_RDA_normy$SNP %in% bioclim_partial_RDA_out_axis3$SNP,]
 
 write_csv(bioclim_partial_RDA_normy,
           'AC_partial_RDA_Associations_Normy_SNPs_09.01.2023.csv')
 
 
 ## get the predictor variables associated with each outlier locus
-bioclim_partial_RDA_out_total = as.data.frame(bioclim_partial_RDA_out_total)
+# bioclim_partial_RDA_out_total = as.data.frame(bioclim_partial_RDA_out_total)
 bioclim_SNPS = as.data.frame(bioclim_SNPS)
 
 bioclim_env = bioclim_full_data %>% 
@@ -235,7 +237,10 @@ bioclim_env = bioclim_full_data %>%
                 bio4) %>% 
   as.data.frame()
 
-nam = bioclim_partial_RDA_out_total[1:134, 2]
+bioclim_partial_RDA_outliers = bioclim_partial_RDA_out_axis1 %>% 
+  as.data.frame()
+
+nam = bioclim_partial_RDA_outliers[1:140, 2]
 # nam = RDA_out[1:109,2]
 out_snps = bioclim_SNPS[,nam]
 outlier_correlations = apply(bioclim_env, 
@@ -244,25 +249,25 @@ outlier_correlations = apply(bioclim_env,
                                             out_snps))
 out_snp_cor = as_tibble(outlier_correlations)
 
-bioclim_partial_RDA_out_total = bind_cols(bioclim_partial_RDA_out_total,
+bioclim_partial_RDA_outliers= bind_cols(bioclim_partial_RDA_outliers,
                                           out_snp_cor) %>%
   as_tibble()
 
 # View(bioclim_partial_RDA_out_total)
 
 ## check for duplicated outliers across axes
-length(bioclim_partial_RDA_out_total$SNP[duplicated(bioclim_partial_RDA_out_total$SNP)])
+# length(bioclim_partial_RDA_out_total$SNP[duplicated(bioclim_partial_RDA_out_total$SNP)])
 
 ## for loop to get the predctor and correlation coefficient 
 ## for each variable in the RDA
-for (i in 1:length(bioclim_partial_RDA_out_total$SNP)) {
-  bar <- bioclim_partial_RDA_out_total[i,]
-  bioclim_partial_RDA_out_total[i,9] <- names(which.max(abs(bar[6:8]))) # gives the variable
-  bioclim_partial_RDA_out_total[i,10] <- max(abs(bar[6:8]))              # gives the correlation
+for (i in 1:length(bioclim_partial_RDA_outliers$SNP)) {
+  bar <- bioclim_partial_RDA_outliers[i,]
+  bioclim_partial_RDA_outliers[i,9] <- names(which.max(abs(bar[6:8]))) # gives the variable
+  bioclim_partial_RDA_outliers[i,10] <- max(abs(bar[6:8]))              # gives the correlation
 }
 
 ## clean up the new dataframe
-bioclim_cand_snps = bioclim_partial_RDA_out_total %>% 
+bioclim_cand_snps = bioclim_partial_RDA_outliers %>% 
   rename(predictor = ...9, 
          correlation = ...10)
 
@@ -272,7 +277,86 @@ bioclim_cand_snps = bioclim_partial_RDA_out_total %>%
 write_csv(bioclim_cand_snps, 
           'AC_partial_RDA_Association_Outlier_SNPs_09.01.2023.csv')
 
+# Fix SNP labels ----------------------------------------------------------
 
+## SNP formats don't match and need to be updated to 
+## correspond to the map file
+map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map', 
+               col_names = c('Chromosome', 
+                             'SNP', 
+                             'Genetic_pos', 
+                             'Physical_pos'))
+bioclim_partial_outs = read_csv('AC_partial_RDA_Association_Outlier_SNPs_09.01.2023.csv')
+
+bioclim_normy_snps = read_csv('AC_partial_RDA_Associations_Normy_SNPs_09.01.2023.csv')
+
+## This gets rid the format the snps are in after the RDA
+## We need to line up the SNP names to the map file
+## The first set of two operations arefor the outlier snps
+bioclim_partial_outs$SNP = gsub("AX.",
+                            "AX-",
+                            bioclim_partial_outs$SNP)
+
+bioclim_partial_outs$SNP = gsub("_.*",
+                            "",
+                            bioclim_partial_outs$SNP)
+
+## The next set of operations are for the non-outlier snps
+bioclim_normy_snps$SNP = gsub("AX.",
+                              "AX-",
+                              bioclim_normy_snps$SNP)
+
+bioclim_normy_snps$SNP = gsub("_.*",
+                              "",
+                              bioclim_normy_snps$SNP)
+
+## This gets the map file data for the outlier snps
+bioclim_outs_map = map[map$SNP %in% bioclim_partial_outs$SNP,]
+## This merges the map file with the outlier snps
+bioclim_partial_outs = merge(bioclim_outs_map,
+                         bioclim_partial_outs,
+                         by.x = 'SNP',
+                         by.y = 'SNP') %>%
+  as_tibble()
+
+## Now we're going to do the same thing with the non-outlier snps
+normy_map = map[map$SNP %in% bioclim_normy_snps$SNP,]
+bioclim_normy_snps = merge(normy_map,
+                           bioclim_normy_snps,
+                           by.x = 'SNP',
+                           by.y = 'SNP') %>%
+  as_tibble()
+
+## Write out the rda scores for all of the map data
+write_csv(bioclim_normy_snps,
+          'AC_bioclim_partial_RDA_Normysnp_data_09.01.2023.csv')
+
+## This gets us the rda scores for all of the snps used
+
+# map_all_snp = map %>%
+#   dplyr::select(SNP)
+# bioclim_Full_scores = as.data.frame(cbind(SNP = rownames(bioclim_partial_RDA_scores),
+#                                           bioclim_partial_RDA_scores)) %>%
+#   as_tibble()
+# bioclim_Full_scores = bind_cols(map_all_snp,
+#                                 bioclim_Full_scores)
+# 
+# bioclim_out_snps_rdascores = merge(bioclim_partial_outs,
+#                                    bioclim_Full_scores,
+#                                    by.x = 'SNP',
+#                                    by.y = 'SNP') %>%
+#   as_tibble()
+# 
+# write_csv(bioclim_out_snps_rdascores,
+#           'AC_bioclim_partial_RDA_outlier_data_08.06.2022.csv')
+#
+
+bioclim_partial_outs %>% 
+  arrange(Chromosome) %>% 
+  group_by(Chromosome) %>% 
+  summarise(n = n()) %>% 
+  # filter(n > 20) %>% 
+  View()
 
 
 # bioclim normal rda ------------------------------------------------------
@@ -292,7 +376,7 @@ summary(eigenvals(bioclim_RDA,
                   model = "constrained"))
 
 vif.cca(bioclim_RDA)
-bioclim_sig = anova.cca(bioclim_RDA) 
+# bioclim_sig = anova.cca(bioclim_RDA) 
 bioclim_rda_sum = summary(bioclim_RDA)
 
 
