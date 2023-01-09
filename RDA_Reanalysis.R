@@ -110,5 +110,29 @@ bioclim_SNPS = bioclim_SNPS %>%
   as_tibble()
 
 
+# Bioclim Partial RDA -----------------------------------------------------
+
+bioclim_partial_RDA = rda(bioclim_SNPS ~ bio1 + bio3 + bio4 + Condition(bioclim_env_data$Lat), 
+                          data = bioclim_env_data, 
+                          scale = T)
+
+RsquareAdj(bioclim_partial_RDA)
+summary(eigenvals(bioclim_partial_RDA,
+                  model = "constrained"))
+
+vif.cca(bioclim_partial_RDA)
+bioclim_sig = anova.cca(bioclim_partial_RDA) 
+
+## VIF gets better without the partial RDA
+bioclim_RDA = rda(bioclim_SNPS ~ bio1 + bio3 + bio4, 
+                          data = bioclim_env_data, 
+                          scale = T)
+
+RsquareAdj(bioclim_RDA)
+summary(eigenvals(bioclim_RDA,
+                  model = "constrained"))
+
+vif.cca(bioclim_RDA)
+bioclim_sig = anova.cca(bioclim_RDA) 
 
 
