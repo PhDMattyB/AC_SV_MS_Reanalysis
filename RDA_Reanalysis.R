@@ -124,6 +124,10 @@ vif.cca(bioclim_partial_RDA)
 bioclim_sig = anova.cca(bioclim_partial_RDA) 
 
 ## VIF gets better without the partial RDA
+## overall r-squared is higher without the condition
+## The model has a much larger effect. 
+## generally both RDA's show similar patterns
+## I can plot that to demonstrate that
 bioclim_RDA = rda(bioclim_SNPS ~ bio1 + bio3 + bio4, 
                           data = bioclim_env_data, 
                           scale = T)
