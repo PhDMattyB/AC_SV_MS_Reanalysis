@@ -86,4 +86,29 @@ bioclim_full_data = inner_join(bioclim_data_naomit,
                                genotype_data)
 
 
+# Create SNP matrix -------------------------------------------------------
+
+## Need to create a data frame with just the SNPs we want to look at
+bioclim_SNPS = bioclim_full_data %>%
+  dplyr::select(matches("AX.")) %>%
+  as_tibble(bioclim_full_data)
+
+dim(bioclim_SNPS)
+## The realignment lost us about 4000 SNPS, great
+
+## Check for the number of NA's
+(sum(is.na(bioclim_SNPS))/12596)*100
+
+
+## impute the NA's to the most common genotype at the locus
+bioclim_SNPS = apply(bioclim_SNPS ,
+                     2,
+                     function(x) replace(x, 
+                                         is.na(x),
+                                         as.numeric(names(which.max(table(x))))))
+bioclim_SNPS = bioclim_SNPS %>%
+  as_tibble()
+
+
+
 
