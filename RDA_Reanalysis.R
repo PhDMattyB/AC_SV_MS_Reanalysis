@@ -590,3 +590,12 @@ bioclim_outs %>%
   # filter(n > 20) %>% 
   View()
 
+
+
+
+# Bioclim partial RDA biplot ----------------------------------------------
+
+
+# Bioclim partial manhattan plot ------------------------------------------
+
+
