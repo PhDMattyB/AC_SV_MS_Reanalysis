@@ -45,7 +45,7 @@ LatLong = read_csv('SampleSites_Coords_1June2020.csv')
 bioclim_env_data = read_csv('bioclim_data_AC_AllPops.csv')
 
 ## genotype data
-genotype_data = read.delim('Charr_Poly_All_Fixed_coords_maf05_geno95_envmatch_Lab.raw', 
+genotype_data = read.delim('Charr_Poly_All_Fixed_coords_maf05_geno95_RecodeA.raw', 
                            sep = "", 
                            stringsAsFactors = F) %>% 
   as_tibble() %>% 
@@ -54,7 +54,6 @@ genotype_data = read.delim('Charr_Poly_All_Fixed_coords_maf05_geno95_envmatch_La
 
 
 # Clean Data --------------------------------------------------------------
-
 
 ## Need to add the lat long data to the genotype data
 genotype_data = left_join(genotype_data, 
@@ -77,6 +76,11 @@ bioclim_env_data = left_join(genotype_data,
                 Long,
                 starts_with('bio'))
 
+
+# bioclim_env_data %>% 
+#   distinct(Population, .keep_all = T) %>% 
+#   View()
+
 ## we don't have bioclimatic variables for 3/57 populations
 
 bioclim_data_naomit = bioclim_env_data %>% 
@@ -97,7 +101,7 @@ dim(bioclim_SNPS)
 ## The realignment lost us about 4000 SNPS, great
 
 ## Check for the number of NA's
-(sum(is.na(bioclim_SNPS))/12596)*100
+(sum(is.na(bioclim_SNPS))/13123)*100
 
 
 ## impute the NA's to the most common genotype at the locus
@@ -112,8 +116,8 @@ bioclim_SNPS = bioclim_SNPS %>%
 
 # Bioclim partial RDA -----------------------------------------------------
 
-bioclim_partial_RDA = rda(bioclim_SNPS ~ bio1 + bio3 + bio4 + Condition(bioclim_env_data$Lat), 
-                          data = bioclim_env_data, 
+bioclim_partial_RDA = rda(bioclim_SNPS ~ bio1 + bio3 + bio4 + Condition(bioclim_data_naomit$Lat), 
+                          data = bioclim_data_naomit, 
                           scale = T)
 
 RsquareAdj(bioclim_partial_RDA)
@@ -280,7 +284,7 @@ write_csv(bioclim_cand_snps,
 ## generally both RDA's show similar patterns
 ## I can plot that to demonstrate that
 bioclim_RDA = rda(bioclim_SNPS ~ bio1 + bio3 + bio4, 
-                          data = bioclim_env_data, 
+                          data = bioclim_data_naomit, 
                           scale = T)
 
 RsquareAdj(bioclim_RDA)
@@ -288,7 +292,7 @@ summary(eigenvals(bioclim_RDA,
                   model = "constrained"))
 
 vif.cca(bioclim_RDA)
-bioclim_sig = anova.cca(bioclim_RDA) 4
+bioclim_sig = anova.cca(bioclim_RDA) 
 bioclim_rda_sum = summary(bioclim_RDA)
 
 
