@@ -352,7 +352,7 @@ write_csv(bioclim_normy_snps,
 #
 
 
-##Chromosome 9 and 16 have >20 outliers which is different 
+##Chromosome 9 (LG6.2) and 16 (LG13) have >20 outliers which is different 
 ## than what I found before
 bioclim_partial_outs %>% 
   arrange(Chromosome) %>% 
