@@ -65,12 +65,13 @@ pca_allpops_scores = as_tibble(pca_allpops$scores) %>%
 identifiers = read_csv('ggtree_labels.csv') %>% 
   rename(FID = Population)
 
-meta_data = read_delim('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped')
-
-meta_data = data %>% 
-  dplyr::select(FID, 
-                IndividualID) %>% 
+meta_data = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped', 
+              col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
   left_join(., 
-            identifiers,
-            by = '#FamilyID')
+            identifiers, 
+            by = 'FID')
+
 
