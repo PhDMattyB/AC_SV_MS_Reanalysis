@@ -15,6 +15,7 @@ library(pcadapt)
 library(devtools)
 # install_github('isglobal-brge/invClust')
 library(invClust)
+library(patchwork)
 
 theme_set(theme_bw())
 
@@ -75,5 +76,47 @@ meta_data = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped',
             by = 'FID') %>% 
   bind_cols(., 
             pca_allpops_scores)
+
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1 (43.7%)',
+       y = 'Principal component 2 (29.6%)', 
+       col = 'Glacial lineages')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+
+# AC08 or LG11 SV detect --------------------------------------------------
+
+## Need to pull out chromosome LG11 from the full data set
 
 
