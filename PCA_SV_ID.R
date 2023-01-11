@@ -72,6 +72,8 @@ meta_data = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped',
          IID = X2) %>% 
   left_join(., 
             identifiers, 
-            by = 'FID')
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_allpops_scores)
 
 
