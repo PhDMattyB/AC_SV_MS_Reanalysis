@@ -1172,6 +1172,1056 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG9.tiff',
        width = 20.0, 
        height = 13)
 
+# LG10 sv detect ----------------------------------------------------------
+
+LG10 = read.pcadapt('Charr_Poly_All_Fixed_13.bed', 
+                   type = 'bed')
+
+pca_LG10 = pcadapt(LG10, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG10, 
+     option = 'screeplot')
+# 
+# plot(pca_LG10, 
+#      option = 'scores')
+# summary(pca_LG10)
+# 
+# pca_LG10$singular.values
+# sum(pca_LG10$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG10_scores = as_tibble(pca_LG10$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG10_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_13.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG10_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG10')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG10.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+
+
+# LG11 sv detect ----------------------------------------------------------
+
+LG11 = read.pcadapt('Charr_Poly_All_Fixed_14.bed', 
+                   type = 'bed')
+
+pca_LG11 = pcadapt(LG11, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG11, 
+     option = 'screeplot')
+# 
+# plot(pca_LG11, 
+#      option = 'scores')
+# summary(pca_LG11)
+# 
+# pca_LG11$singular.values
+# sum(pca_LG11$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG11_scores = as_tibble(pca_LG11$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG11_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_14.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG11_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG11')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG11.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+# LG12 --------------------------------------------------------------------
+
+LG12 = read.pcadapt('Charr_Poly_All_Fixed_15.bed', 
+                   type = 'bed')
+
+pca_LG12 = pcadapt(LG12, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG12, 
+     option = 'screeplot')
+# 
+# plot(pca_LG12, 
+#      option = 'scores')
+# summary(pca_LG12)
+# 
+# pca_LG12$singular.values
+# sum(pca_LG12$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG12_scores = as_tibble(pca_LG12$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG12_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_15.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG12_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG12')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG12.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+# LG13 sv detect ----------------------------------------------------------
+
+LG13 = read.pcadapt('Charr_Poly_All_Fixed_16.bed', 
+                   type = 'bed')
+
+pca_LG13 = pcadapt(LG13, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG13, 
+     option = 'screeplot')
+# 
+# plot(pca_LG13, 
+#      option = 'scores')
+# summary(pca_LG13)
+# 
+# pca_LG13$singular.values
+# sum(pca_LG13$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG13_scores = as_tibble(pca_LG13$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG13_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_16.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG13_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG13')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG13.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+
+# LG14 sv detect ----------------------------------------------------------
+
+LG14 = read.pcadapt('Charr_Poly_All_Fixed_17.bed', 
+                   type = 'bed')
+
+pca_LG14 = pcadapt(LG14, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG14, 
+     option = 'screeplot')
+# 
+# plot(pca_LG14, 
+#      option = 'scores')
+# summary(pca_LG14)
+# 
+# pca_LG14$singular.values
+# sum(pca_LG14$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG14_scores = as_tibble(pca_LG14$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG14_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_17.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG14_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG14')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG14.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+# LG15 --------------------------------------------------------------------
+
+LG15 = read.pcadapt('Charr_Poly_All_Fixed_18.bed', 
+                   type = 'bed')
+
+pca_LG15 = pcadapt(LG15, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG15, 
+     option = 'screeplot')
+# 
+# plot(pca_LG15, 
+#      option = 'scores')
+# summary(pca_LG15)
+# 
+# pca_LG15$singular.values
+# sum(pca_LG15$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG15_scores = as_tibble(pca_LG15$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG15_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_18.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG15_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG15')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG15.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+# LG16 --------------------------------------------------------------------
+
+LG16 = read.pcadapt('Charr_Poly_All_Fixed_19.bed', 
+                   type = 'bed')
+
+pca_LG16 = pcadapt(LG16, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG16, 
+     option = 'screeplot')
+# 
+# plot(pca_LG16, 
+#      option = 'scores')
+# summary(pca_LG16)
+# 
+# pca_LG16$singular.values
+# sum(pca_LG16$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG16_scores = as_tibble(pca_LG16$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG16_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_19.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG16_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG16')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG16.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+
+# LG17 sv detect ----------------------------------------------------------
+
+LG17 = read.pcadapt('Charr_Poly_All_Fixed_20.bed', 
+                   type = 'bed')
+
+pca_LG17 = pcadapt(LG17, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG17, 
+     option = 'screeplot')
+# 
+# plot(pca_LG17, 
+#      option = 'scores')
+# summary(pca_LG17)
+# 
+# pca_LG17$singular.values
+# sum(pca_LG17$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG17_scores = as_tibble(pca_LG17$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG17_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_20.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG17_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG17')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG17.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+
+# LG18 sv detect ----------------------------------------------------------
+
+LG18 = read.pcadapt('Charr_Poly_All_Fixed_21.bed', 
+                   type = 'bed')
+
+pca_LG18 = pcadapt(LG18, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG18, 
+     option = 'screeplot')
+# 
+# plot(pca_LG18, 
+#      option = 'scores')
+# summary(pca_LG18)
+# 
+# pca_LG18$singular.values
+# sum(pca_LG18$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG18_scores = as_tibble(pca_LG18$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG18_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_21.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG18_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG18')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG18.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+# LG19 sv detect ----------------------------------------------------------
+
+LG19 = read.pcadapt('Charr_Poly_All_Fixed_22.bed', 
+                   type = 'bed')
+
+pca_LG19 = pcadapt(LG19, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG19, 
+     option = 'screeplot')
+# 
+# plot(pca_LG19, 
+#      option = 'scores')
+# summary(pca_LG19)
+# 
+# pca_LG19$singular.values
+# sum(pca_LG19$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG19_scores = as_tibble(pca_LG19$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG19_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_22.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG19_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG19')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG19.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+
+# LG20 sv detect --------------------------------------------------------------------
+LG20 = read.pcadapt('Charr_Poly_All_Fixed_23.bed', 
+                   type = 'bed')
+
+pca_LG20 = pcadapt(LG20, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG20, 
+     option = 'screeplot')
+# 
+# plot(pca_LG20, 
+#      option = 'scores')
+# summary(pca_LG20)
+# 
+# pca_LG20$singular.values
+# sum(pca_LG20$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG20_scores = as_tibble(pca_LG20$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG20_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_23.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG20_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG20')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG20.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
+
+# LG21 sv detect ----------------------------------------------------------
+
+LG21 = read.pcadapt('Charr_Poly_All_Fixed_24.bed', 
+                   type = 'bed')
+
+pca_LG21 = pcadapt(LG21, 
+                  K = 10, 
+                  method = 'mahalanobis', 
+                  min.maf = 0.01)
+
+plot(pca_LG21, 
+     option = 'screeplot')
+# 
+# plot(pca_LG21, 
+#      option = 'scores')
+# summary(pca_LG21)
+# 
+# pca_LG21$singular.values
+# sum(pca_LG21$singular.values)
+# 
+# (sqrt(0.5733557)/1.968103)*100
+# ## 38.47%
+# (sqrt(0.2538209)/1.968103)*100
+# ## 25.60%
+# (sqrt(0.2335121)/1.968103)*100
+# ## 24.55%
+
+pca_LG21_scores = as_tibble(pca_LG21$scores) %>%
+  rename(PC1 = 1,
+         PC2 = 2,
+         PC3 = 3) %>%
+  dplyr::select(PC1,
+                PC2,
+                PC3) %>% 
+  write_csv('Charr_PCA_LG21_scores.csv')
+
+identifiers = read_csv('ggtree_labels.csv') %>% 
+  rename(FID = Population)
+
+meta_data = read_table2('Charr_Poly_All_Fixed_notbed_24.ped', 
+                        col_names = F) %>% 
+  dplyr::select(X1:X2) %>% 
+  rename(FID = X1, 
+         IID = X2) %>% 
+  left_join(., 
+            identifiers, 
+            by = 'FID') %>% 
+  bind_cols(., 
+            pca_LG21_scores)
+
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
+meta_data %>%  
+  ggplot(aes(x = PC1, y = PC2))+
+  # geom_point(aes(col = Location), 
+  #            size = 2)+
+  geom_point(aes(col = Glacial_lin), 
+             size = 2)+
+  # geom_point(aes(col = Population), 
+  #            size = 2)+
+  # scale_color_manual(values = cols)+
+  scale_color_manual(values = glacial_cols)+
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14), 
+        legend.position = 'none') +
+  labs(x = 'Principal component 1',
+       y = 'Principal component 2', 
+       col = 'Glacial lineages', 
+       title = 'LG21')
+
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG21.tiff', 
+       plot = last_plot(), 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20.0, 
+       height = 13)
+
 
 
 
