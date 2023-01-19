@@ -52,6 +52,9 @@ genotype_data = read.delim('Charr_Poly_All_Fixed_coords_maf05_geno95_RecodeA.raw
   dplyr::rename(Population = FID)
 
 
+sdm_env = read_csv('sdmpredictors_All_Populations_04.01.2022.csv') %>% 
+  dplyr::rename(Population = Name) %>% 
+  na.omit()
 
 # Clean Data --------------------------------------------------------------
 
@@ -88,6 +91,27 @@ bioclim_data_naomit = bioclim_env_data %>%
 
 bioclim_full_data = inner_join(bioclim_data_naomit, 
                                genotype_data)
+
+
+## cleaning the sdm predictors data set
+sdm_env_data = left_join(sdm_env, 
+                         LatLong, 
+                         by = 'Population')
+sdm_env_data = left_join(genotype_data, 
+                         sdm_env_data, 
+                         by = c('Population',
+                                'Lat',
+                                'Long')) %>%
+  # dplyr::select(1:5) %>% 
+# View()
+  # na.omit() %>% 
+  dplyr::select(Population,
+                IID,
+                Lat,
+                Long,
+                starts_with('env'))
+
+
 
 
 # Create SNP matrix -------------------------------------------------------
