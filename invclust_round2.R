@@ -13,8 +13,9 @@ library(patchwork)
 library(invClust)
 library(tidyverse)
 library(snpStats)
-BiocManager::install("inveRsion")
-library(inveRsion)
+# BiocManager::install("inveRsion")
+# library(inveRsion)
+library(scoreInvHap)
 
 theme_set(theme_bw())
 
