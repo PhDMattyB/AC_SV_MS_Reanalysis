@@ -138,6 +138,32 @@ bioclim_SNPS = bioclim_SNPS %>%
   as_tibble()
 
 
+
+
+
+## sdmpredictors snp matrix
+
+sdm_SNPs = left_join(genotype_data, 
+          sdm_env_data, 
+          by = c('Population',
+                 'Lat',
+                 'Long')) %>% 
+  dplyr::select(matches('AX.')) %>% 
+  as_tibble()
+
+
+(sum(is.na(sdm_SNPs))/13123)*100
+
+
+## impute the NA's to the most common genotype at the locus
+sdm_SNPs = apply(sdm_SNPs ,
+                     2,
+                     function(x) replace(x, 
+                                         is.na(x),
+                                         as.numeric(names(which.max(table(x))))))
+sdm_SNPs = sdm_SNPs %>%
+  as_tibble()
+
 # Bioclim partial RDA -----------------------------------------------------
 
 bioclim_partial_RDA = rda(bioclim_SNPS ~ bio1 + bio3 + bio4 + Condition(bioclim_data_naomit$Lat), 
