@@ -468,9 +468,9 @@ sdm_col.pred$SNP = gsub("_.*",
 sdm_sel = sdm_rda_outliers$SNP
 sdm_env = sdm_rda_outliers$predictor
 sdm_env_col = sdm_rda_outliers$predictor
-sdm_env_col[sdm_env_col == 'bio1'] = '#663F8C'
-  sdm_env_col[sdm_env_col == 'bio3'] = '#D9965B'
-    sdm_env_col[sdm_env_col == 'bio4'] = '#BF4B54'
+sdm_env_col[sdm_env_col == 'icecover'] = '#663F8C'
+sdm_env_col[sdm_env_col == 'dissox_mean'] = '#D9965B'
+sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
       
     sdm_sel_tib = sdm_sel %>% 
       as_tibble()
