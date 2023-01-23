@@ -236,14 +236,14 @@ sdm_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
   dplyr::rename(Axis = 1,
                 SNP = 2,
                 RDA_score = 3)
-# sdm_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
-#                                                      times = length(sdm_partial_RDA_outliers_axis2)),
-#                                                  names(sdm_partial_RDA_outliers_axis2),
-#                                                  unname(sdm_partial_RDA_outliers_axis2)) %>%
-#   as_tibble() %>%
-#   dplyr::rename(Axis = 1,
-#                 SNP = 2,
-#                 RDA_score = 3) 
+sdm_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
+                                                     times = length(sdm_partial_RDA_outliers_axis2)),
+                                                 names(sdm_partial_RDA_outliers_axis2),
+                                                 unname(sdm_partial_RDA_outliers_axis2)) %>%
+  as_tibble() %>%
+  dplyr::rename(Axis = 1,
+                SNP = 2,
+                RDA_score = 3)
 # 
 # sdm_partial_RDA_out_axis3 = cbind.data.frame(rep(3,
 #                                                      times = length(sdm_partial_RDA_outliers_axis3)),
@@ -256,9 +256,11 @@ sdm_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
 
 ## Full cleaned data frame with all outliers
 ## used all three axes in the RDA
+sdm_partial_RDA_out_total = bind_rows(sdm_partial_RDA_out_axis1,
+                                      sdm_partial_RDA_out_axis2)
 
-# sdm_partial_RDA_out_total = bind_rows(sdm_partial_RDA_out_axis1, 
-#                                           sdm_partial_RDA_out_axis2, 
+# sdm_partial_RDA_out_total = bind_rows(sdm_partial_RDA_out_axis1,
+#                                           sdm_partial_RDA_out_axis2,
 #                                           sdm_partial_RDA_out_axis3)
 
 
@@ -278,36 +280,36 @@ sdm_partial_RDA_normy = sdm_partial_RDA_normy %>%
                 SNP = 2,
                 RDA_score_axis1 = 3)
 
-
+# View(sdm_partial_RDA_normy)
 ## If this doesn't work, you might need to load the data.table R package
 ## this pulls out the outlier snps from the full snp data frame
 ## we only want the normal nonoutlier snps
 sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis1$SNP,]
-# sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis2$SNP,]
+sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis2$SNP,]
 # sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis3$SNP,]
 
 write_csv(sdm_partial_RDA_normy,
-          'AC_partial_RDA_Associations_Normy_SNPs_09.01.2023.csv')
+          'AC_sdm_partial_RDA_Associations_Normy_SNPs_23.01.2023.csv')
 
 
 ## get the predictor variables associated with each outlier locus
 # sdm_partial_RDA_out_total = as.data.frame(sdm_partial_RDA_out_total)
-sdm_SNPS = as.data.frame(sdm_SNPS)
+sdm_SNPs = as.data.frame(sdm_SNPs)
 
-sdm_env = sdm_full_data %>% 
+sdm_env = sdm_env_data %>% 
   dplyr::select(Lat, 
                 Long, 
-                bio1, 
-                bio3, 
-                bio4) %>% 
+                icecover, 
+                dissox_mean, 
+                primprod_mean) %>% 
   as.data.frame()
 
-sdm_partial_RDA_outliers = sdm_partial_RDA_out_axis1 %>% 
+sdm_partial_RDA_outliers = sdm_partial_RDA_out_total %>% 
   as.data.frame()
 
-nam = sdm_partial_RDA_outliers[1:140, 2]
+nam = sdm_partial_RDA_outliers[1:492, 2]
 # nam = RDA_out[1:109,2]
-out_snps = sdm_SNPS[,nam]
+out_snps = sdm_SNPs[,nam]
 outlier_correlations = apply(sdm_env, 
                              2, 
                              function(x)cor(x, 
@@ -340,10 +342,98 @@ sdm_cand_snps = sdm_partial_RDA_outliers %>%
 
 ## save the data
 write_csv(sdm_cand_snps, 
-          'AC_partial_RDA_Association_Outlier_SNPs_09.01.2023.csv')
+          'AC_sdm_partial_RDA_Association_Outlier_SNPs_23.01.2023.csv')
 
 
 ##
+
+
+# sdm fix snp labels ------------------------------------------------------
+
+
+## SNP formats don't match and need to be updated to 
+## correspond to the map file
+map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map', 
+               col_names = c('Chromosome', 
+                             'SNP', 
+                             'Genetic_pos', 
+                             'Physical_pos'))
+sdm_partial_outs = read_csv('AC_partial_RDA_Association_Outlier_SNPs_09.01.2023.csv')
+
+sdm_normy_snps = read_csv('AC_partial_RDA_Associations_Normy_SNPs_09.01.2023.csv')
+
+## This gets rid the format the snps are in after the RDA
+## We need to line up the SNP names to the map file
+## The first set of two operations arefor the outlier snps
+sdm_partial_outs$SNP = gsub("AX.",
+                                "AX-",
+                                sdm_partial_outs$SNP)
+
+sdm_partial_outs$SNP = gsub("_.*",
+                                "",
+                                sdm_partial_outs$SNP)
+
+## The next set of operations are for the non-outlier snps
+sdm_normy_snps$SNP = gsub("AX.",
+                              "AX-",
+                              sdm_normy_snps$SNP)
+
+sdm_normy_snps$SNP = gsub("_.*",
+                              "",
+                              sdm_normy_snps$SNP)
+
+## This gets the map file data for the outlier snps
+sdm_outs_map = map[map$SNP %in% sdm_partial_outs$SNP,]
+## This merges the map file with the outlier snps
+sdm_partial_outs = merge(sdm_outs_map,
+                             sdm_partial_outs,
+                             by.x = 'SNP',
+                             by.y = 'SNP') %>%
+  as_tibble()
+
+## Now we're going to do the same thing with the non-outlier snps
+normy_map = map[map$SNP %in% sdm_normy_snps$SNP,]
+sdm_normy_snps = merge(normy_map,
+                           sdm_normy_snps,
+                           by.x = 'SNP',
+                           by.y = 'SNP') %>%
+  as_tibble()
+
+## Write out the rda scores for all of the map data
+write_csv(sdm_normy_snps,
+          'AC_sdm_partial_RDA_Normysnp_data_09.01.2023.csv')
+
+## This gets us the rda scores for all of the snps used
+
+# map_all_snp = map %>%
+#   dplyr::select(SNP)
+# sdm_Full_scores = as.data.frame(cbind(SNP = rownames(sdm_partial_RDA_scores),
+#                                           sdm_partial_RDA_scores)) %>%
+#   as_tibble()
+# sdm_Full_scores = bind_cols(map_all_snp,
+#                                 sdm_Full_scores)
+# 
+# sdm_out_snps_rdascores = merge(sdm_partial_outs,
+#                                    sdm_Full_scores,
+#                                    by.x = 'SNP',
+#                                    by.y = 'SNP') %>%
+#   as_tibble()
+# 
+# write_csv(sdm_out_snps_rdascores,
+#           'AC_sdm_partial_RDA_outlier_data_08.06.2022.csv')
+#
+
+
+##Chromosome 9 (LG6.2) and 16 (LG13) have >20 outliers which is different 
+## than what I found before
+sdm_partial_outs %>% 
+  arrange(Chromosome) %>% 
+  group_by(Chromosome) %>% 
+  summarise(n = n()) %>% 
+  # filter(n > 20) %>% 
+  View()
+
+
 # sdm normal rda ----------------------------------------------------------
 
 sdm_RDA = rda(sdm_SNPs ~ icecover + dissox_mean + primprod_mean, 
