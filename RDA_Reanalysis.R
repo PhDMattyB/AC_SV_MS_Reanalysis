@@ -194,6 +194,156 @@ vif.cca(sdm_partial_RDA)
 sdm_partial_sum = summary(sdm_partial_RDA)
 
 
+# sdm partial rda outliers ------------------------------------------------
+
+## write data to files.
+sdm_partial_sum$species %>%
+  as_tibble() %>%
+  write_csv('AC_sdm_Partial_RDA_All_Pops_SNPS_23.01.2023.csv')
+
+## RDA scores for each individual
+sdm_partial_sum$sites %>%
+  as_tibble() %>%
+  write_csv('AC_sdm_Partial_RDA_All_Pops_INDIVIDUALS_23.01.2023.csv')
+
+## RDA scores for the variables used as predictors
+sdm_partial_sum$biplot %>%
+  as_tibble() %>%
+  write_csv('AC_sdm_Partial_RDA_All_Pops_BIPLOTVARS_23.01.2023.csv')
+
+## All three axes were significant!
+## Need to pull snps from all three axes
+sdm_partial_RDA_scores = scores(sdm_partial_RDA,
+                                    choices = c(1:3),
+                                    display = 'species')
+
+## Pulling out the outlier loci for each significant axis
+## Outliers are 3 standard deviations from the axis mean
+
+## The first axis explains almost 90% variation
+## only using the outliers on the first axis 
+## BUT NEED SECOND AXIS FOR THE BIPLOT
+sdm_partial_RDA_outliers_axis1 = outliers(sdm_partial_RDA_scores[,1],3)
+sdm_partial_RDA_outliers_axis2 = outliers(sdm_partial_RDA_scores[,2],3)
+# sdm_partial_RDA_outliers_axis3 = outliers(sdm_partial_RDA_scores[,3],3)
+
+## Creating a cleaned data frame for outiers on each axis
+sdm_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
+                                                     times = length(sdm_partial_RDA_outliers_axis1)),
+                                                 names(sdm_partial_RDA_outliers_axis1),
+                                                 unname(sdm_partial_RDA_outliers_axis1))%>%
+  as_tibble() %>%
+  dplyr::rename(Axis = 1,
+                SNP = 2,
+                RDA_score = 3)
+# sdm_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
+#                                                      times = length(sdm_partial_RDA_outliers_axis2)),
+#                                                  names(sdm_partial_RDA_outliers_axis2),
+#                                                  unname(sdm_partial_RDA_outliers_axis2)) %>%
+#   as_tibble() %>%
+#   dplyr::rename(Axis = 1,
+#                 SNP = 2,
+#                 RDA_score = 3) 
+# 
+# sdm_partial_RDA_out_axis3 = cbind.data.frame(rep(3,
+#                                                      times = length(sdm_partial_RDA_outliers_axis3)),
+#                                                  names(sdm_partial_RDA_outliers_axis3),
+#                                                  unname(sdm_partial_RDA_outliers_axis3)) %>%
+#   as_tibble() %>%
+#   dplyr::rename(Axis = 1,
+#                 SNP = 2,
+#                 RDA_score = 3) 
+
+## Full cleaned data frame with all outliers
+## used all three axes in the RDA
+
+# sdm_partial_RDA_out_total = bind_rows(sdm_partial_RDA_out_axis1, 
+#                                           sdm_partial_RDA_out_axis2, 
+#                                           sdm_partial_RDA_out_axis3)
+
+
+## the rda scores for all snps, not just the outliers
+sdm_all_snps = sdm_partial_RDA_scores[,1] %>% 
+  as.data.frame()
+
+## data frame for the normy snps
+sdm_partial_RDA_normy = cbind.data.frame(rep(0,
+                                                 times = length(sdm_all_snps)),
+                                             row.names(sdm_all_snps),
+                                             unname(sdm_all_snps))
+
+sdm_partial_RDA_normy = sdm_partial_RDA_normy %>%
+  as_tibble() %>%
+  dplyr::rename(Axis = 1,
+                SNP = 2,
+                RDA_score_axis1 = 3)
+
+
+## If this doesn't work, you might need to load the data.table R package
+## this pulls out the outlier snps from the full snp data frame
+## we only want the normal nonoutlier snps
+sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis1$SNP,]
+# sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis2$SNP,]
+# sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis3$SNP,]
+
+write_csv(sdm_partial_RDA_normy,
+          'AC_partial_RDA_Associations_Normy_SNPs_09.01.2023.csv')
+
+
+## get the predictor variables associated with each outlier locus
+# sdm_partial_RDA_out_total = as.data.frame(sdm_partial_RDA_out_total)
+sdm_SNPS = as.data.frame(sdm_SNPS)
+
+sdm_env = sdm_full_data %>% 
+  dplyr::select(Lat, 
+                Long, 
+                bio1, 
+                bio3, 
+                bio4) %>% 
+  as.data.frame()
+
+sdm_partial_RDA_outliers = sdm_partial_RDA_out_axis1 %>% 
+  as.data.frame()
+
+nam = sdm_partial_RDA_outliers[1:140, 2]
+# nam = RDA_out[1:109,2]
+out_snps = sdm_SNPS[,nam]
+outlier_correlations = apply(sdm_env, 
+                             2, 
+                             function(x)cor(x, 
+                                            out_snps))
+out_snp_cor = as_tibble(outlier_correlations)
+
+sdm_partial_RDA_outliers= bind_cols(sdm_partial_RDA_outliers,
+                                        out_snp_cor) %>%
+  as_tibble()
+
+# View(sdm_partial_RDA_out_total)
+
+## check for duplicated outliers across axes
+# length(sdm_partial_RDA_out_total$SNP[duplicated(sdm_partial_RDA_out_total$SNP)])
+
+## for loop to get the predctor and correlation coefficient 
+## for each variable in the RDA
+for (i in 1:length(sdm_partial_RDA_outliers$SNP)) {
+  bar <- sdm_partial_RDA_outliers[i,]
+  sdm_partial_RDA_outliers[i,9] <- names(which.max(abs(bar[6:8]))) # gives the variable
+  sdm_partial_RDA_outliers[i,10] <- max(abs(bar[6:8]))              # gives the correlation
+}
+
+## clean up the new dataframe
+sdm_cand_snps = sdm_partial_RDA_outliers %>% 
+  rename(predictor = ...9, 
+         correlation = ...10)
+
+# View(sdm_cand_snps)
+
+## save the data
+write_csv(sdm_cand_snps, 
+          'AC_partial_RDA_Association_Outlier_SNPs_09.01.2023.csv')
+
+
+##
 # sdm normal rda ----------------------------------------------------------
 
 sdm_RDA = rda(sdm_SNPs ~ icecover + dissox_mean + primprod_mean, 
