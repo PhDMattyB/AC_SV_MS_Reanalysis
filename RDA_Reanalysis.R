@@ -435,7 +435,124 @@ sdm_partial_outs %>%
 
 
 # sdm partial biplot ------------------------------------------------------
+theme_set(theme_bw())
 
+sdm_rda_snps = read_csv('AC_sdm_Partial_RDA_All_Pops_SNPS_23.01.2023.csv')
+sdm_rda_indivs = read_csv('AC_sdm_Partial_RDA_All_Pops_INDIVIDUALS_23.01.2023.csv')
+sdm_rda_vars = read_csv('AC_sdm_Partial_RDA_All_Pops_BIPLOTVARS_23.01.2023.csv')
+# bio_clim_data = read_csv('sdm_data_mito_nuclear_charr.csv')
+# sdm_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>% 
+#   dplyr::select(Long, 
+#                 Lat, 
+#                 bio1, 
+#                 bio3, 
+#                 bio4)
+sdm_rda_outliers = read_csv('AC_sdm_partial_RDA_Association_Outlier_SNPs_23.01.2023.csv')
+sdm_rda_normy_snps = read_csv('AC_sdm_partial_RDA_Associations_Normy_SNPs_23.01.2023.csv')
+
+# rda_outliers %>% 
+#   filter(Axis != 3) %>% 
+#   View()
+sdm_col.pred = rownames(sdm_partial_RDA$CCA$v) %>% 
+  as_tibble() %>% 
+  dplyr::rename(SNP = value)
+
+sdm_col.pred$SNP = gsub("AX.",
+                            "AX-",
+                            sdm_col.pred$SNP)
+
+sdm_col.pred$SNP = gsub("_.*",
+                            "",
+                            sdm_col.pred$SNP)
+
+sdm_sel = sdm_rda_outliers$SNP
+sdm_env = sdm_rda_outliers$predictor
+sdm_env_col = sdm_rda_outliers$predictor
+sdm_env_col[sdm_env_col == 'bio1'] = '#663F8C'
+  sdm_env_col[sdm_env_col == 'bio3'] = '#D9965B'
+    sdm_env_col[sdm_env_col == 'bio4'] = '#BF4B54'
+      
+    sdm_sel_tib = sdm_sel %>% 
+      as_tibble()
+    sdm_env_tib = sdm_env %>% 
+      as_tibble()
+    sdm_env_col_tib = sdm_env_col %>% 
+      as_tibble()
+    
+    sdm_SNP_cols = bind_cols(sdm_sel_tib, 
+                                 sdm_env_tib, 
+                                 sdm_env_col_tib) %>% 
+      dplyr::rename(SNP = 1, 
+                    var = 2, 
+                    col = 3)
+    
+    sdm_rda_out_test = bind_cols(sdm_rda_outliers, 
+                                     sdm_SNP_cols)
+    
+    
+    sdm_RDA_biplot = ggplot() +
+      ## this geom point is for the zoomed out version
+      geom_point(data = sdm_rda_snps,
+                 aes(x = RDA1,
+                     y = RDA2),
+                 col = '#A6A6A6', 
+                 size = 2)+
+      geom_point(data = sdm_rda_out_test,
+                 aes(x = RDA_score_axis1,
+                     y = RDA_score_axis2,
+                     col = var),
+                 size = 2)+
+      # geom_point(data = rda_outliers, 
+      #            aes(x = RDA_score_axis1, 
+      #                y = RDA_score_axis2), 
+      #            col = '#0AB33A', 
+      #            size = 2)+
+      ## These two things are only for the zoomed out rda to look
+      ## at population level variation related to isotopic variation
+      # geom_point(data = sdm_rda_env_data,
+      #            aes(x = RDA1,
+      #                y = RDA2,
+      #                col = Latitude),
+    #            size = 2)+
+    # scale_color_viridis(option = 'magma')+
+    # scale_color_manual(values = c('#663F8C',
+    #                               '#D9965B',
+    #                               '#BF4B54'))+
+    scale_color_manual(values = c('#A6036D',
+                                           '#F2D6A2',
+                                           '#8DF2CD'))+
+                                             ## THis is for the zoomed out RDA to show var in pops
+      geom_segment(aes(xend = sdm_RDA$CCA$biplot[,1],
+                       yend = sdm_RDA$CCA$biplot[,2],
+                       x=0,
+                       y=0),
+                   colour="black",
+                   size=1,
+                   linetype=1,
+                   arrow = arrow(length = unit(0.02, "npc"))) +
+      geom_text(aes(x = 1.0*sdm_RDA$CCA$biplot[,1],
+                    y = 1.2*sdm_RDA$CCA$biplot[,2],
+                    label = colnames(sdm_rda_env_data[,3:5]))) +
+      
+      labs(x = 'RDA 1 (83.7% variance explained)',
+           y = 'RDA 2 (13.1% variance explained)', 
+           title = 'A)')+
+      theme(#legend.position = "none", 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        axis.title = element_text(size = 14), 
+        axis.text = element_text(size = 14), 
+        axis.ticks = element_line(size = 1), 
+        plot.title = element_text(size = 15, 
+                                  hjust = 0), 
+        # legend.title = element_text(size = 13),
+        # legend.text = element_text(size = 12),
+        legend.position = 'none'
+      )
+    
+    sdm_RDA_biplot
+    
+    
 
 
 # sdm normal rda ----------------------------------------------------------
