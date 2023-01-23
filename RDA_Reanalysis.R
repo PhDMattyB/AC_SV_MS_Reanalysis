@@ -51,7 +51,7 @@ genotype_data = read.delim('Charr_Poly_All_Fixed_coords_maf05_geno95_RecodeA.raw
   as_tibble() %>% 
   dplyr::rename(Population = FID)
 
-
+## sdm predictors dataset
 sdm_env = read_csv('sdmpredictors_All_Populations_04.01.2022.csv') %>% 
   dplyr::rename(Population = Name) %>% 
   na.omit()
@@ -109,7 +109,18 @@ sdm_env_data = left_join(genotype_data,
                 IID,
                 Lat,
                 Long,
-                starts_with('env'))
+                starts_with('env')) %>% 
+  dplyr::rename(icecover = 5, 
+                temp_mean = 6, 
+                chloro_mean = 7, 
+                dissox_mean = 8, 
+                iron_mean = 9, 
+                phosphate_mean = 10, 
+                nitrate_mean = 11, 
+                primprod_mean = 12, 
+                salinity_mean = 13, 
+                silicate_mean = 14) %>% 
+  na.omit()
 
 
 
@@ -137,19 +148,22 @@ bioclim_SNPS = apply(bioclim_SNPS ,
 bioclim_SNPS = bioclim_SNPS %>%
   as_tibble()
 
-
-
-
-
 ## sdmpredictors snp matrix
 
-sdm_SNPs = left_join(genotype_data, 
-          sdm_env_data, 
-          by = c('Population',
-                 'Lat',
-                 'Long')) %>% 
+sdm_SNPs = inner_join(sdm_env_data, 
+           genotype_data) %>% 
   dplyr::select(matches('AX.')) %>% 
   as_tibble()
+
+
+# 
+# sdm_SNPs = left_join(genotype_data, 
+#           sdm_env_data, 
+#           by = c('Population',
+#                  'Lat',
+#                  'Long')) %>% 
+#   dplyr::select(matches('AX.')) %>% 
+#   as_tibble()
 
 
 (sum(is.na(sdm_SNPs))/13123)*100
@@ -163,6 +177,38 @@ sdm_SNPs = apply(sdm_SNPs ,
                                          as.numeric(names(which.max(table(x))))))
 sdm_SNPs = sdm_SNPs %>%
   as_tibble()
+
+
+# sdm partial rda ---------------------------------------------------------
+sdm_partial_RDA = rda(sdm_SNPs ~ icecover + dissox_mean + primprod_mean + Condition(sdm_env_data$Lat), 
+                          data = sdm_env_data, 
+                          scale = T)
+
+RsquareAdj(sdm_partial_RDA)
+summary(eigenvals(sdm_partial_RDA,
+                  model = "constrained"))
+
+vif.cca(sdm_partial_RDA)
+# sdm_sig = anova.cca(sdm_partial_RDA) 
+
+sdm_partial_sum = summary(sdm_partial_RDA)
+
+
+# sdm normal rda ----------------------------------------------------------
+
+sdm_RDA = rda(sdm_SNPs ~ icecover + dissox_mean + primprod_mean, 
+                      data = sdm_env_data, 
+                      scale = T)
+
+RsquareAdj(sdm_RDA)
+summary(eigenvals(sdm_RDA,
+                  model = "constrained"))
+
+vif.cca(sdm_RDA)
+# sdm_sig = anova.cca(sdm_partial_RDA) 
+
+sdm_sum = summary(sdm_RDA)
+
 
 # Bioclim partial RDA -----------------------------------------------------
 
