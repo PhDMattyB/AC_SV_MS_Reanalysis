@@ -358,9 +358,9 @@ map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map',
                              'SNP', 
                              'Genetic_pos', 
                              'Physical_pos'))
-sdm_partial_outs = read_csv('AC_partial_RDA_Association_Outlier_SNPs_09.01.2023.csv')
+sdm_partial_outs = read_csv('AC_sdm_partial_RDA_Association_Outlier_SNPs_23.01.2023.csv')
 
-sdm_normy_snps = read_csv('AC_partial_RDA_Associations_Normy_SNPs_09.01.2023.csv')
+sdm_normy_snps = read_csv('AC_sdm_partial_RDA_Associations_Normy_SNPs_23.01.2023.csv')
 
 ## This gets rid the format the snps are in after the RDA
 ## We need to line up the SNP names to the map file
@@ -401,7 +401,7 @@ sdm_normy_snps = merge(normy_map,
 
 ## Write out the rda scores for all of the map data
 write_csv(sdm_normy_snps,
-          'AC_sdm_partial_RDA_Normysnp_data_09.01.2023.csv')
+          'AC_sdm_partial_RDA_Normysnp_data_23.01.2023.csv')
 
 ## This gets us the rda scores for all of the snps used
 
@@ -432,6 +432,10 @@ sdm_partial_outs %>%
   summarise(n = n()) %>% 
   # filter(n > 20) %>% 
   View()
+
+
+# sdm partial biplot ------------------------------------------------------
+
 
 
 # sdm normal rda ----------------------------------------------------------
