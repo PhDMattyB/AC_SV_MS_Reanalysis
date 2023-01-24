@@ -214,7 +214,7 @@ sdm_partial_sum$biplot %>%
 ## All three axes were significant!
 ## Need to pull snps from all three axes
 sdm_partial_RDA_scores = scores(sdm_partial_RDA,
-                                    choices = c(1:3),
+                                    choices = c(1:2),
                                     display = 'species')
 
 ## Pulling out the outlier loci for each significant axis
@@ -225,8 +225,6 @@ sdm_partial_RDA_scores = scores(sdm_partial_RDA,
 ## BUT NEED SECOND AXIS FOR THE BIPLOT
 sdm_partial_RDA_outliers_axis1 = outliers(sdm_partial_RDA_scores[,1],3)
 sdm_partial_RDA_outliers_axis2 = outliers(sdm_partial_RDA_scores[,2],3)
-# sdm_partial_RDA_outliers_axis3 = outliers(sdm_partial_RDA_scores[,3],3)
-
 ## Creating a cleaned data frame for outiers on each axis
 sdm_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
                                                      times = length(sdm_partial_RDA_outliers_axis1)),
@@ -244,41 +242,26 @@ sdm_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
   dplyr::rename(Axis = 1,
                 SNP = 2,
                 RDA_score = 3)
-# 
-# sdm_partial_RDA_out_axis3 = cbind.data.frame(rep(3,
-#                                                      times = length(sdm_partial_RDA_outliers_axis3)),
-#                                                  names(sdm_partial_RDA_outliers_axis3),
-#                                                  unname(sdm_partial_RDA_outliers_axis3)) %>%
-#   as_tibble() %>%
-#   dplyr::rename(Axis = 1,
-#                 SNP = 2,
-#                 RDA_score = 3) 
 
 ## Full cleaned data frame with all outliers
 ## used all three axes in the RDA
 sdm_partial_RDA_out_total = bind_rows(sdm_partial_RDA_out_axis1,
                                       sdm_partial_RDA_out_axis2)
 
-# sdm_partial_RDA_out_total = bind_rows(sdm_partial_RDA_out_axis1,
-#                                           sdm_partial_RDA_out_axis2,
-#                                           sdm_partial_RDA_out_axis3)
-
-
 ## the rda scores for all snps, not just the outliers
-sdm_all_snps = sdm_partial_RDA_scores[,1] %>% 
+sdm_all_snps = sdm_partial_RDA_scores[,1:2] %>% 
   as.data.frame()
 
 ## data frame for the normy snps
 sdm_partial_RDA_normy = cbind.data.frame(rep(0,
-                                                 times = length(sdm_all_snps)),
+                                             times = length(sdm_all_snps)),
                                              row.names(sdm_all_snps),
-                                             unname(sdm_all_snps))
-
-sdm_partial_RDA_normy = sdm_partial_RDA_normy %>%
+                                             unname(sdm_all_snps)) %>%
   as_tibble() %>%
   dplyr::rename(Axis = 1,
                 SNP = 2,
-                RDA_score_axis1 = 3)
+                RDA_score_axis1 = 3, 
+                RDA_score_axis2 = 4)
 
 # View(sdm_partial_RDA_normy)
 ## If this doesn't work, you might need to load the data.table R package
