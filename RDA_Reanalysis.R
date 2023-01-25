@@ -271,7 +271,7 @@ sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sd
 # sdm_partial_RDA_normy = sdm_partial_RDA_normy[!sdm_partial_RDA_normy$SNP %in% sdm_partial_RDA_out_axis3$SNP,]
 
 write_csv(sdm_partial_RDA_normy,
-          'AC_sdm_partial_RDA_Associations_Normy_SNPs_23.01.2023.csv')
+          'AC_sdm_partial_RDA_Associations_Normy_SNPs_25.01.2023.csv')
 
 
 ## get the predictor variables associated with each outlier locus
@@ -286,10 +286,14 @@ sdm_env = sdm_env_data %>%
                 primprod_mean) %>% 
   as.data.frame()
 
-sdm_partial_RDA_outliers = sdm_partial_RDA_out_total %>% 
+# sdm_partial_RDA_outliers = sdm_partial_RDA_out_total %>% 
+#   as.data.frame()
+
+sdm_partial_RDA_out_axis1 = sdm_partial_RDA_out_total %>%
+  filter(Axis == 1) %>% 
   as.data.frame()
 
-nam = sdm_partial_RDA_outliers[1:492, 2]
+nam = sdm_partial_RDA_out_axis1[1:176, 2]
 # nam = RDA_out[1:109,2]
 out_snps = sdm_SNPs[,nam]
 outlier_correlations = apply(sdm_env, 
@@ -298,14 +302,35 @@ outlier_correlations = apply(sdm_env,
                                             out_snps))
 out_snp_cor = as_tibble(outlier_correlations)
 
-sdm_partial_RDA_outliers= bind_cols(sdm_partial_RDA_outliers,
+sdm_partial_RDA_out_axis1= bind_cols(sdm_partial_RDA_out_axis1,
                                         out_snp_cor) %>%
+  as_tibble()
+
+
+sdm_partial_RDA_out_axis2 = sdm_partial_RDA_out_total %>%
+  filter(Axis == 2) %>% 
+  as.data.frame()
+
+nam = sdm_partial_RDA_out_axis2[1:316, 2]
+# nam = RDA_out[1:109,2]
+out_snps = sdm_SNPs[,nam]
+outlier_correlations = apply(sdm_env, 
+                             2, 
+                             function(x)cor(x, 
+                                            out_snps))
+out_snp_cor = as_tibble(outlier_correlations)
+
+sdm_partial_RDA_out_axis2 = bind_cols(sdm_partial_RDA_out_axis2,
+                                     out_snp_cor) %>%
   as_tibble()
 
 # View(sdm_partial_RDA_out_total)
 
 ## check for duplicated outliers across axes
-# length(sdm_partial_RDA_out_total$SNP[duplicated(sdm_partial_RDA_out_total$SNP)])
+length(sdm_partial_RDA_out_axis1$SNP[duplicated(sdm_partial_RDA_out_axis2$SNP)])
+
+sdm_partial_RDA_outliers = bind_rows(sdm_partial_RDA_out_axis1, 
+                                     sdm_partial_RDA_out_axis2)
 
 ## for loop to get the predctor and correlation coefficient 
 ## for each variable in the RDA
@@ -324,25 +349,25 @@ sdm_cand_snps = sdm_partial_RDA_outliers %>%
 
 ## save the data
 write_csv(sdm_cand_snps, 
-          'AC_sdm_partial_RDA_Association_Outlier_SNPs_23.01.2023.csv')
+          'AC_sdm_partial_RDA_Association_Outlier_SNPs_25.01.2023.csv')
 
 
 ##
-
-
 # sdm fix snp labels ------------------------------------------------------
 
 
 ## SNP formats don't match and need to be updated to 
 ## correspond to the map file
-map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map', 
-               col_names = c('Chromosome', 
-                             'SNP', 
-                             'Genetic_pos', 
-                             'Physical_pos'))
-sdm_partial_outs = read_csv('AC_sdm_partial_RDA_Association_Outlier_SNPs_23.01.2023.csv')
+# map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map', 
+#                col_names = c('Chromosome', 
+#                              'SNP', 
+#                              'Genetic_pos', 
+#                              'Physical_pos'))
+map = read_tsv('AC_New_New_map.map')
 
-sdm_normy_snps = read_csv('AC_sdm_partial_RDA_Associations_Normy_SNPs_23.01.2023.csv')
+sdm_partial_outs = read_csv('AC_sdm_partial_RDA_Association_Outlier_SNPs_25.01.2023.csv')
+
+sdm_normy_snps = read_csv('AC_sdm_partial_RDA_Associations_Normy_SNPs_25.01.2023.csv')
 
 ## This gets rid the format the snps are in after the RDA
 ## We need to line up the SNP names to the map file
@@ -383,27 +408,27 @@ sdm_normy_snps = merge(normy_map,
 
 ## Write out the rda scores for all of the map data
 write_csv(sdm_normy_snps,
-          'AC_sdm_partial_RDA_Normysnp_data_23.01.2023.csv')
+          'AC_sdm_partial_RDA_Normysnp_data_25.01.2023.csv')
 
 ## This gets us the rda scores for all of the snps used
 
-# map_all_snp = map %>%
-#   dplyr::select(SNP)
-# sdm_Full_scores = as.data.frame(cbind(SNP = rownames(sdm_partial_RDA_scores),
-#                                           sdm_partial_RDA_scores)) %>%
-#   as_tibble()
-# sdm_Full_scores = bind_cols(map_all_snp,
-#                                 sdm_Full_scores)
-# 
-# sdm_out_snps_rdascores = merge(sdm_partial_outs,
-#                                    sdm_Full_scores,
-#                                    by.x = 'SNP',
-#                                    by.y = 'SNP') %>%
-#   as_tibble()
-# 
-# write_csv(sdm_out_snps_rdascores,
-#           'AC_sdm_partial_RDA_outlier_data_08.06.2022.csv')
-#
+map_all_snp = map %>%
+  dplyr::select(SNP)
+sdm_Full_scores = as.data.frame(cbind(SNP = rownames(sdm_partial_RDA_scores),
+                                          sdm_partial_RDA_scores)) %>%
+  as_tibble()
+sdm_Full_scores = bind_cols(map_all_snp,
+                                sdm_Full_scores)
+
+sdm_out_snps_rdascores = merge(sdm_partial_outs,
+                                   sdm_Full_scores,
+                                   by.x = 'SNP',
+                                   by.y = 'SNP...1') %>%
+  as_tibble()
+
+write_csv(sdm_out_snps_rdascores,
+          'AC_sdm_partial_RDA_outlier_data_25.01.2023.csv')
+
 
 
 ##Chromosome 9 (LG6.2) and 16 (LG13) have >20 outliers which is different 
@@ -429,8 +454,16 @@ sdm_rda_vars = read_csv('AC_sdm_Partial_RDA_All_Pops_BIPLOTVARS_23.01.2023.csv')
 #                 bio1, 
 #                 bio3, 
 #                 bio4)
-sdm_rda_outliers = read_csv('AC_sdm_partial_RDA_Association_Outlier_SNPs_23.01.2023.csv')
-sdm_rda_normy_snps = read_csv('AC_sdm_partial_RDA_Associations_Normy_SNPs_23.01.2023.csv')
+
+sdm_partial_env = sdm_env_data %>% 
+  dplyr::select(Population, 
+                Lat, 
+                Long, 
+                icecover,  
+                dissox_mean, 
+                primprod_mean)
+sdm_rda_outliers = read_csv('AC_sdm_partial_RDA_outlier_data_25.01.2023.csv')
+sdm_rda_normy_snps = read_csv('AC_sdm_partial_RDA_Normysnp_data_25.01.2023.csv')
 
 # rda_outliers %>% 
 #   filter(Axis != 3) %>% 
@@ -447,7 +480,7 @@ sdm_col.pred$SNP = gsub("_.*",
                             "",
                             sdm_col.pred$SNP)
 
-sdm_sel = sdm_rda_outliers$SNP
+sdm_sel = sdm_rda_outliers$SNP...1
 sdm_env = sdm_rda_outliers$predictor
 sdm_env_col = sdm_rda_outliers$predictor
 sdm_env_col[sdm_env_col == 'icecover'] = '#663F8C'
@@ -480,8 +513,8 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
                  col = '#A6A6A6', 
                  size = 2)+
       geom_point(data = sdm_rda_out_test,
-                 aes(x = RDA_score_axis1,
-                     y = RDA_score_axis2,
+                 aes(x = RDA1,
+                     y = RDA2,
                      col = var),
                  size = 2)+
       # geom_point(data = rda_outliers, 
@@ -500,25 +533,25 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
     # scale_color_manual(values = c('#663F8C',
     #                               '#D9965B',
     #                               '#BF4B54'))+
-    scale_color_manual(values = c('#A6036D',
-                                           '#F2D6A2',
-                                           '#8DF2CD'))+
+    scale_color_manual(values = c('#353A8C', 
+                                           '#2A8C55', 
+                                           '#F28E13'))+
                                              ## THis is for the zoomed out RDA to show var in pops
-      geom_segment(aes(xend = sdm_RDA$CCA$biplot[,1],
-                       yend = sdm_RDA$CCA$biplot[,2],
+      geom_segment(aes(xend = sdm_partial_RDA$CCA$biplot[,1],
+                       yend = sdm_partial_RDA$CCA$biplot[,2],
                        x=0,
                        y=0),
                    colour="black",
                    size=1,
                    linetype=1,
                    arrow = arrow(length = unit(0.02, "npc"))) +
-      geom_text(aes(x = 1.0*sdm_RDA$CCA$biplot[,1],
-                    y = 1.2*sdm_RDA$CCA$biplot[,2],
-                    label = colnames(sdm_rda_env_data[,3:5]))) +
+      geom_text(aes(x = 0.95*sdm_partial_RDA$CCA$biplot[,1],
+                    y = 1.0*sdm_partial_RDA$CCA$biplot[,2],
+                    label = colnames(sdm_partial_env[,4:6]))) +
       
-      labs(x = 'RDA 1 (83.7% variance explained)',
-           y = 'RDA 2 (13.1% variance explained)', 
-           title = 'A)')+
+      labs(x = 'RDA 1 (93.7% variance explained)',
+           y = 'RDA 2 (3.9% variance explained)', 
+           title = 'B)')+
       theme(#legend.position = "none", 
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), 
@@ -535,6 +568,9 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
     sdm_RDA_biplot
     
     
+
+# sdm manhattan plot ------------------------------------------------------
+
 
 
 # sdm normal rda ----------------------------------------------------------
