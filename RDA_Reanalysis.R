@@ -199,17 +199,17 @@ sdm_partial_sum = summary(sdm_partial_RDA)
 ## write data to files.
 sdm_partial_sum$species %>%
   as_tibble() %>%
-  write_csv('AC_sdm_Partial_RDA_All_Pops_SNPS_23.01.2023.csv')
+  write_csv('AC_sdm_Partial_RDA_All_Pops_SNPS_25.01.2023.csv')
 
 ## RDA scores for each individual
 sdm_partial_sum$sites %>%
   as_tibble() %>%
-  write_csv('AC_sdm_Partial_RDA_All_Pops_INDIVIDUALS_23.01.2023.csv')
+  write_csv('AC_sdm_Partial_RDA_All_Pops_INDIVIDUALS_25.01.2023.csv')
 
 ## RDA scores for the variables used as predictors
 sdm_partial_sum$biplot %>%
   as_tibble() %>%
-  write_csv('AC_sdm_Partial_RDA_All_Pops_BIPLOTVARS_23.01.2023.csv')
+  write_csv('AC_sdm_Partial_RDA_All_Pops_BIPLOTVARS_25.01.2023.csv')
 
 ## All three axes were significant!
 ## Need to pull snps from all three axes
@@ -249,19 +249,18 @@ sdm_partial_RDA_out_total = bind_rows(sdm_partial_RDA_out_axis1,
                                       sdm_partial_RDA_out_axis2)
 
 ## the rda scores for all snps, not just the outliers
-sdm_all_snps = sdm_partial_RDA_scores[,1:2] %>% 
-  as.data.frame()
-
 ## data frame for the normy snps
-sdm_partial_RDA_normy = cbind.data.frame(rep(0,
-                                             times = length(sdm_all_snps)),
-                                             row.names(sdm_all_snps),
-                                             unname(sdm_all_snps)) %>%
-  as_tibble() %>%
-  dplyr::rename(Axis = 1,
-                SNP = 2,
-                RDA_score_axis1 = 3, 
-                RDA_score_axis2 = 4)
+
+sdm_partial_RDA_normy = sdm_partial_RDA_scores[,1:2] %>% 
+  as.data.frame() %>% 
+  as_tibble(rownames = 'SNP') %>% 
+  mutate(Axis = 0) %>% 
+  dplyr::select(Axis, 
+                SNP, 
+                RDA1, 
+                RDA2) %>% 
+  rename(RDA_score_axis1 = RDA1, 
+         RDA_score_axis2 = RDA2)
 
 # View(sdm_partial_RDA_normy)
 ## If this doesn't work, you might need to load the data.table R package
@@ -1080,8 +1079,9 @@ bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>%
                 bio1, 
                 bio3, 
                 bio4)
-bioclim_rda_outliers = read_csv('AC_partial_RDA_Association_Outlier_SNPs_09.01.2023.csv')
-bioclim_rda_normy_snps = read_csv('AC_partial_RDA_Associations_Normy_SNPs_09.01.2023.csv')
+bioclim_rda_outliers = read_csv('AC_bioclim_partial_RDA_outlier_data_25.06.2022.csv') %>% 
+  rename(SNP = SNP...1)
+bioclim_rda_normy_snps = read_csv('AC_bioclim_partial_RDA_Normysnp_data_25.01.2023.csv')
 
 # rda_outliers %>% 
 #   filter(Axis != 3) %>% 
@@ -1131,8 +1131,8 @@ bioclim_RDA_biplot = ggplot() +
              col = '#A6A6A6', 
              size = 2)+
   geom_point(data = bioclim_rda_out_test,
-             aes(x = RDA_score_axis1,
-                 y = RDA_score_axis2,
+             aes(x = RDA1,
+                 y = RDA2,
                  col = var),
              size = 2)+
   # geom_point(data = rda_outliers, 
@@ -1155,20 +1155,20 @@ scale_color_manual(values = c('#A6036D',
                               '#F2D6A2',
                               '#8DF2CD'))+
   ## THis is for the zoomed out RDA to show var in pops
-  geom_segment(aes(xend = bioclim_RDA$CCA$biplot[,1],
-                   yend = bioclim_RDA$CCA$biplot[,2],
+  geom_segment(aes(xend = bioclim_partial_RDA$CCA$biplot[,1],
+                   yend = bioclim_partial_RDA$CCA$biplot[,2],
                    x=0,
                    y=0),
                colour="black",
                size=1,
                linetype=1,
                arrow = arrow(length = unit(0.02, "npc"))) +
-  geom_text(aes(x = 1.0*bioclim_RDA$CCA$biplot[,1],
-                y = 1.2*bioclim_RDA$CCA$biplot[,2],
+  geom_text(aes(x = 1.0*bioclim_partial_RDA$CCA$biplot[,1],
+                y = 1.2*bioclim_partial_RDA$CCA$biplot[,2],
                 label = colnames(bioclim_rda_env_data[,3:5]))) +
   
-  labs(x = 'RDA 1 (83.7% variance explained)',
-       y = 'RDA 2 (13.1% variance explained)', 
+  labs(x = 'RDA 1 (88.7% variance explained)',
+       y = 'RDA 2 (8.5% variance explained)', 
        title = 'A)')+
   theme(#legend.position = "none", 
     panel.grid.major = element_blank(), 
