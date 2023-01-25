@@ -668,7 +668,7 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
     
     
     #
-    RDA_manhattan_Axis1 = ggplot(sdm_non_outs, 
+    sdm_manhattan_Axis1 = ggplot(sdm_non_outs, 
                                  aes(x = BPcum, 
                                      y = RDA_score_axis1_abs))+
       # plot the non outliers in grey
@@ -682,9 +682,9 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
       # scale_color_manual(values = c('#663F8C',
       #                               '#D9965B',
       #                               '#BF4B54'))+
-      scale_color_manual(values = c('#A6036D',
-                                             '#F2D6A2',
-                                             '#8DF2CD'))+
+      scale_color_manual(values = c('#353A8C', 
+                                             '#2A8C55', 
+                                             '#F28E13'))+
                                                ## plot the outliers on top of everything
       ## currently digging this hot pink colour
       geom_point(data = sdm_out_axis1,
@@ -709,7 +709,7 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
       # remove space between plot area and x axis
       labs(x = 'Cumulative base pair', 
            y = 'RDA score', 
-           title = 'A)')+
+           title = 'C)')+
       theme(legend.position="none",
             # panel.border = element_blank(),
             # panel.grid = element_blank(),
@@ -721,7 +721,7 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
             axis.text.y = element_text(size = 12),
             plot.title = element_text(size = 15, 
                                       hjust = 0))
-    RDA_manhattan_Axis1
+    sdm_manhattan_Axis1
     
     
     # sdm rda outlier prop ------------------------------------------------
@@ -757,7 +757,7 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
                fill = 'black')+ 
       labs(x = 'Chromosome', 
            y = 'Proportion of outlier loci', 
-           title = 'B)')+
+           title = 'D)')+
       theme(legend.position="none",
             # panel.border = element_blank(),
             panel.grid = element_blank(),
@@ -776,10 +776,10 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
     
     
     
-    # sdm ggsave ----------------------------------------------------------
+# sdm ggsave ----------------------------------------------------------
     
     
-    sdm_plot_combo = RDA_manhattan_Axis1/sdm_outlier_proportion
+    sdm_plot_combo = sdm_manhattan_Axis1/sdm_outlier_proportion
     
     
     ggsave(file = 'AC_sdm_RDA_Combined_Plot_25.01.2023.tiff', 
@@ -791,6 +791,17 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
            height = 30)
     
 
+# bioclim + sdm ggsave ----------------------------------------------------
+
+full_rda_combo = bioclim_plot_combo|sdm_plot_combo
+    
+ggsave(file = 'Combined_RDA_Plots_25.01.2023.tiff', 
+           path = '~/Bradbury_Postdoc/AC_SV_MS_Data/Figures/',
+           plot = full_rda_combo, 
+           dpi = 'retina', 
+           units = 'cm', 
+           width = 45, 
+           height = 30)
 
 # sdm normal rda ----------------------------------------------------------
 
