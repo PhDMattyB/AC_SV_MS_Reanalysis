@@ -1342,7 +1342,8 @@ RDA_manhattan_Axis1 = ggplot(bioclim_non_outs,
                  y = RDA_score_abs, 
                  col = predictor),
              # col = '#2D2059',
-             alpha=0.8)+
+             alpha=0.8, 
+             size = 2)+
   # geom_point(data = num_df, 
   #            aes(x = AC_CHR, 
   #                y = proportion_outlier), 
@@ -1357,7 +1358,7 @@ RDA_manhattan_Axis1 = ggplot(bioclim_non_outs,
   # remove space between plot area and x axis
   labs(x = 'Cumulative base pair', 
        y = 'RDA score', 
-       title = 'C)')+
+       title = 'A)')+
   theme(legend.position="none",
         # panel.border = element_blank(),
         # panel.grid = element_blank(),
@@ -1379,13 +1380,13 @@ RDA_manhattan_Axis1
 num_outlier = bioclim_dist_cal %>% 
   filter(label == 'RDA_outlier', 
          Axis == '1') %>% 
-  group_by(AC_CHR) %>% 
+  group_by(Chromosome) %>% 
   summarise(n_outlier = n()) %>% 
   arrange(-n_outlier)
 
 num_neutral = bioclim_dist_cal %>% 
   filter(label == 'Normy_SNPS') %>% 
-  group_by(AC_CHR) %>% 
+  group_by(Chromosome) %>% 
   summarise(n_neutral = n())
 
 num_df = inner_join(num_outlier, 
@@ -1398,14 +1399,14 @@ bioclim_outlier_proportion = ggplot()+
   #              aes(x = AC_CHR, 
   #                  y = proportion_outlier))+ 
   geom_bar(data = num_df, 
-           aes(x = AC_CHR, 
+           aes(x = Chromosome, 
                y = proportion_outlier), 
            stat = 'identity', 
            col = 'white', 
            fill = 'black')+ 
   labs(x = 'Chromosome', 
        y = 'Proportion of outlier loci', 
-       title = 'E)')+
+       title = 'B)')+
   theme(legend.position="none",
         # panel.border = element_blank(),
         panel.grid = element_blank(),
@@ -1421,3 +1422,19 @@ bioclim_outlier_proportion = ggplot()+
                                   hjust = 0))
 
 bioclim_outlier_proportion
+
+
+
+# Bioclim ggsave ----------------------------------------------------------
+
+
+bioclim_plot_combo = RDA_manhattan_Axis1/bioclim_outlier_proportion
+
+
+ggsave(file = 'AC_Bioclim_RDA_Combined_Plot_25.01.2023.tiff', 
+       path = '~/Bradbury_Postdoc/AC_SV_MS_Data/Figures/',
+       plot = bioclim_plot_combo, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 40, 
+       height = 30)
