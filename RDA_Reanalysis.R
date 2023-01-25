@@ -571,7 +571,225 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
     
 
 # sdm manhattan plot ------------------------------------------------------
+    # 
+    # sdm_partial_env = sdm_env_data %>% 
+    #   dplyr::select(Population, 
+    #                 Lat, 
+    #                 Long, 
+    #                 icecover,  
+    #                 dissox_mean, 
+    #                 primprod_mean)
+    # 
+    # sdm_rda_outliers = read_csv('AC_sdm_partial_RDA_outlier_data_25.01.2023.csv') %>% 
+    #   rename(SNP = SNP...1) %>% 
+    #   filter(Axis == 1)
+    # sdm_rda_normy_snps = read_csv('AC_sdm_partial_RDA_Normysnp_data_25.01.2023.csv')
+    # 
+    # 
+    # label = rep('RDA_outlier',
+    #             nrow(sdm_rda_outliers))
+    # 
+    # out_snps_scores = bind_cols(sdm_rda_outliers,
+    #                             label) %>%
+    #   as_tibble() %>%
+    #   rename(label = ...18,
+    #          SNP = SNP...1) %>%
+    #   dplyr::select(1:8,
+    #                 label,
+    #                 RDA_score,
+    #                 Lat,
+    #                 Long,
+    #                 icecover,
+    #                 dissox_mean, 
+    #                 primprod_mean,
+    #                 predictor,
+    #                 correlation)
+    # 
+    # 
+    # label2 = rep('Normy_SNPS',
+    #              nrow(sdm_rda_normy_snps))
+    # 
+    # normy_snps_scores = bind_cols(sdm_rda_normy_snps,
+    #                               label2) %>%
+    #   as_tibble() %>%
+    #   rename(label = ...8)
+    # 
+    # bind_rows(out_snps_scores,
+    #           normy_snps_scores) %>%
+    #   write_csv('AC_RDA_sdm_finaldf_25.01.2023.csv')
 
+    sdm_rda_df = read_csv('AC_RDA_sdm_finaldf_25.01.2023.csv')
+    
+    sdm_dist_cal = sdm_rda_df %>% 
+      group_by(Chromosome) %>% 
+      summarise(chr_len = max(Position)) %>% 
+      mutate(total = cumsum(chr_len)-chr_len) %>% 
+      dplyr::select(-chr_len) %>% 
+      left_join(sdm_rda_df, ., by = c('Chromosome'='Chromosome')) %>%
+      arrange(Chromosome, 
+              Position) %>% 
+      mutate(BPcum = Position + total) 
+    
+    ## calculate the center of the chromosome
+    sdm_axisdf = sdm_dist_cal %>% 
+      group_by(Chromosome) %>% 
+      summarize(center=(max(BPcum) + min(BPcum))/2 )  
+    
+    ## get the absolute score for the RDA outliers
+    ## the negatives plot like shit
+    sdm_dist_cal$RDA_score_axis1_abs = abs(sdm_dist_cal$RDA_score_axis1)
+    sdm_dist_cal$RDA_score_axis2_abs = abs(sdm_dist_cal$RDA_score_axis2)
+    sdm_dist_cal$RDA_score_abs = abs(sdm_dist_cal$RDA_score)
+    # write_csv(dist_cal,
+    #           'Mito_Nuc_RDA_Outliers_distcal_df.csv')
+    # write_csv(axisdf,
+    #           'Mito_Nuc_RDA_Outliers_axisdf_df.csv')
+    
+    ## Get the neutral snps
+    
+    sdm_dist_cal %>% 
+      dplyr::select(label) %>% 
+      distinct()
+    
+    sdm_non_outs = sdm_dist_cal %>% 
+      filter(label == 'Normy_SNPS')
+    ## Get the outliers
+    sdm_outs = sdm_dist_cal %>% 
+      filter(label == 'RDA_outlier')
+    
+    sdm_outs$Axis = as.factor(sdm_outs$Axis)
+    
+    ## split outs by axis and then plot all three with a 
+    ## geom_point layer
+    
+    sdm_out_axis1 = sdm_dist_cal %>% 
+      filter(label == 'RDA_outlier', 
+             Axis == '1')
+    
+    
+    #
+    RDA_manhattan_Axis1 = ggplot(sdm_non_outs, 
+                                 aes(x = BPcum, 
+                                     y = RDA_score_axis1_abs))+
+      # plot the non outliers in grey
+      geom_point(aes(color = as.factor(Chromosome)), 
+                 alpha = 0.8, 
+                 size = 1.3)+
+      ## alternate colors per chromosome
+      scale_color_manual(values = rep(c("grey", "dimgrey"), 
+                                      39))+
+      new_scale_color()+
+      # scale_color_manual(values = c('#663F8C',
+      #                               '#D9965B',
+      #                               '#BF4B54'))+
+      scale_color_manual(values = c('#A6036D',
+                                             '#F2D6A2',
+                                             '#8DF2CD'))+
+                                               ## plot the outliers on top of everything
+      ## currently digging this hot pink colour
+      geom_point(data = sdm_out_axis1,
+                 inherit.aes = F,
+                 aes(x = BPcum, 
+                     y = RDA_score_abs, 
+                     col = predictor),
+                 # col = '#2D2059',
+                 alpha=0.8, 
+                 size = 2)+
+      # geom_point(data = num_df, 
+      #            aes(x = AC_CHR, 
+      #                y = proportion_outlier), 
+      #            col = 'black', 
+      #            size = 3)+
+      scale_x_continuous(label = sdm_axisdf$Chromosome, 
+                         breaks = sdm_axisdf$center)+
+      # scale_y_continuous(expand = c(0, 0))+
+      # scale_y_continuous(sec.axis = sec_axis(~., 
+      #                    name = 'Outlier proportion per chromosome'))+
+      ylim(0, 0.6)+
+      # remove space between plot area and x axis
+      labs(x = 'Cumulative base pair', 
+           y = 'RDA score', 
+           title = 'A)')+
+      theme(legend.position="none",
+            # panel.border = element_blank(),
+            # panel.grid = element_blank(),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.x = element_blank(),
+            axis.text.x = element_text(size = 9, 
+                                       angle = 90), 
+            axis.title = element_text(size = 14), 
+            axis.text.y = element_text(size = 12),
+            plot.title = element_text(size = 15, 
+                                      hjust = 0))
+    RDA_manhattan_Axis1
+    
+    
+    # sdm rda outlier prop ------------------------------------------------
+    
+    
+    # Calculate proportion of outliers per chromosome
+    num_outlier = sdm_dist_cal %>% 
+      filter(label == 'RDA_outlier', 
+             Axis == '1') %>% 
+      group_by(Chromosome) %>% 
+      summarise(n_outlier = n()) %>% 
+      arrange(-n_outlier)
+    
+    num_neutral = sdm_dist_cal %>% 
+      filter(label == 'Normy_SNPS') %>% 
+      group_by(Chromosome) %>% 
+      summarise(n_neutral = n())
+    
+    num_df = inner_join(num_outlier, 
+                        num_neutral) %>% 
+      mutate(proportion_outlier = n_outlier/n_neutral) %>% 
+      arrange(-proportion_outlier)
+    
+    sdm_outlier_proportion = ggplot()+
+      # geom_boxplot(data = num_df, 
+      #              aes(x = AC_CHR, 
+      #                  y = proportion_outlier))+ 
+      geom_bar(data = num_df, 
+               aes(x = Chromosome, 
+                   y = proportion_outlier), 
+               stat = 'identity', 
+               col = 'white', 
+               fill = 'black')+ 
+      labs(x = 'Chromosome', 
+           y = 'Proportion of outlier loci', 
+           title = 'B)')+
+      theme(legend.position="none",
+            # panel.border = element_blank(),
+            panel.grid = element_blank(),
+            # panel.grid.major.y = element_blank(), 
+            # panel.grid.minor.y = element_blank(), 
+            # panel.grid.major.x = element_blank(),
+            # panel.grid.minor.x = element_blank(),
+            axis.text.x = element_text(size = 9, 
+                                       angle = 90), 
+            axis.title = element_text(size = 14), 
+            axis.text.y = element_text(size = 12),
+            plot.title = element_text(size = 15, 
+                                      hjust = 0))
+    
+    sdm_outlier_proportion
+    
+    
+    
+    # sdm ggsave ----------------------------------------------------------
+    
+    
+    sdm_plot_combo = RDA_manhattan_Axis1/sdm_outlier_proportion
+    
+    
+    ggsave(file = 'AC_sdm_RDA_Combined_Plot_25.01.2023.tiff', 
+           path = '~/Bradbury_Postdoc/AC_SV_MS_Data/Figures/',
+           plot = sdm_plot_combo, 
+           dpi = 'retina', 
+           units = 'cm', 
+           width = 40, 
+           height = 30)
+    
 
 
 # sdm normal rda ----------------------------------------------------------
