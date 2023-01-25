@@ -648,62 +648,34 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr7.tiff',
        height = 13)
 
 
-# LG6.1 sv detect ---------------------------------------------------------
+# Chr8 sv detect ---------------------------------------------------------
 
-LG6.1 = read.pcadapt('Charr_Poly_All_Fixed_8.bed', 
+Chr8 = read.pcadapt('AC_New_CHRSET_8.bed', 
                    type = 'bed')
 
-pca_LG6.1 = pcadapt(LG6.1, 
+pca_Chr8 = pcadapt(Chr8, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG6.1, 
-     option = 'screeplot')
-# 
-# plot(pca_LG6.1, 
-#      option = 'scores')
-# summary(pca_LG6.1)
-# 
-# pca_LG6.1$singular.values
-# sum(pca_LG6.1$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG6.1_scores = as_tibble(pca_LG6.1$scores) %>%
+pca_Chr8_scores = as_tibble(pca_Chr8$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG6.1_scores.csv')
+  write_csv('Charr_PCA_Chr8_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_8.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG6.1_scores)
+chr8_meta = bind_cols(meta_data, 
+            pca_Chr8_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr8_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -726,9 +698,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG6.1')
+       title = 'Chr8')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG6.1.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr8.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
@@ -736,64 +708,36 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG6.1.tiff',
        height = 13)
 
 
-# LG6.2 SV detect ------------------------------------------------
+# Chr9 SV detect ------------------------------------------------
 
 # map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map')
 
-LG6.2 = read.pcadapt('Charr_Poly_All_Fixed_9.bed', 
+Chr9 = read.pcadapt('AC_New_CHRSET_9.bed', 
                      type = 'bed')
 
-pca_LG6.2 = pcadapt(LG6.2, 
+pca_Chr9 = pcadapt(Chr9, 
                       K = 10, 
                       method = 'mahalanobis', 
                       min.maf = 0.01)
 
-plot(pca_LG6.2, 
-     option = 'screeplot')
-# 
-# plot(pca_LG6.2, 
-#      option = 'scores')
-# summary(pca_LG6.2)
-# 
-# pca_LG6.2$singular.values
-# sum(pca_LG6.2$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG6.2_scores = as_tibble(pca_LG6.2$scores) %>%
+pca_Chr9_scores = as_tibble(pca_Chr9$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG6.2_scores.csv')
+  write_csv('Charr_PCA_Chr9_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_9.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG6.2_scores)
+chr9_meta = bind_cols(meta_data, 
+            pca_Chr9_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr9_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -816,10 +760,10 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG6.2')
+       title = 'Chr9')
 
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG6.2.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr9.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
@@ -828,62 +772,34 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG6.2.tiff',
 
 
 
-# LG7 sv detect -----------------------------------------------------------
+# Chr10 sv detect -----------------------------------------------------------
 
-LG7 = read.pcadapt('Charr_Poly_All_Fixed_10.bed', 
+Chr10 = read.pcadapt('AC_New_CHRSET_10.bed', 
                    type = 'bed')
 
-pca_LG7 = pcadapt(LG7, 
+pca_Chr10 = pcadapt(Chr10, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG7, 
-     option = 'screeplot')
-# 
-# plot(pca_LG7, 
-#      option = 'scores')
-# summary(pca_LG7)
-# 
-# pca_LG7$singular.values
-# sum(pca_LG7$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG7_scores = as_tibble(pca_LG7$scores) %>%
+pca_Chr10_scores = as_tibble(pca_Chr10$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG7_scores.csv')
+  write_csv('Charr_PCA_Chr10_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_10.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG7_scores)
+chr10_meta = bind_cols(meta_data, 
+            pca_Chr10_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr10_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -906,9 +822,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG7')
+       title = 'Chr10')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG7.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr10.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
@@ -916,64 +832,36 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG7.tiff',
        height = 13)
 
 
-# AC08 or LG11 SV detect --------------------------------------------------
+# Chr11 SV detect --------------------------------------------------
 
-## Need to pull out chromosome LG11 from the full data set
+## Need to pull out chromosome Chr11 from the full data set
 ## Then make the bed file(s) for pcadapt
-LG11 = read.pcadapt('Charr_Poly_All_Fixed_11.bed', 
+Chr11 = read.pcadapt('AC_New_CHRSET_11.bed', 
                      type = 'bed')
 
-pca_LG11 = pcadapt(LG11, 
+pca_Chr11 = pcadapt(Chr11, 
                     K = 10, 
                     method = 'mahalanobis', 
                     min.maf = 0.01)
 
-plot(pca_LG11, 
-     option = 'screeplot')
-# 
-# plot(pca_LG11, 
-#      option = 'scores')
-summary(pca_LG11)
-
-pca_LG11$singular.values
-sum(pca_LG11$singular.values)
-
-(sqrt(0.5733557)/1.968103)*100
-## 38.47%
-(sqrt(0.2538209)/1.968103)*100
-## 25.60%
-(sqrt(0.2335121)/1.968103)*100
-## 24.55%
-
-pca_LG11_scores = as_tibble(pca_LG11$scores) %>%
+pca_Chr11_scores = as_tibble(pca_Chr11$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG11_scores.csv')
+  write_csv('Charr_PCA_Chr11_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_11.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG11_scores)
+chr11_meta = bind_cols(meta_data, 
+            pca_Chr11_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr11_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -996,70 +884,42 @@ meta_data %>%
   labs(x = 'Principal component 1 ',
        y = 'Principal component 2 ', 
        col = 'Glacial lineages', 
-       title = 'LG8')
+       title = 'Chr11')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG8.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr11.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
        width = 20.0, 
        height = 13)
-# LG9 sv detect -----------------------------------------------------------
+# Chr12 sv detect -----------------------------------------------------------
 
-LG9 = read.pcadapt('Charr_Poly_All_Fixed_12.bed', 
+Chr12 = read.pcadapt('AC_New_CHRSET_12.bed', 
                    type = 'bed')
 
-pca_LG9 = pcadapt(LG9, 
+pca_Chr12 = pcadapt(Chr12, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG9, 
-     option = 'screeplot')
-# 
-# plot(pca_LG9, 
-#      option = 'scores')
-# summary(pca_LG9)
-# 
-# pca_LG9$singular.values
-# sum(pca_LG9$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG9_scores = as_tibble(pca_LG9$scores) %>%
+pca_Chr12_scores = as_tibble(pca_Chr12$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG9_scores.csv')
+  write_csv('Charr_PCA_Chr12_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_12.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG9_scores)
+chr12_meta = bind_cols(meta_data, 
+            pca_Chr12_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr12_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -1082,71 +942,43 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG9')
+       title = 'Chr12')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG9.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr12.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
        width = 20.0, 
        height = 13)
 
-# LG10 sv detect ----------------------------------------------------------
+# Chr13 sv detect ----------------------------------------------------------
 
-LG10 = read.pcadapt('Charr_Poly_All_Fixed_13.bed', 
+Chr13 = read.pcadapt('AC_New_CHRSET_13.bed', 
                    type = 'bed')
 
-pca_LG10 = pcadapt(LG10, 
+pca_Chr13 = pcadapt(Chr13, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG10, 
-     option = 'screeplot')
-# 
-# plot(pca_LG10, 
-#      option = 'scores')
-# summary(pca_LG10)
-# 
-# pca_LG10$singular.values
-# sum(pca_LG10$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG10_scores = as_tibble(pca_LG10$scores) %>%
+pca_Chr13_scores = as_tibble(pca_Chr13$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG10_scores.csv')
+  write_csv('Charr_PCA_Chr13_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_13.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG10_scores)
+chr13_meta = bind_cols(meta_data, 
+            pca_Chr13_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr13_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -1169,9 +1001,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG10')
+       title = 'Chr13')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG10.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr13.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
@@ -1180,62 +1012,34 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG10.tiff',
 
 
 
-# LG11 sv detect ----------------------------------------------------------
+# Chr14 sv detect ----------------------------------------------------------
 
-LG11 = read.pcadapt('Charr_Poly_All_Fixed_14.bed', 
+Chr14 = read.pcadapt('AC_New_CHRSET_14.bed', 
                    type = 'bed')
 
-pca_LG11 = pcadapt(LG11, 
+pca_Chr14 = pcadapt(Chr14, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG11, 
-     option = 'screeplot')
-# 
-# plot(pca_LG11, 
-#      option = 'scores')
-# summary(pca_LG11)
-# 
-# pca_LG11$singular.values
-# sum(pca_LG11$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG11_scores = as_tibble(pca_LG11$scores) %>%
+pca_Chr14_scores = as_tibble(pca_Chr14$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG11_scores.csv')
+  write_csv('Charr_PCA_Chr14_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_14.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG11_scores)
+chr14_meta = bind_cols(meta_data, 
+            pca_Chr14_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr14_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -1258,71 +1062,43 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG11')
+       title = 'Chr14')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG11.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr14.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
        width = 20.0, 
        height = 13)
 
-# LG12 --------------------------------------------------------------------
+# Chr15 --------------------------------------------------------------------
 
-LG12 = read.pcadapt('Charr_Poly_All_Fixed_15.bed', 
+Chr15 = read.pcadapt('AC_New_CHRSET_15.bed', 
                    type = 'bed')
 
-pca_LG12 = pcadapt(LG12, 
+pca_Chr15 = pcadapt(Chr15, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG12, 
-     option = 'screeplot')
-# 
-# plot(pca_LG12, 
-#      option = 'scores')
-# summary(pca_LG12)
-# 
-# pca_LG12$singular.values
-# sum(pca_LG12$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG12_scores = as_tibble(pca_LG12$scores) %>%
+pca_Chr15_scores = as_tibble(pca_Chr15$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG12_scores.csv')
+  write_csv('Charr_PCA_Chr15_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_15.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG12_scores)
+chr15_meta = bind_cols(meta_data, 
+            pca_Chr15_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr15_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -1345,71 +1121,43 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG12')
+       title = 'Chr15')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG12.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr15.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
        width = 20.0, 
        height = 13)
 
-# LG13 sv detect ----------------------------------------------------------
+# Chr16 sv detect ----------------------------------------------------------
 
-LG13 = read.pcadapt('Charr_Poly_All_Fixed_16.bed', 
+Chr16 = read.pcadapt('AC_New_CHRSET_16.bed', 
                    type = 'bed')
 
-pca_LG13 = pcadapt(LG13, 
+pca_Chr16 = pcadapt(Chr16, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG13, 
-     option = 'screeplot')
-# 
-# plot(pca_LG13, 
-#      option = 'scores')
-# summary(pca_LG13)
-# 
-# pca_LG13$singular.values
-# sum(pca_LG13$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG13_scores = as_tibble(pca_LG13$scores) %>%
+pca_Chr16_scores = as_tibble(pca_Chr16$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG13_scores.csv')
+  write_csv('Charr_PCA_Chr16_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_16.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG13_scores)
+chr16_meta = bind_cols(meta_data, 
+            pca_Chr16_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr16_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -1432,9 +1180,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG13')
+       title = 'Chr16')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG13.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr16.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
@@ -1442,62 +1190,34 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG13.tiff',
        height = 13)
 
 
-# LG14 sv detect ----------------------------------------------------------
+# Chr17 sv detect ----------------------------------------------------------
 
-LG14 = read.pcadapt('Charr_Poly_All_Fixed_17.bed', 
+Chr17 = read.pcadapt('AC_New_CHRSET_17.bed', 
                    type = 'bed')
 
-pca_LG14 = pcadapt(LG14, 
+pca_Chr17 = pcadapt(Chr17, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG14, 
-     option = 'screeplot')
-# 
-# plot(pca_LG14, 
-#      option = 'scores')
-# summary(pca_LG14)
-# 
-# pca_LG14$singular.values
-# sum(pca_LG14$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG14_scores = as_tibble(pca_LG14$scores) %>%
+pca_Chr17_scores = as_tibble(pca_Chr17$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG14_scores.csv')
+  write_csv('Charr_PCA_Chr17_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
-
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_17.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG14_scores)
+chr17_meta =  bind_cols(meta_data, 
+            pca_Chr17_scores)
 
 glacial_cols = c('#F23545',
                           '#4E458C',
                           '#4E94BF', 
                           '#F29F05')
                           
-meta_data %>%  
+chr17_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -1520,9 +1240,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG14')
+       title = 'Chr17')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG14.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr17.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
