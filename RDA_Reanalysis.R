@@ -214,7 +214,7 @@ sdm_partial_sum$biplot %>%
 ## All three axes were significant!
 ## Need to pull snps from all three axes
 sdm_partial_RDA_scores = scores(sdm_partial_RDA,
-                                    choices = c(1:2),
+                                    choices = c(1:3),
                                     display = 'species')
 
 ## Pulling out the outlier loci for each significant axis
@@ -599,8 +599,8 @@ bioclim_partial_RDA_scores = scores(bioclim_partial_RDA,
 ## The first axis explains almost 90% variation
 ## only using the outliers on the first axis
 bioclim_partial_RDA_outliers_axis1 = outliers(bioclim_partial_RDA_scores[,1],3)
-# bioclim_partial_RDA_outliers_axis2 = outliers(bioclim_partial_RDA_scores[,2],3)
-# bioclim_partial_RDA_outliers_axis3 = outliers(bioclim_partial_RDA_scores[,3],3)
+bioclim_partial_RDA_outliers_axis2 = outliers(bioclim_partial_RDA_scores[,2],3)
+bioclim_partial_RDA_outliers_axis3 = outliers(bioclim_partial_RDA_scores[,3],3)
 
 ## Creating a cleaned data frame for outiers on each axis
 bioclim_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
@@ -611,43 +611,52 @@ bioclim_partial_RDA_out_axis1 = cbind.data.frame(rep(1,
   dplyr::rename(Axis = 1,
                 SNP = 2,
                 RDA_score = 3)
-# bioclim_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
-#                                                      times = length(bioclim_partial_RDA_outliers_axis2)),
-#                                                  names(bioclim_partial_RDA_outliers_axis2),
-#                                                  unname(bioclim_partial_RDA_outliers_axis2)) %>%
-#   as_tibble() %>%
-#   dplyr::rename(Axis = 1,
-#                 SNP = 2,
-#                 RDA_score = 3) 
-# 
-# bioclim_partial_RDA_out_axis3 = cbind.data.frame(rep(3,
-#                                                      times = length(bioclim_partial_RDA_outliers_axis3)),
-#                                                  names(bioclim_partial_RDA_outliers_axis3),
-#                                                  unname(bioclim_partial_RDA_outliers_axis3)) %>%
-#   as_tibble() %>%
-#   dplyr::rename(Axis = 1,
-#                 SNP = 2,
-#                 RDA_score = 3) 
+bioclim_partial_RDA_out_axis2 = cbind.data.frame(rep(2,
+                                                     times = length(bioclim_partial_RDA_outliers_axis2)),
+                                                 names(bioclim_partial_RDA_outliers_axis2),
+                                                 unname(bioclim_partial_RDA_outliers_axis2)) %>%
+  as_tibble() %>%
+  dplyr::rename(Axis = 1,
+                SNP = 2,
+                RDA_score = 3)
 
+sbioclim_partial_RDA_out_axis3 = cbind.data.frame(rep(2,
+                                                     times = length(bioclim_partial_RDA_outliers_axis3)),
+                                                 names(bioclim_partial_RDA_outliers_axis3),
+                                                 unname(bioclim_partial_RDA_outliers_axis3)) %>%
+  as_tibble() %>%
+  dplyr::rename(Axis = 1,
+                SNP = 2,
+                RDA_score = 3)
+
+# 
 ## Full cleaned data frame with all outliers
 ## used all three axes in the RDA
 
-# bioclim_partial_RDA_out_total = bind_rows(bioclim_partial_RDA_out_axis1, 
-#                                           bioclim_partial_RDA_out_axis2, 
-#                                           bioclim_partial_RDA_out_axis3)
+bioclim_partial_RDA_out_total = bind_rows(bioclim_partial_RDA_out_axis1,
+                                          bioclim_partial_RDA_out_axis2)
 
 
 ## the rda scores for all snps, not just the outliers
-bioclim_all_snps = bioclim_partial_RDA_scores[,1] %>% 
-  as.data.frame()
+bioclim_all_snps = bioclim_partial_RDA_scores[,1:2] %>% 
+  as.data.frame() %>% 
+  as_tibble(rownames = 'SNP') %>% 
+  mutate(Axis = 0) %>% 
+  dplyr::select(Axis, 
+                SNP, 
+                RDA1, 
+                RDA2) %>% 
+  rename(RDA_score_axis1 = RDA1, 
+         RDA_score_axis2 = RDA2)
+
+
+
 
 ## data frame for the normy snps
 bioclim_partial_RDA_normy = cbind.data.frame(rep(0,
                                                  times = length(bioclim_all_snps)),
                                              row.names(bioclim_all_snps),
-                                             unname(bioclim_all_snps))
-
-bioclim_partial_RDA_normy = bioclim_partial_RDA_normy %>%
+                                             unname(bioclim_all_snps)) %>%
   as_tibble() %>%
   dplyr::rename(Axis = 1,
                 SNP = 2,
