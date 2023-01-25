@@ -1268,3 +1268,156 @@ bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>%
 #   write_csv('AC_RDA_Bioclim_finaldf_25.01.2023.csv')
 
 bioclim_rda_df = read_csv('AC_RDA_Bioclim_finaldf_25.01.2023.csv')
+
+bioclim_dist_cal = bioclim_rda_df %>% 
+  group_by(Chromosome) %>% 
+  summarise(chr_len = max(Position)) %>% 
+  mutate(total = cumsum(chr_len)-chr_len) %>% 
+  dplyr::select(-chr_len) %>% 
+  left_join(bioclim_rda_df, ., by = c('Chromosome'='Chromosome')) %>%
+  arrange(Chromosome, 
+          Position) %>% 
+  mutate(BPcum = Position + total) 
+
+## calculate the center of the chromosome
+bioclim_axisdf = bioclim_dist_cal %>% 
+  group_by(Chromosome) %>% 
+  summarize(center=(max(BPcum) + min(BPcum))/2 )  
+
+## get the absolute score for the RDA outliers
+## the negatives plot like shit
+bioclim_dist_cal$RDA_score_axis1_abs = abs(bioclim_dist_cal$RDA_score_axis1)
+bioclim_dist_cal$RDA_score_axis2_abs = abs(bioclim_dist_cal$RDA_score_axis2)
+bioclim_dist_cal$RDA_score_abs = abs(bioclim_dist_cal$RDA_score)
+# write_csv(dist_cal,
+#           'Mito_Nuc_RDA_Outliers_distcal_df.csv')
+# write_csv(axisdf,
+#           'Mito_Nuc_RDA_Outliers_axisdf_df.csv')
+
+## Get the neutral snps
+
+bioclim_dist_cal %>% 
+  dplyr::select(label) %>% 
+  distinct()
+
+bioclim_non_outs = bioclim_dist_cal %>% 
+  filter(label == 'Normy_SNPS')
+## Get the outliers
+bioclim_outs = bioclim_dist_cal %>% 
+  filter(label == 'RDA_outlier')
+
+bioclim_outs$Axis = as.factor(bioclim_outs$Axis)
+
+## split outs by axis and then plot all three with a 
+## geom_point layer
+
+bioclim_out_axis1 = bioclim_dist_cal %>% 
+  filter(label == 'RDA_outlier', 
+         Axis == '1')
+
+
+#
+RDA_manhattan_Axis1 = ggplot(bioclim_non_outs, 
+                             aes(x = BPcum, 
+                                 y = RDA_score_axis1_abs))+
+  # plot the non outliers in grey
+  geom_point(aes(color = as.factor(Chromosome)), 
+             alpha = 0.8, 
+             size = 1.3)+
+  ## alternate colors per chromosome
+  scale_color_manual(values = rep(c("grey", "dimgrey"), 
+                                  39))+
+  new_scale_color()+
+  # scale_color_manual(values = c('#663F8C',
+  #                               '#D9965B',
+  #                               '#BF4B54'))+
+  scale_color_manual(values = c('#A6036D',
+                                         '#F2D6A2',
+                                         '#8DF2CD'))+
+                                           ## plot the outliers on top of everything
+  ## currently digging this hot pink colour
+  geom_point(data = bioclim_out_axis1,
+             inherit.aes = F,
+             aes(x = BPcum, 
+                 y = RDA_score_abs, 
+                 col = predictor),
+             # col = '#2D2059',
+             alpha=0.8)+
+  # geom_point(data = num_df, 
+  #            aes(x = AC_CHR, 
+  #                y = proportion_outlier), 
+  #            col = 'black', 
+  #            size = 3)+
+  scale_x_continuous(label = bioclim_axisdf$Chromosome, 
+                     breaks = bioclim_axisdf$center)+
+  # scale_y_continuous(expand = c(0, 0))+
+  # scale_y_continuous(sec.axis = sec_axis(~., 
+  #                    name = 'Outlier proportion per chromosome'))+
+  ylim(0, 0.6)+
+  # remove space between plot area and x axis
+  labs(x = 'Cumulative base pair', 
+       y = 'RDA score', 
+       title = 'C)')+
+  theme(legend.position="none",
+        # panel.border = element_blank(),
+        # panel.grid = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(size = 9, 
+                                   angle = 90), 
+        axis.title = element_text(size = 14), 
+        axis.text.y = element_text(size = 12),
+        plot.title = element_text(size = 15, 
+                                  hjust = 0))
+RDA_manhattan_Axis1
+
+
+# Bioclim rda outlier prop ------------------------------------------------
+
+
+# Calculate proportion of outliers per chromosome
+num_outlier = bioclim_dist_cal %>% 
+  filter(label == 'RDA_outlier', 
+         Axis == '1') %>% 
+  group_by(AC_CHR) %>% 
+  summarise(n_outlier = n()) %>% 
+  arrange(-n_outlier)
+
+num_neutral = bioclim_dist_cal %>% 
+  filter(label == 'Normy_SNPS') %>% 
+  group_by(AC_CHR) %>% 
+  summarise(n_neutral = n())
+
+num_df = inner_join(num_outlier, 
+                    num_neutral) %>% 
+  mutate(proportion_outlier = n_outlier/n_neutral) %>% 
+  arrange(-proportion_outlier)
+
+bioclim_outlier_proportion = ggplot()+
+  # geom_boxplot(data = num_df, 
+  #              aes(x = AC_CHR, 
+  #                  y = proportion_outlier))+ 
+  geom_bar(data = num_df, 
+           aes(x = AC_CHR, 
+               y = proportion_outlier), 
+           stat = 'identity', 
+           col = 'white', 
+           fill = 'black')+ 
+  labs(x = 'Chromosome', 
+       y = 'Proportion of outlier loci', 
+       title = 'E)')+
+  theme(legend.position="none",
+        # panel.border = element_blank(),
+        panel.grid = element_blank(),
+        # panel.grid.major.y = element_blank(), 
+        # panel.grid.minor.y = element_blank(), 
+        # panel.grid.major.x = element_blank(),
+        # panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(size = 9, 
+                                   angle = 90), 
+        axis.title = element_text(size = 14), 
+        axis.text.y = element_text(size = 12),
+        plot.title = element_text(size = 15, 
+                                  hjust = 0))
+
+bioclim_outlier_proportion
