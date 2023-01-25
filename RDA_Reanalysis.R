@@ -18,6 +18,7 @@ library(sdmpredictors)
 # library(leaflet)
 # library(ggnewscale)
 library(patchwork)
+library(ggnewscale)
 
 theme_set(theme_bw())
 
@@ -1224,4 +1225,46 @@ bioclim_RDA_biplot
 
 # Bioclim partial manhattan plot ------------------------------------------
 
+bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>%
+  dplyr::select(Long,
+                Lat,
+                bio1,
+                bio3,
+                bio4)
+# bioclim_rda_outliers = read_csv('AC_bioclim_partial_RDA_outlier_data_25.06.2022.csv') %>% 
+#   rename(SNP = SNP...1) %>% 
+#   filter(Axis == 1)
+# bioclim_rda_normy_snps = read_csv('AC_bioclim_partial_RDA_Normysnp_data_25.01.2023.csv')
+# 
+# 
+# label = rep('RDA_outlier',
+#             nrow(bioclim_rda_outliers))
+# 
+# out_snps_scores = bind_cols(bioclim_rda_outliers,
+#                             label) %>%
+#   as_tibble() %>%
+#   rename(label = ...18, 
+#          SNP = SNP...1) %>%
+#   dplyr::select(1:8,
+#                 label,
+#                 RDA_score,
+#                 Lat,
+#                 Long,
+#                 starts_with('bio'),
+#                 predictor,
+#                 correlation)
+# 
+# 
+# label2 = rep('Normy_SNPS',
+#              nrow(bioclim_rda_normy_snps))
+# 
+# normy_snps_scores = bind_cols(bioclim_rda_normy_snps,
+#                               label2) %>%
+#   as_tibble() %>%
+#   rename(label = ...8)
+# 
+# bind_rows(out_snps_scores,
+#           normy_snps_scores) %>%
+#   write_csv('AC_RDA_Bioclim_finaldf_25.01.2023.csv')
 
+bioclim_rda_df = read_csv('AC_RDA_Bioclim_finaldf_25.01.2023.csv')
