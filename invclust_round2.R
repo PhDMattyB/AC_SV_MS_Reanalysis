@@ -1158,8 +1158,6 @@ ggsave('chr22_putate_sv.tiff',
 
 
 
-
-
 # chr 23 ------------------------------------------------------------------
 
 
@@ -1231,31 +1229,31 @@ chr23_inver3 = invClust(roi = ROI_3_chr23,
 ## inversion plots per SNP cluster on the CHR
 plot(chr23_inver1)
 plot(chr23_inver2)
-plot(chr23_inver3)
+plot(chr23_inver3)## maybe
 
 
 ## chr23 sv size 
 
 chr23_map %>% 
-  slice(301:400) %>% 
+  slice(201:nrow(chr23_map)) %>% 
   summarize(start = first(position),
             end = last(position)) %>% 
   mutate(sv_size = end-start, 
          sv_size_mb = sv_size/1000000)
 
-chr23_inver4$datin$y %>% 
+chr23_inver3$datin$y %>% 
   as_tibble() %>% 
-  write_csv('chr23_inver4_100SNPS_MDS.csv')
+  write_csv('chr23_inver3_100SNPS_MDS.csv')
 
-invGenotypes(chr23_inver4) %>% 
+invGenotypes(chr23_inver3) %>% 
   as_tibble() %>% 
-  write_csv('chr23_inver4_100SNPS_Inversion_genos.csv')
+  write_csv('chr23_inver3_100SNPS_Inversion_genos.csv')
 
 
 # plot chr23  sv --------------------------------------------------------------
 
-chr23_mds = read_csv('chr23_inver4_100SNPS_MDS.csv')
-chr23_inver_geno = read_csv('chr23_inver4_100SNPS_Inversion_genos.csv')
+chr23_mds = read_csv('chr23_inver3_100SNPS_MDS.csv')
+chr23_inver_geno = read_csv('chr23_inver3_100SNPS_Inversion_genos.csv')
 chr23_ped = read_table2('AC_New_CHRSET_5.ped', 
                        col_names = F) %>% 
   dplyr::select(1:2)
@@ -1280,7 +1278,7 @@ chr23_Big_Plot_Energy = ggplot(data = chr23_inver,
   labs(x = 'MDS axis 1', 
        y = 'MDS axis 2', 
        col = 'Inversion genotypes', 
-       title = 'chr23 11.2 Mb')+
+       title = 'chr23 9.5 Mb')+
   theme(panel.grid = element_blank(), 
         axis.title = element_text(size = 14), 
         axis.text.y = element_text(size = 12), 
@@ -1303,5 +1301,11 @@ ggsave('chr23_putate_sv.tiff',
        width = 20, 
        height = 15)
 
+
+
+
+
+
+# chr 26 ------------------------------------------------------------------
 
 
