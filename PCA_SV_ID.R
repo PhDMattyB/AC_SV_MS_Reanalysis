@@ -131,62 +131,36 @@ meta_data = read_table2('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/Charr_Poly_All
             identifiers, 
             by = 'FID')
 
+glacial_cols = c('#F23545',
+                          '#4E458C',
+                          '#4E94BF', 
+                          '#F29F05')
+                          
 ##
-# LG1 SV detect -----------------------------------------------------------
+# Chr1 SV detect -----------------------------------------------------------
 
-LG1 = read.pcadapt('AC_New_CHRSET_1.bed', 
+Chr1 = read.pcadapt('AC_New_CHRSET_1.bed', 
                      type = 'bed')
 
-pca_LG1 = pcadapt(LG1, 
+pca_Chr1 = pcadapt(Chr1, 
                     K = 10, 
                     method = 'mahalanobis', 
                     min.maf = 0.01)
 
-plot(pca_LG1, 
-     option = 'screeplot')
-# 
-# plot(pca_LG1, 
-#      option = 'scores')
-
-pca_LG1$singular.values
-sum(pca_LG1$singular.values)
-
-(sqrt(0.5733557)/1.968103)*100
-## 38.47%
-(sqrt(0.2538209)/1.968103)*100
-## 25.60%
-(sqrt(0.2335121)/1.968103)*100
-## 24.55%
-
-pca_LG1_scores = as_tibble(pca_LG1$scores) %>%
+pca_Chr1_scores = as_tibble(pca_Chr1$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG1_scores.csv')
+  write_csv('Charr_PCA_Chr1_scores.csv')
 
-identifiers = read_csv('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/ggtree_labels.csv') %>% 
-  rename(FID = Population)
 
-meta_data = read_table2('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/Charr_Poly_All_Fixed_notbed_1.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG1_scores)
+pca_Chr1_scores =  bind_cols(meta_data, 
+            pca_Chr1_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
-meta_data %>%  
+pca_Chr1_scores %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -219,7 +193,7 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr1.tiff',
        height = 13)
 
 
-# LG2 SV detect -----------------------------------------------------------
+# Chr2 SV detect -----------------------------------------------------------
 
 Chr2 = read.pcadapt('AC_New_CHRSET_2.bed', 
                      type = 'bed')
@@ -228,23 +202,6 @@ pca_Chr2 = pcadapt(Chr2,
                     K = 10, 
                     method = 'mahalanobis', 
                     min.maf = 0.01)
-
-plot(pca_Chr2, 
-     option = 'screeplot')
-# 
-# plot(pca_Chr2, 
-#      option = 'scores')
-# summary(pca_Chr2)
-# 
-# pca_Chr2$singular.values
-# sum(pca_Chr2$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
 
 pca_Chr2_scores = as_tibble(pca_Chr2$scores) %>%
   rename(PC1 = 1,
@@ -255,15 +212,11 @@ pca_Chr2_scores = as_tibble(pca_Chr2$scores) %>%
                 PC3) %>% 
   write_csv('Charr_PCA_Chr2_scores.csv')
 
-meta_data = bind_cols(meta_data, 
+chr2_meta_data = bind_cols(meta_data, 
             pca_Chr2_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
-meta_data %>%  
+
+chr2_meta_data %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -306,23 +259,6 @@ pca_Chr3 = pcadapt(Chr3,
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_Chr3, 
-     option = 'screeplot')
-# 
-# plot(pca_Chr3, 
-#      option = 'scores')
-# summary(pca_Chr3)
-# 
-# pca_Chr3$singular.values
-# sum(pca_Chr3$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
 pca_Chr3_scores = as_tibble(pca_Chr3$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
@@ -335,11 +271,6 @@ pca_Chr3_scores = as_tibble(pca_Chr3$scores) %>%
 chr3_meta =  bind_cols(meta_data, 
             pca_Chr3_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
 chr3_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -383,22 +314,6 @@ pca_Chr4 = pcadapt(Chr4,
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_Chr4, 
-     option = 'screeplot')
-# 
-# plot(pca_Chr4, 
-#      option = 'scores')
-# summary(pca_Chr4)
-# 
-# pca_Chr4$singular.values
-# sum(pca_Chr4$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
 
 pca_Chr4_scores = as_tibble(pca_Chr4$scores) %>%
   rename(PC1 = 1,
@@ -412,11 +327,6 @@ pca_Chr4_scores = as_tibble(pca_Chr4$scores) %>%
 chr4_meta =  bind_cols(meta_data, 
             pca_Chr4_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
 chr4_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -460,23 +370,6 @@ pca_chr5 = pcadapt(Chr5,
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-# plot(pca_LG4q, 
-#      option = 'screeplot')
-# 
-# plot(pca_LG4q, 
-#      option = 'scores')
-# summary(pca_LG4q)
-# 
-# pca_LG4q$singular.values
-# sum(pca_LG4q$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
 pca_chr5_scores = as_tibble(pca_chr5$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
@@ -490,11 +383,6 @@ pca_chr5_scores = as_tibble(pca_chr5$scores) %>%
 chr5_meta = bind_cols(meta_data, 
             pca_chr5_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
 chr5_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -550,11 +438,7 @@ pca_Chr6_scores = as_tibble(pca_Chr6$scores) %>%
 chr6_meta = bind_cols(meta_data, 
             pca_Chr6_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr6_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -610,11 +494,7 @@ pca_Chr7_scores = as_tibble(pca_Chr7$scores) %>%
 chr7_meta = bind_cols(meta_data, 
             pca_Chr7_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr7_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -670,11 +550,6 @@ pca_Chr8_scores = as_tibble(pca_Chr8$scores) %>%
 chr8_meta = bind_cols(meta_data, 
             pca_Chr8_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
 chr8_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -732,11 +607,7 @@ pca_Chr9_scores = as_tibble(pca_Chr9$scores) %>%
 chr9_meta = bind_cols(meta_data, 
             pca_Chr9_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+                         
 chr9_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -794,11 +665,7 @@ pca_Chr10_scores = as_tibble(pca_Chr10$scores) %>%
 chr10_meta = bind_cols(meta_data, 
             pca_Chr10_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr10_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -856,11 +723,7 @@ pca_Chr11_scores = as_tibble(pca_Chr11$scores) %>%
 chr11_meta = bind_cols(meta_data, 
             pca_Chr11_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr11_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -914,11 +777,7 @@ pca_Chr12_scores = as_tibble(pca_Chr12$scores) %>%
 chr12_meta = bind_cols(meta_data, 
             pca_Chr12_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr12_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -973,11 +832,7 @@ pca_Chr13_scores = as_tibble(pca_Chr13$scores) %>%
 chr13_meta = bind_cols(meta_data, 
             pca_Chr13_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr13_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1034,11 +889,7 @@ pca_Chr14_scores = as_tibble(pca_Chr14$scores) %>%
 chr14_meta = bind_cols(meta_data, 
             pca_Chr14_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr14_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1093,11 +944,7 @@ pca_Chr15_scores = as_tibble(pca_Chr15$scores) %>%
 chr15_meta = bind_cols(meta_data, 
             pca_Chr15_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr15_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1152,11 +999,7 @@ pca_Chr16_scores = as_tibble(pca_Chr16$scores) %>%
 chr16_meta = bind_cols(meta_data, 
             pca_Chr16_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr16_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1212,11 +1055,7 @@ pca_Chr17_scores = as_tibble(pca_Chr17$scores) %>%
 chr17_meta =  bind_cols(meta_data, 
             pca_Chr17_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr17_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1271,11 +1110,7 @@ pca_Chr18_scores = as_tibble(pca_Chr18$scores) %>%
 chr18_meta =  bind_cols(meta_data, 
             pca_Chr18_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr18_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1330,11 +1165,7 @@ pca_CHr19_scores = as_tibble(pca_CHr19$scores) %>%
 chr19_meta =  bind_cols(meta_data, 
             pca_CHr19_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr19_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1358,7 +1189,7 @@ chr19_meta %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'CHr19')
+       title = 'Chr19')
 
 ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_CHr19.tiff', 
        plot = last_plot(), 
@@ -1390,11 +1221,7 @@ pca_Chr20_scores = as_tibble(pca_Chr20$scores) %>%
 chr20_meta  = bind_cols(meta_data, 
             pca_Chr20_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr20_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1450,11 +1277,7 @@ pca_Chr21_scores = as_tibble(pca_Chr21$scores) %>%
 chr21_meta  = bind_cols(meta_data, 
             pca_Chr21_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr21_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1509,11 +1332,7 @@ pca_Chr22_scores = as_tibble(pca_Chr22$scores) %>%
 chr22_meta =  bind_cols(meta_data, 
             pca_Chr22_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr22_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1568,11 +1387,7 @@ pca_Chr23_scores = as_tibble(pca_Chr23$scores) %>%
 chr23_meta =  bind_cols(meta_data, 
             pca_Chr23_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr23_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1628,11 +1443,7 @@ pca_Chr24_scores = as_tibble(pca_Chr24$scores) %>%
 chr24_meta = bind_cols(meta_data, 
             pca_Chr24_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr24_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1688,11 +1499,6 @@ pca_Chr25_scores = as_tibble(pca_Chr25$scores) %>%
 chr25_meta =  bind_cols(meta_data, 
             pca_Chr25_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
 chr25_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1748,11 +1554,7 @@ pca_Chr26_scores = as_tibble(pca_Chr26$scores) %>%
 chr26_meta =  bind_cols(meta_data, 
             pca_Chr26_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr26_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1807,11 +1609,7 @@ pca_Chr27_scores = as_tibble(pca_Chr27$scores) %>%
 chr27_meta =  bind_cols(meta_data, 
             pca_Chr27_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr27_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1867,11 +1665,7 @@ pca_Chr28_scores = as_tibble(pca_Chr28$scores) %>%
 chr28_meta =  bind_cols(meta_data, 
             pca_Chr28_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr28_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1926,11 +1720,6 @@ pca_Chr29_scores = as_tibble(pca_Chr29$scores) %>%
 chr29_meta =  bind_cols(meta_data, 
             pca_Chr29_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
 chr29_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -1985,11 +1774,7 @@ pca_Chr30_scores = as_tibble(pca_Chr30$scores) %>%
 chr30_meta =  bind_cols(meta_data, 
             pca_Chr30_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr30_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2046,11 +1831,7 @@ pca_Chr31_scores = as_tibble(pca_Chr31$scores) %>%
 chr31_meta =  bind_cols(meta_data, 
             pca_Chr31_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr31_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2106,11 +1887,6 @@ pca_Chr32_scores = as_tibble(pca_Chr32$scores) %>%
 chr32_meta =  bind_cols(meta_data, 
             pca_Chr32_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
 chr32_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2166,11 +1942,7 @@ pca_Chr33_scores = as_tibble(pca_Chr33$scores) %>%
 chr33_meta =  bind_cols(meta_data, 
             pca_Chr33_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr33_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2226,11 +1998,7 @@ pca_Chr34_scores = as_tibble(pca_Chr34$scores) %>%
 chr34_meta =  bind_cols(meta_data, 
             pca_Chr34_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr34_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2286,11 +2054,7 @@ pca_Chr35_scores = as_tibble(pca_Chr35$scores) %>%
 chr35_meta =  bind_cols(meta_data, 
             pca_Chr35_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr35_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2347,11 +2111,7 @@ pca_Chr36_scores = as_tibble(pca_Chr36$scores) %>%
 chr36_meta =  bind_cols(meta_data, 
             pca_Chr36_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr36_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2408,11 +2168,7 @@ pca_Chr37_scores = as_tibble(pca_Chr37$scores) %>%
 chr37_meta =  bind_cols(meta_data, 
             pca_Chr37_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
+
 chr37_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
@@ -2446,62 +2202,30 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr37.tiff',
        height = 13)
 
 
-# LG35 sv detect ----------------------------------------------------------
+# Chr38 sv detect ----------------------------------------------------------
 
-LG35 = read.pcadapt('Charr_Poly_All_Fixed_38.bed', 
+Chr38 = read.pcadapt('AC_New_CHRSET_38.bed', 
                    type = 'bed')
 
-pca_LG35 = pcadapt(LG35, 
+pca_Chr38 = pcadapt(Chr38, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG35, 
-     option = 'screeplot')
-# 
-# plot(pca_LG35, 
-#      option = 'scores')
-# summary(pca_LG35)
-# 
-# pca_LG35$singular.values
-# sum(pca_LG35$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG35_scores = as_tibble(pca_LG35$scores) %>%
+pca_Chr38_scores = as_tibble(pca_Chr38$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG35_scores.csv')
+  write_csv('Charr_PCA_Chr38_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
+Chr38_meta =  bind_cols(meta_data, 
+            pca_Chr38_scores)
 
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_38.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG35_scores)
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
-meta_data %>%  
+Chr38_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -2524,9 +2248,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG35')
+       title = 'Chr38')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG35.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr38.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
@@ -2534,62 +2258,29 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG35.tiff',
        height = 13)
 
 
-# LG36 sv detect ----------------------------------------------------------
+# Chr39 sv detect ----------------------------------------------------------
 
-LG36 = read.pcadapt('Charr_Poly_All_Fixed_39.bed', 
+Chr39 = read.pcadapt('AC_New_CHRSET_39.bed', 
                    type = 'bed')
 
-pca_LG36 = pcadapt(LG36, 
+pca_Chr39 = pcadapt(Chr39, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG36, 
-     option = 'screeplot')
-# 
-# plot(pca_LG36, 
-#      option = 'scores')
-# summary(pca_LG36)
-# 
-# pca_LG36$singular.values
-# sum(pca_LG36$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
-
-pca_LG36_scores = as_tibble(pca_LG36$scores) %>%
+pca_Chr39_scores = as_tibble(pca_Chr39$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG36_scores.csv')
+  write_csv('Charr_PCA_Chr39_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
+chr39_meta =  bind_cols(meta_data, 
+            pca_Chr39_scores)
 
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_39.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG36_scores)
-
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
-meta_data %>%  
+chr39_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -2612,9 +2303,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG36')
+       title = 'Chr39')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG36.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr39.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
@@ -2622,62 +2313,30 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG36.tiff',
        height = 13)
 
 
-# LG37  sv detection--------------------------------------------------------------------
+# Chr40  sv detection--------------------------------------------------------------------
 
-LG37 = read.pcadapt('Charr_Poly_All_Fixed_40.bed', 
+Chr40 = read.pcadapt('AC_New_CHRSET_40.bed', 
                    type = 'bed')
 
-pca_LG37 = pcadapt(LG37, 
+pca_Chr40 = pcadapt(Chr40, 
                   K = 10, 
                   method = 'mahalanobis', 
                   min.maf = 0.01)
 
-plot(pca_LG37, 
-     option = 'screeplot')
-# 
-# plot(pca_LG37, 
-#      option = 'scores')
-# summary(pca_LG37)
-# 
-# pca_LG37$singular.values
-# sum(pca_LG37$singular.values)
-# 
-# (sqrt(0.5733557)/1.968103)*100
-# ## 38.47%
-# (sqrt(0.2538209)/1.968103)*100
-# ## 25.60%
-# (sqrt(0.2335121)/1.968103)*100
-# ## 24.55%
 
-pca_LG37_scores = as_tibble(pca_LG37$scores) %>%
+pca_Chr40_scores = as_tibble(pca_Chr40$scores) %>%
   rename(PC1 = 1,
          PC2 = 2,
          PC3 = 3) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_LG37_scores.csv')
+  write_csv('Charr_PCA_Chr40_scores.csv')
 
-identifiers = read_csv('ggtree_labels.csv') %>% 
-  rename(FID = Population)
+chr40_meta =  bind_cols(meta_data, 
+            pca_Chr40_scores)
 
-meta_data = read_table2('Charr_Poly_All_Fixed_notbed_40.ped', 
-                        col_names = F) %>% 
-  dplyr::select(X1:X2) %>% 
-  rename(FID = X1, 
-         IID = X2) %>% 
-  left_join(., 
-            identifiers, 
-            by = 'FID') %>% 
-  bind_cols(., 
-            pca_LG37_scores)
-
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
-meta_data %>%  
+chr40_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
@@ -2700,9 +2359,9 @@ meta_data %>%
   labs(x = 'Principal component 1',
        y = 'Principal component 2', 
        col = 'Glacial lineages', 
-       title = 'LG37')
+       title = 'Chr40')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_LG37.tiff', 
+ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr40.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 

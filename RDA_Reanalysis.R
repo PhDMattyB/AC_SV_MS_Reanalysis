@@ -434,13 +434,12 @@ write_csv(sdm_out_snps_rdascores,
 
 ##Chromosome 9 (LG6.2) and 16 (LG13) have >20 outliers which is different 
 ## than what I found before
-sdm_partial_outs %>% 
+sdm_out_enrich = sdm_partial_outs %>% 
   arrange(Chromosome) %>% 
   group_by(Chromosome) %>% 
-  summarise(n = n()) %>% 
-  # filter(n > 20) %>% 
-  View()
-
+  summarise(n = n()) 
+  # filter(n > 20) %>%
+View(sdm_out_enrich)
 
 # sdm partial biplot ------------------------------------------------------
 theme_set(theme_bw())
@@ -1093,13 +1092,14 @@ write_csv(bioclim_out_snps_rdascores,
 
 ##Chromosome 9 (LG6.2) and 16 (LG13) have >20 outliers which is different 
 ## than what I found before
-bioclim_partial_outs %>% 
+bioclim_out_enrich = bioclim_partial_outs %>% 
   arrange(Chromosome) %>% 
   group_by(Chromosome) %>% 
-  summarise(n = n()) %>% 
-  # filter(n > 20) %>% 
-  View()
+  summarise(n = n()) 
 
+
+View(bioclim_out_enrich)
+##
 
 # bioclim normal rda ------------------------------------------------------
 
@@ -1301,23 +1301,23 @@ write_csv(bioclim_normy_snps,
 
 ## This gets us the rda scores for all of the snps used
 
-# map_all_snp = map %>%
-#   dplyr::select(SNP)
-# bioclim_Full_scores = as.data.frame(cbind(SNP = rownames(bioclim_partial_RDA_scores),
-#                                           bioclim_partial_RDA_scores)) %>%
-#   as_tibble()
-# bioclim_Full_scores = bind_cols(map_all_snp,
-#                                 bioclim_Full_scores)
-# 
-# bioclim_out_snps_rdascores = merge(bioclim_partial_outs,
-#                                    bioclim_Full_scores,
-#                                    by.x = 'SNP',
-#                                    by.y = 'SNP') %>%
-#   as_tibble()
-# 
-# write_csv(bioclim_out_snps_rdascores,
-#           'AC_bioclim_partial_RDA_outlier_data_08.06.2022.csv')
-#
+map_all_snp = map %>%
+  dplyr::select(SNP)
+bioclim_Full_scores = as.data.frame(cbind(SNP = rownames(bioclim_partial_RDA_scores),
+                                          bioclim_partial_RDA_scores)) %>%
+  as_tibble()
+bioclim_Full_scores = bind_cols(map_all_snp,
+                                bioclim_Full_scores)
+
+bioclim_out_snps_rdascores = merge(bioclim_partial_outs,
+                                   bioclim_Full_scores,
+                                   by.x = 'SNP',
+                                   by.y = 'SNP') %>%
+  as_tibble()
+
+write_csv(bioclim_out_snps_rdascores,
+          'AC_bioclim_partial_RDA_outlier_data_08.06.2022.csv')
+
 
 
 ##Chromosome 9 and 16 have >20 outliers which is different 
