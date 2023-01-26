@@ -1934,8 +1934,8 @@ chr35_map %>%
             end = last(position))
 
 ROI_2_chr35 = data.frame(chr = 35, 
-                        LBP = , 
-                        RBP = , 
+                        LBP = 13455118, 
+                        RBP = 20652526, 
                         reg = 'inver2')
 
 chr35_inver2 = invClust(roi = ROI_2_chr35, 
@@ -1947,76 +1947,184 @@ chr35_inver2 = invClust(roi = ROI_2_chr35,
 
 ## inversion plots per SNP cluster on the CHR
 plot(chr35_inver1)
-plot(chr35_inver2)
+plot(chr35_inver2) ## maybe
 
-## chr35 sv size 
+# ## chr35 sv size 
+# 
+# chr35_map %>% 
+#   slice(301:400) %>% 
+#   summarize(start = first(position),
+#             end = last(position)) %>% 
+#   mutate(sv_size = end-start, 
+#          sv_size_mb = sv_size/1000000)
+# 
+# chr35_inver4$datin$y %>% 
+#   as_tibble() %>% 
+#   write_csv('chr35_inver4_100SNPS_MDS.csv')
+# 
+# invGenotypes(chr35_inver4) %>% 
+#   as_tibble() %>% 
+#   write_csv('chr35_inver4_100SNPS_Inversion_genos.csv')
+# 
+# 
+# # plot chr35  sv --------------------------------------------------------------
+# 
+# chr35_mds = read_csv('chr35_inver4_100SNPS_MDS.csv')
+# chr35_inver_geno = read_csv('chr35_inver4_100SNPS_Inversion_genos.csv')
+# chr35_ped = read_table2('AC_New_CHRSET_5.ped', 
+#                        col_names = F) %>% 
+#   dplyr::select(1:2)
+# 
+# chr35_inver = bind_cols(chr35_ped, 
+#                        chr35_mds, 
+#                        chr35_inver_geno)
+# 
+# 
+# shades_of_BigD = c('#0583F2', 
+#                             '#F28705',
+#                             '#F20530')
+#                             
+# # View(North_chr1_Big_D_Energy)
+# chr35_Big_Plot_Energy = ggplot(data = chr35_inver, 
+#                               aes(x = V1, 
+#                                   y = V2, 
+#                                   col = value))+
+#   geom_point()+
+#   scale_colour_manual(values = shades_of_BigD)+
+#   # facet_grid(.~label)+
+#   labs(x = 'MDS axis 1', 
+#        y = 'MDS axis 2', 
+#        col = 'Inversion genotypes', 
+#        title = 'chr35 11.2 Mb')+
+#   theme(panel.grid = element_blank(), 
+#         axis.title = element_text(size = 14), 
+#         axis.text.y = element_text(size = 12), 
+#         axis.text.x = element_text(size = 10, 
+#                                    angle = 45, 
+#                                    hjust = 1, 
+#                                    vjust = 1),
+#         legend.title = element_text(size = 14), 
+#         legend.text = element_text(size = 12), 
+#         strip.background = element_rect(fill = 'white'),
+#         strip.text = element_text(size = 12, 
+#                                   face = 'bold'))
+# 
+# chr35_Big_Plot_Energy
+# 
+# ggsave('chr35_putate_sv.tiff', 
+#        plot = chr35_Big_Plot_Energy, 
+#        dpi = 'retina', 
+#        units = 'cm', 
+#        width = 20, 
+#        height = 15)
 
-chr35_map %>% 
-  slice(301:400) %>% 
-  summarize(start = first(position),
-            end = last(position)) %>% 
-  mutate(sv_size = end-start, 
-         sv_size_mb = sv_size/1000000)
 
-chr35_inver4$datin$y %>% 
+# chr36 -------------------------------------------------------------------
+
+chr36 = read.plink(bed = 'AC_New_CHRSET_36.bed', 
+                  bim = 'AC_New_CHRSET_36.bim', 
+                  fam = 'AC_New_CHRSET_36.fam')
+
+chr36_geno = chr36$genotypes
+chr36_map = chr36$map 
+identical(chr36_map[,2], 
+          colnames(chr36_geno))
+
+dim(chr36_map)
+
+## SNP cluster 1
+chr36_map %>% 
+  slice(1:nrow(chr36_map)) %>% 
   as_tibble() %>% 
-  write_csv('chr35_inver4_100SNPS_MDS.csv')
+  summarize(start = first(position), 
+            end = last(position))
 
-invGenotypes(chr35_inver4) %>% 
-  as_tibble() %>% 
-  write_csv('chr35_inver4_100SNPS_Inversion_genos.csv')
+ROI_1_chr36 = data.frame(chr = 36, 
+                        LBP = 714059, 
+                        RBP = 37134107, 
+                        reg = 'inver1')
 
-
-# plot chr35  sv --------------------------------------------------------------
-
-chr35_mds = read_csv('chr35_inver4_100SNPS_MDS.csv')
-chr35_inver_geno = read_csv('chr35_inver4_100SNPS_Inversion_genos.csv')
-chr35_ped = read_table2('AC_New_CHRSET_5.ped', 
-                       col_names = F) %>% 
-  dplyr::select(1:2)
-
-chr35_inver = bind_cols(chr35_ped, 
-                       chr35_mds, 
-                       chr35_inver_geno)
+chr36_inver1 = invClust(roi = ROI_1_chr36, 
+                       wh = 1, 
+                       geno = chr36_geno, 
+                       annot = chr36_map, 
+                       dim = 2)
 
 
-shades_of_BigD = c('#0583F2', 
-                            '#F28705',
-                            '#F20530')
-                            
-# View(North_chr1_Big_D_Energy)
-chr35_Big_Plot_Energy = ggplot(data = chr35_inver, 
-                              aes(x = V1, 
-                                  y = V2, 
-                                  col = value))+
-  geom_point()+
-  scale_colour_manual(values = shades_of_BigD)+
-  # facet_grid(.~label)+
-  labs(x = 'MDS axis 1', 
-       y = 'MDS axis 2', 
-       col = 'Inversion genotypes', 
-       title = 'chr35 11.2 Mb')+
-  theme(panel.grid = element_blank(), 
-        axis.title = element_text(size = 14), 
-        axis.text.y = element_text(size = 12), 
-        axis.text.x = element_text(size = 10, 
-                                   angle = 45, 
-                                   hjust = 1, 
-                                   vjust = 1),
-        legend.title = element_text(size = 14), 
-        legend.text = element_text(size = 12), 
-        strip.background = element_rect(fill = 'white'),
-        strip.text = element_text(size = 12, 
-                                  face = 'bold'))
+## inversion plots per SNP cluster on the CHR
+plot(chr36_inver1)
 
-chr35_Big_Plot_Energy
+# 
+# ## chr36 sv size 
+# 
+# chr36_map %>% 
+#   slice(301:400) %>% 
+#   summarize(start = first(position),
+#             end = last(position)) %>% 
+#   mutate(sv_size = end-start, 
+#          sv_size_mb = sv_size/1000000)
+# 
+# chr36_inver4$datin$y %>% 
+#   as_tibble() %>% 
+#   write_csv('chr36_inver4_100SNPS_MDS.csv')
+# 
+# invGenotypes(chr36_inver4) %>% 
+#   as_tibble() %>% 
+#   write_csv('chr36_inver4_100SNPS_Inversion_genos.csv')
+# 
+# 
+# # plot chr36  sv --------------------------------------------------------------
+# 
+# chr36_mds = read_csv('chr36_inver4_100SNPS_MDS.csv')
+# chr36_inver_geno = read_csv('chr36_inver4_100SNPS_Inversion_genos.csv')
+# chr36_ped = read_table2('AC_New_CHRSET_5.ped', 
+#                        col_names = F) %>% 
+#   dplyr::select(1:2)
+# 
+# chr36_inver = bind_cols(chr36_ped, 
+#                        chr36_mds, 
+#                        chr36_inver_geno)
+# 
+# 
+# shades_of_BigD = c('#0583F2', 
+#                             '#F28705',
+#                             '#F20530')
+#                             
+# # View(North_chr1_Big_D_Energy)
+# chr36_Big_Plot_Energy = ggplot(data = chr36_inver, 
+#                               aes(x = V1, 
+#                                   y = V2, 
+#                                   col = value))+
+#   geom_point()+
+#   scale_colour_manual(values = shades_of_BigD)+
+#   # facet_grid(.~label)+
+#   labs(x = 'MDS axis 1', 
+#        y = 'MDS axis 2', 
+#        col = 'Inversion genotypes', 
+#        title = 'chr36 11.2 Mb')+
+#   theme(panel.grid = element_blank(), 
+#         axis.title = element_text(size = 14), 
+#         axis.text.y = element_text(size = 12), 
+#         axis.text.x = element_text(size = 10, 
+#                                    angle = 45, 
+#                                    hjust = 1, 
+#                                    vjust = 1),
+#         legend.title = element_text(size = 14), 
+#         legend.text = element_text(size = 12), 
+#         strip.background = element_rect(fill = 'white'),
+#         strip.text = element_text(size = 12, 
+#                                   face = 'bold'))
+# 
+# chr36_Big_Plot_Energy
+# 
+# ggsave('chr36_putate_sv.tiff', 
+#        plot = chr36_Big_Plot_Energy, 
+#        dpi = 'retina', 
+#        units = 'cm', 
+#        width = 20, 
+#        height = 15)
 
-ggsave('chr35_putate_sv.tiff', 
-       plot = chr35_Big_Plot_Energy, 
-       dpi = 'retina', 
-       units = 'cm', 
-       width = 20, 
-       height = 15)
+
 
 
 
