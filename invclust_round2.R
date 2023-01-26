@@ -1307,5 +1307,491 @@ ggsave('chr23_putate_sv.tiff',
 
 
 # chr 26 ------------------------------------------------------------------
+chr26 = read.plink(bed = 'AC_New_CHRSET_26.bed', 
+                  bim = 'AC_New_CHRSET_26.bim', 
+                  fam = 'AC_New_CHRSET_26.fam')
+
+chr26_geno = chr26$genotypes
+chr26_map = chr26$map 
+identical(chr26_map[,2], 
+          colnames(chr26_geno))
+
+dim(chr26_map)
+
+## SNP cluster 1
+chr26_map %>% 
+  slice(1:100) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_1_chr26 = data.frame(chr = 26, 
+                        LBP = 883499, 
+                        RBP = 11053831, 
+                        reg = 'inver1')
+
+chr26_inver1 = invClust(roi = ROI_1_chr26, 
+                       wh = 1, 
+                       geno = chr26_geno, 
+                       annot = chr26_map, 
+                       dim = 2)
+
+## SNP cluster 2
+chr26_map %>% 
+  slice(101:200) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_2_chr26 = data.frame(chr = 26, 
+                        LBP = 11221098, 
+                        RBP = 25552361, 
+                        reg = 'inver2')
+
+chr26_inver2 = invClust(roi = ROI_2_chr26, 
+                       wh = 1, 
+                       geno = chr26_geno, 
+                       annot = chr26_map, 
+                       dim = 2)
+
+## SNP cluster 3
+chr26_map %>% 
+  slice(201:300) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_3_chr26 = data.frame(chr = 26, 
+                        LBP = 25619512, 
+                        RBP = 29581331, 
+                        reg = 'inver3')
+
+chr26_inver3 = invClust(roi = ROI_3_chr26, 
+                       wh = 1, 
+                       geno = chr26_geno, 
+                       annot = chr26_map, 
+                       dim = 2)
+
+## SNP cluster 4
+chr26_map %>% 
+  slice(301:nrow(chr26_map)) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_4_chr26 = data.frame(chr = 26,
+                        LBP = 29599392,
+                        RBP = 39785897,
+                        reg = 'inver4')
+
+chr26_inver4 = invClust(roi = ROI_4_chr26,
+                       wh = 1,
+                       geno = chr26_geno,
+                       annot = chr26_map,
+                       dim = 2)
+
+
+
+## inversion plots per SNP cluster on the CHR
+plot(chr26_inver1)
+plot(chr26_inver2)
+plot(chr26_inver3)
+plot(chr26_inver4) 
+
+
+## chr26 sv size 
+
+chr26_map %>% 
+  slice(201:300) %>% 
+  summarize(start = first(position),
+            end = last(position)) %>% 
+  mutate(sv_size = end-start, 
+         sv_size_mb = sv_size/1000000)
+
+chr26_inver3$datin$y %>% 
+  as_tibble() %>% 
+  write_csv('chr26_inver3_100SNPS_MDS.csv')
+
+invGenotypes(chr26_inver3) %>% 
+  as_tibble() %>% 
+  write_csv('chr26_inver3_100SNPS_Inversion_genos.csv')
+
+
+# plot chr26  sv --------------------------------------------------------------
+
+chr26_mds = read_csv('chr26_inver3_100SNPS_MDS.csv')
+chr26_inver_geno = read_csv('chr26_inver3_100SNPS_Inversion_genos.csv')
+chr26_ped = read_table2('AC_New_CHRSET_5.ped', 
+                       col_names = F) %>% 
+  dplyr::select(1:2)
+
+chr26_inver = bind_cols(chr26_ped, 
+                       chr26_mds, 
+                       chr26_inver_geno)
+
+
+shades_of_BigD = c('#0583F2', 
+                            '#F28705',
+                            '#F20530')
+                            
+# View(North_chr1_Big_D_Energy)
+chr26_Big_Plot_Energy = ggplot(data = chr26_inver, 
+                              aes(x = V1, 
+                                  y = V2, 
+                                  col = value))+
+  geom_point()+
+  scale_colour_manual(values = shades_of_BigD)+
+  # facet_grid(.~label)+
+  labs(x = 'MDS axis 1', 
+       y = 'MDS axis 2', 
+       col = 'Inversion genotypes', 
+       title = 'chr26 11.2 Mb')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), 
+        axis.text.x = element_text(size = 10, 
+                                   angle = 45, 
+                                   hjust = 1, 
+                                   vjust = 1),
+        legend.title = element_text(size = 14), 
+        legend.text = element_text(size = 12), 
+        strip.background = element_rect(fill = 'white'),
+        strip.text = element_text(size = 12, 
+                                  face = 'bold'))
+
+chr26_Big_Plot_Energy
+
+ggsave('chr26_putate_sv.tiff', 
+       plot = chr26_Big_Plot_Energy, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20, 
+       height = 15)
+
+# chr27 -------------------------------------------------------------------
+
+chr27 = read.plink(bed = 'AC_New_CHRSET_27.bed', 
+                  bim = 'AC_New_CHRSET_27.bim', 
+                  fam = 'AC_New_CHRSET_27.fam')
+
+chr27_geno = chr27$genotypes
+chr27_map = chr27$map 
+identical(chr27_map[,2], 
+          colnames(chr27_geno))
+
+dim(chr27_map)
+
+## SNP cluster 1
+chr27_map %>% 
+  slice(1:100) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_1_chr27 = data.frame(chr = 27, 
+                        LBP = 7427836, 
+                        RBP = 26082025, 
+                        reg = 'inver1')
+
+chr27_inver1 = invClust(roi = ROI_1_chr27, 
+                       wh = 1, 
+                       geno = chr27_geno, 
+                       annot = chr27_map, 
+                       dim = 2)
+
+## SNP cluster 2
+chr27_map %>% 
+  slice(101:200) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_2_chr27 = data.frame(chr = 27, 
+                        LBP = 26256039, 
+                        RBP = 36620257, 
+                        reg = 'inver2')
+
+chr27_inver2 = invClust(roi = ROI_2_chr27, 
+                       wh = 1, 
+                       geno = chr27_geno, 
+                       annot = chr27_map, 
+                       dim = 2)
+
+## SNP cluster 3
+chr27_map %>% 
+  slice(201:nrow(chr27_map)) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_3_chr27 = data.frame(chr = 27, 
+                        LBP = 36706140, 
+                        RBP = 45228603, 
+                        reg = 'inver3')
+
+chr27_inver3 = invClust(roi = ROI_3_chr27, 
+                       wh = 1, 
+                       geno = chr27_geno, 
+                       annot = chr27_map, 
+                       dim = 2)
+
+## inversion plots per SNP cluster on the CHR
+plot(chr27_inver1) #yep
+plot(chr27_inver2)
+plot(chr27_inver3)
+
+
+## chr27 sv size 
+
+chr27_map %>% 
+  slice(1:100) %>% 
+  summarize(start = first(position),
+            end = last(position)) %>% 
+  mutate(sv_size = end-start, 
+         sv_size_mb = sv_size/1000000)
+
+chr27_inver1$datin$y %>% 
+  as_tibble() %>% 
+  write_csv('chr27_inver1_100SNPS_MDS.csv')
+
+invGenotypes(chr27_inver1) %>% 
+  as_tibble() %>% 
+  write_csv('chr27_inver1_100SNPS_Inversion_genos.csv')
+
+
+# plot chr27  sv --------------------------------------------------------------
+
+chr27_mds = read_csv('chr27_inver1_100SNPS_MDS.csv')
+chr27_inver_geno = read_csv('chr27_inver1_100SNPS_Inversion_genos.csv')
+chr27_ped = read_table2('AC_New_CHRSET_5.ped', 
+                       col_names = F) %>% 
+  dplyr::select(1:2)
+
+chr27_inver = bind_cols(chr27_ped, 
+                       chr27_mds, 
+                       chr27_inver_geno)
+
+
+shades_of_BigD = c('#0583F2', 
+                            '#F28705',
+                            '#F20530')
+                            
+# View(North_chr1_Big_D_Energy)
+chr27_Big_Plot_Energy = ggplot(data = chr27_inver, 
+                              aes(x = V1, 
+                                  y = V2, 
+                                  col = value))+
+  geom_point()+
+  scale_colour_manual(values = shades_of_BigD)+
+  # facet_grid(.~label)+
+  labs(x = 'MDS axis 1', 
+       y = 'MDS axis 2', 
+       col = 'Inversion genotypes', 
+       title = 'chr27 11.2 Mb')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), 
+        axis.text.x = element_text(size = 10, 
+                                   angle = 45, 
+                                   hjust = 1, 
+                                   vjust = 1),
+        legend.title = element_text(size = 14), 
+        legend.text = element_text(size = 12), 
+        strip.background = element_rect(fill = 'white'),
+        strip.text = element_text(size = 12, 
+                                  face = 'bold'))
+
+chr27_Big_Plot_Energy
+
+ggsave('chr27_putate_sv.tiff', 
+       plot = chr27_Big_Plot_Energy, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20, 
+       height = 15)
+
+# chr30 -------------------------------------------------------------------
+
+chr30 = read.plink(bed = 'AC_New_CHRSET_30.bed', 
+                  bim = 'AC_New_CHRSET_30.bim', 
+                  fam = 'AC_New_CHRSET_30.fam')
+
+chr30_geno = chr30$genotypes
+chr30_map = chr30$map 
+identical(chr30_map[,2], 
+          colnames(chr30_geno))
+
+dim(chr30_map)
+
+## SNP cluster 1
+chr30_map %>% 
+  slice(1:100) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_1_chr30 = data.frame(chr = 30, 
+                        LBP = 867959, 
+                        RBP = 23790862, 
+                        reg = 'inver1')
+
+chr30_inver1 = invClust(roi = ROI_1_chr30, 
+                       wh = 1, 
+                       geno = chr30_geno, 
+                       annot = chr30_map, 
+                       dim = 2)
+
+## SNP cluster 2
+chr30_map %>% 
+  slice(101:200) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_2_chr30 = data.frame(chr = 30, 
+                        LBP = , 
+                        RBP = , 
+                        reg = 'inver2')
+
+chr30_inver2 = invClust(roi = ROI_2_chr30, 
+                       wh = 1, 
+                       geno = chr30_geno, 
+                       annot = chr30_map, 
+                       dim = 2)
+
+## SNP cluster 3
+chr30_map %>% 
+  slice(201:300) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_3_chr30 = data.frame(chr = 30, 
+                        LBP = , 
+                        RBP = , 
+                        reg = 'inver3')
+
+chr30_inver3 = invClust(roi = ROI_3_chr30, 
+                       wh = 1, 
+                       geno = chr30_geno, 
+                       annot = chr30_map, 
+                       dim = 2)
+
+## SNP cluster 4
+chr30_map %>% 
+  slice(301:nrow(chr30_ped)) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_4_chr30 = data.frame(chr = 30,
+                        LBP = ,
+                        RBP = ,
+                        reg = 'inver4')
+
+chr30_inver4 = invClust(roi = ROI_4_chr30,
+                       wh = 1,
+                       geno = chr30_geno,
+                       annot = chr30_map,
+                       dim = 2)
+
+
+## SNP cluster 5
+chr30_map %>% 
+  slice(401:nrow(chr30_map)) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_5_chr30 = data.frame(chr = 9,
+                        LBP = 65323041,
+                        RBP = 87135312,
+                        reg = 'inver5')
+
+chr30_inver5 = invClust(roi = ROI_5_chr30,
+                       wh = 1,
+                       geno = chr30_geno,
+                       annot = chr30_map,
+                       dim = 2)
+
+## inversion plots per SNP cluster on the CHR
+plot(chr30_inver1)
+plot(chr30_inver2)
+plot(chr30_inver3)
+plot(chr30_inver4) 
+plot(chr30_inver5)
+
+
+## chr30 sv size 
+
+chr30_map %>% 
+  slice(301:400) %>% 
+  summarize(start = first(position),
+            end = last(position)) %>% 
+  mutate(sv_size = end-start, 
+         sv_size_mb = sv_size/1000000)
+
+chr30_inver4$datin$y %>% 
+  as_tibble() %>% 
+  write_csv('chr30_inver4_100SNPS_MDS.csv')
+
+invGenotypes(chr30_inver4) %>% 
+  as_tibble() %>% 
+  write_csv('chr30_inver4_100SNPS_Inversion_genos.csv')
+
+
+# plot chr30  sv --------------------------------------------------------------
+
+chr30_mds = read_csv('chr30_inver4_100SNPS_MDS.csv')
+chr30_inver_geno = read_csv('chr30_inver4_100SNPS_Inversion_genos.csv')
+chr30_ped = read_table2('AC_New_CHRSET_5.ped', 
+                       col_names = F) %>% 
+  dplyr::select(1:2)
+
+chr30_inver = bind_cols(chr30_ped, 
+                       chr30_mds, 
+                       chr30_inver_geno)
+
+
+shades_of_BigD = c('#0583F2', 
+                            '#F28705',
+                            '#F20530')
+                            
+# View(North_chr1_Big_D_Energy)
+chr30_Big_Plot_Energy = ggplot(data = chr30_inver, 
+                              aes(x = V1, 
+                                  y = V2, 
+                                  col = value))+
+  geom_point()+
+  scale_colour_manual(values = shades_of_BigD)+
+  # facet_grid(.~label)+
+  labs(x = 'MDS axis 1', 
+       y = 'MDS axis 2', 
+       col = 'Inversion genotypes', 
+       title = 'chr30 11.2 Mb')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), 
+        axis.text.x = element_text(size = 10, 
+                                   angle = 45, 
+                                   hjust = 1, 
+                                   vjust = 1),
+        legend.title = element_text(size = 14), 
+        legend.text = element_text(size = 12), 
+        strip.background = element_rect(fill = 'white'),
+        strip.text = element_text(size = 12, 
+                                  face = 'bold'))
+
+chr30_Big_Plot_Energy
+
+ggsave('chr30_putate_sv.tiff', 
+       plot = chr30_Big_Plot_Energy, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20, 
+       height = 15)
+
+
+
+
+
+
+
+
+
 
 
