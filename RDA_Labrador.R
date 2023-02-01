@@ -574,7 +574,7 @@ sdm_RDA_biplot = ggplot() +
     
     
     
-  # sdm manhattan plot ------------------------------------------------------
+# sdm manhattan plot ------------------------------------------------------
     # 
     # sdm_partial_env = sdm_env_data %>%
     #   dplyr::select(Population,
@@ -789,7 +789,7 @@ sdm_RDA_biplot = ggplot() +
                                       hjust = 0))
     sdm_manhattan_Axis2
     
-  # sdm rda outlier prop ------------------------------------------------
+# sdm rda outlier prop ------------------------------------------------
     
     
     # Calculate proportion of outliers per chromosome
@@ -840,7 +840,7 @@ sdm_RDA_biplot = ggplot() +
     
     
     
-  # sdm ggsave ----------------------------------------------------------
+# sdm ggsave ----------------------------------------------------------
     
     
     sdm_plot_combo = sdm_manhattan_Axis1/sdm_manhattan_Axis2/sdm_outlier_proportion
