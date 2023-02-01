@@ -571,20 +571,19 @@ sdm_RDA_biplot = ggplot() +
     
     
     
-    # sdm manhattan plot ------------------------------------------------------
+  # sdm manhattan plot ------------------------------------------------------
     # 
-    # sdm_partial_env = sdm_env_data %>% 
-    #   dplyr::select(Population, 
-    #                 Lat, 
-    #                 Long, 
-    #                 icecover,  
-    #                 dissox_mean, 
+    # sdm_partial_env = sdm_env_data %>%
+    #   dplyr::select(Population,
+    #                 Lat,
+    #                 Long,
+    #                 icecover,
+    #                 dissox_mean,
     #                 primprod_mean)
     # 
-    # sdm_rda_outliers = read_csv('AC_sdm_partial_RDA_outlier_data_25.01.2023.csv') %>% 
-    #   rename(SNP = SNP...1) %>% 
-    #   filter(Axis == 1)
-    # sdm_rda_normy_snps = read_csv('AC_sdm_partial_RDA_Normysnp_data_25.01.2023.csv')
+    # sdm_rda_outliers = read_csv('LAB_AC_sdm_partial_RDA_outlier_data_01.02.2023.csv') %>%
+    #   rename(SNP = SNP...1) 
+    # sdm_rda_normy_snps = read_csv('LAB_AC_sdm_partial_RDA_Normysnp_data_01.02.2023.csv')
     # 
     # 
     # label = rep('RDA_outlier',
@@ -601,7 +600,7 @@ sdm_RDA_biplot = ggplot() +
     #                 Lat,
     #                 Long,
     #                 icecover,
-    #                 dissox_mean, 
+    #                 dissox_mean,
     #                 primprod_mean,
     #                 predictor,
     #                 correlation)
@@ -617,9 +616,9 @@ sdm_RDA_biplot = ggplot() +
     # 
     # bind_rows(out_snps_scores,
     #           normy_snps_scores) %>%
-    #   write_csv('AC_RDA_sdm_finaldf_25.01.2023.csv')
-    
-    sdm_rda_df = read_csv('AC_RDA_sdm_finaldf_25.01.2023.csv')
+    #   write_csv('LAB_AC_RDA_sdm_finaldf_01.02.2023.csv')
+
+    sdm_rda_df = read_csv('LAB_AC_RDA_sdm_finaldf_01.02.2023.csv')
     
     sdm_dist_cal = sdm_rda_df %>% 
       group_by(Chromosome) %>% 
@@ -662,16 +661,16 @@ sdm_RDA_biplot = ggplot() +
     
     ## split outs by axis and then plot all three with a 
     ## geom_point layer
-    
-    sdm_out_axis1 = sdm_dist_cal %>% 
-      filter(label == 'RDA_outlier', 
-             Axis == '1')
-    
-    
+    # 
+    # sdm_out_axis1 = sdm_dist_cal %>% 
+    #   filter(label == 'RDA_outlier', 
+    #          Axis == '1')
+    # 
+    # 
     #
     sdm_manhattan_Axis1 = ggplot(sdm_non_outs, 
                                  aes(x = BPcum, 
-                                     y = RDA_score_axis1_abs))+
+                                     y = RDA_score_abs))+
       # plot the non outliers in grey
       geom_point(aes(color = as.factor(Chromosome)), 
                  alpha = 0.8, 
@@ -688,7 +687,7 @@ sdm_RDA_biplot = ggplot() +
                                              '#F28E13'))+
                                                ## plot the outliers on top of everything
       ## currently digging this hot pink colour
-      geom_point(data = sdm_out_axis1,
+      geom_point(data = sdm_outs,
                  inherit.aes = F,
                  aes(x = BPcum, 
                      y = RDA_score_abs, 
