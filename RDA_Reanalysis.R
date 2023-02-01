@@ -723,7 +723,7 @@ sdm_env_col[sdm_env_col == 'primprod_mean'] = '#BF4B54'
     sdm_manhattan_Axis1
     
     
-    # sdm rda outlier prop ------------------------------------------------
+# sdm rda outlier prop ------------------------------------------------
     
     
     # Calculate proportion of outliers per chromosome
