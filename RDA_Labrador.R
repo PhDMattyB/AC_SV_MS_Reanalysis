@@ -431,8 +431,6 @@ write_csv(sdm_out_snps_rdascores,
 
 
 
-##Chromosome 9 (LG6.2) and 16 (LG13) have >20 outliers which is different 
-## than what I found before
 sdm_out_enrich = sdm_partial_outs %>% 
   arrange(Chromosome) %>% 
   group_by(Chromosome) %>% 
@@ -440,7 +438,12 @@ sdm_out_enrich = sdm_partial_outs %>%
 # filter(n > 20) %>%
 View(sdm_out_enrich)
 
-
+sdm_partial_outs %>% 
+  arrange(Chromosome) %>% 
+  group_by(Chromosome) %>%
+  filter(Axis == 2) %>% 
+  summarise(n = n()) %>% 
+  View()
 
 
 # sdm partial biplot ------------------------------------------------------
@@ -791,8 +794,7 @@ sdm_RDA_biplot = ggplot() +
     
     # Calculate proportion of outliers per chromosome
     num_outlier = sdm_dist_cal %>% 
-      filter(label == 'RDA_outlier', 
-             Axis == '1') %>% 
+      filter(label == 'RDA_outlier') %>% 
       group_by(Chromosome) %>% 
       summarise(n_outlier = n()) %>% 
       arrange(-n_outlier)
@@ -819,7 +821,7 @@ sdm_RDA_biplot = ggplot() +
                fill = 'black')+ 
       labs(x = 'Chromosome', 
            y = 'Proportion of outlier loci', 
-           title = 'D)')+
+           title = 'E)')+
       theme(legend.position="none",
             # panel.border = element_blank(),
             panel.grid = element_blank(),
@@ -834,17 +836,17 @@ sdm_RDA_biplot = ggplot() +
             plot.title = element_text(size = 15, 
                                       hjust = 0))
     
-    sdm_outlier_proportion
+  sdm_outlier_proportion
     
     
     
-    # sdm ggsave ----------------------------------------------------------
+  # sdm ggsave ----------------------------------------------------------
     
     
-    sdm_plot_combo = sdm_manhattan_Axis1/sdm_outlier_proportion
+    sdm_plot_combo = sdm_manhattan_Axis1/sdm_manhattan_Axis2/sdm_outlier_proportion
     
     
-    ggsave(file = 'AC_sdm_RDA_Combined_Plot_25.01.2023.tiff', 
+    ggsave(file = 'LAB_AC_sdm_RDA_Combined_Plot_01.02.2023.tiff', 
            path = '~/Bradbury_Postdoc/AC_SV_MS_Data/Figures/',
            plot = sdm_plot_combo, 
            dpi = 'retina', 
