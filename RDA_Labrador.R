@@ -662,15 +662,15 @@ sdm_RDA_biplot = ggplot() +
     ## split outs by axis and then plot all three with a 
     ## geom_point layer
     # 
-    # sdm_out_axis1 = sdm_dist_cal %>% 
-    #   filter(label == 'RDA_outlier', 
-    #          Axis == '1')
-    # 
+    sdm_out_axis1 = sdm_dist_cal %>%
+      filter(label == 'RDA_outlier',
+             Axis == '1')
+
     # 
     #
     sdm_manhattan_Axis1 = ggplot(sdm_non_outs, 
                                  aes(x = BPcum, 
-                                     y = RDA_score_abs))+
+                                     y = RDA_score_axis1))+
       # plot the non outliers in grey
       geom_point(aes(color = as.factor(Chromosome)), 
                  alpha = 0.8, 
@@ -687,7 +687,7 @@ sdm_RDA_biplot = ggplot() +
                                              '#F28E13'))+
                                                ## plot the outliers on top of everything
       ## currently digging this hot pink colour
-      geom_point(data = sdm_outs,
+      geom_point(data = sdm_out_axis1,
                  inherit.aes = F,
                  aes(x = BPcum, 
                      y = RDA_score_abs, 
@@ -708,7 +708,7 @@ sdm_RDA_biplot = ggplot() +
       ylim(0, 0.6)+
       # remove space between plot area and x axis
       labs(x = 'Cumulative base pair', 
-           y = 'RDA score', 
+           y = 'RDA score axis 1', 
            title = 'C)')+
       theme(legend.position="none",
             # panel.border = element_blank(),
@@ -724,7 +724,69 @@ sdm_RDA_biplot = ggplot() +
     sdm_manhattan_Axis1
     
     
-    # sdm rda outlier prop ------------------------------------------------
+    
+    sdm_out_axis2 = sdm_dist_cal %>%
+      filter(label == 'RDA_outlier',
+             Axis == '2')
+    
+    # 
+    #
+    sdm_manhattan_Axis2 = ggplot(sdm_non_outs, 
+                                 aes(x = BPcum, 
+                                     y = RDA_score_axis2))+
+      # plot the non outliers in grey
+      geom_point(aes(color = as.factor(Chromosome)), 
+                 alpha = 0.8, 
+                 size = 1.3)+
+      ## alternate colors per chromosome
+      scale_color_manual(values = rep(c("grey", "dimgrey"), 
+                                      39))+
+      new_scale_color()+
+      # scale_color_manual(values = c('#663F8C',
+      #                               '#D9965B',
+      #                               '#BF4B54'))+
+      scale_color_manual(values = c('#353A8C', 
+                                             '#2A8C55', 
+                                             '#F28E13'))+
+                                               ## plot the outliers on top of everything
+      ## currently digging this hot pink colour
+      geom_point(data = sdm_out_axis2,
+                 inherit.aes = F,
+                 aes(x = BPcum, 
+                     y = RDA_score_abs, 
+                     col = predictor),
+                 # col = '#2D2059',
+                 alpha=0.8, 
+                 size = 2)+
+      # geom_point(data = num_df, 
+      #            aes(x = AC_CHR, 
+      #                y = proportion_outlier), 
+      #            col = 'black', 
+      #            size = 3)+
+      scale_x_continuous(label = sdm_axisdf$Chromosome, 
+                         breaks = sdm_axisdf$center)+
+      # scale_y_continuous(expand = c(0, 0))+
+      # scale_y_continuous(sec.axis = sec_axis(~., 
+      #                    name = 'Outlier proportion per chromosome'))+
+      ylim(0, 0.6)+
+      # remove space between plot area and x axis
+      labs(x = 'Cumulative base pair', 
+           y = 'RDA score axis 2', 
+           title = 'D)')+
+      theme(legend.position="none",
+            # panel.border = element_blank(),
+            # panel.grid = element_blank(),
+            panel.grid.major.x = element_blank(),
+            panel.grid.minor.x = element_blank(),
+            axis.text.x = element_text(size = 9, 
+                                       angle = 90), 
+            axis.title = element_text(size = 14), 
+            axis.text.y = element_text(size = 12),
+            plot.title = element_text(size = 15, 
+                                      hjust = 0))
+    sdm_manhattan_Axis2
+    
+  # sdm rda outlier prop ------------------------------------------------
     
     
     # Calculate proportion of outliers per chromosome
