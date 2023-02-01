@@ -1133,22 +1133,22 @@ sdm_RDA_biplot = ggplot() +
       summarise(n = n()) %>% 
       View()
     
-    # Bioclim partial RDA biplot ----------------------------------------------
+# Bioclim partial RDA biplot ----------------------------------------------
     theme_set(theme_bw())
     
-    bioclim_rda_snps = read_csv('AC_Bioclim_Partial_RDA_All_Pops_SNPS_09.01.2023.csv')
-    bioclim_rda_indivs = read_csv('AC_Bioclim_Partial_RDA_All_Pops_INDIVIDUALS_09.01.2023.csv')
-    bioclim_rda_vars = read_csv('AC_Bioclim_Partial_RDA_All_Pops_BIPLOTVARS_09.01.2023.csv')
+    bioclim_rda_snps = read_csv('LAB_AC_Bioclim_Partial_RDA_All_Pops_SNPS_01.02.2023.csv')
+    bioclim_rda_indivs = read_csv('LAB_AC_Bioclim_Partial_RDA_All_Pops_INDIVIDUALS_01.02.2023.csv')
+    bioclim_rda_vars = read_csv('LAB_AC_Bioclim_Partial_RDA_All_Pops_BIPLOTVARS_01.02.2023.csv')
     # bio_clim_data = read_csv('bioclim_data_mito_nuclear_charr.csv')
-    bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>% 
-      dplyr::select(Long, 
-                    Lat, 
-                    bio1, 
-                    bio3, 
-                    bio4)
-    bioclim_rda_outliers = read_csv('AC_bioclim_partial_RDA_outlier_data_25.06.2022.csv') %>% 
+    # bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>% 
+    #   dplyr::select(Long, 
+    #                 Lat, 
+    #                 bio1, 
+    #                 bio3, 
+    #                 bio4)
+    bioclim_rda_outliers = read_csv('LAB_AC_bioclim_partial_RDA_outlier_data_01.02.2022.csv') %>% 
       rename(SNP = SNP...1)
-    bioclim_rda_normy_snps = read_csv('AC_bioclim_partial_RDA_Normysnp_data_25.01.2023.csv')
+    bioclim_rda_normy_snps = read_csv('LAB_AC_bioclim_partial_RDA_Normysnp_data_01.02.2023.csv')
     
     # rda_outliers %>% 
     #   filter(Axis != 3) %>% 
@@ -1234,8 +1234,8 @@ sdm_RDA_biplot = ggplot() +
                         y = 1.2*bioclim_partial_RDA$CCA$biplot[,2],
                         label = colnames(bioclim_rda_env_data[,3:5]))) +
           
-          labs(x = 'RDA 1 (88.7% variance explained)',
-               y = 'RDA 2 (8.5% variance explained)', 
+          labs(x = 'RDA 1 (55.4% variance explained)',
+               y = 'RDA 2 (26.3% variance explained)', 
                title = 'A)')+
           theme(#legend.position = "none", 
             panel.grid.major = element_blank(), 
@@ -1253,18 +1253,20 @@ sdm_RDA_biplot = ggplot() +
         bioclim_RDA_biplot
         
         
-        # Bioclim partial manhattan plot ------------------------------------------
+  # Bioclim partial manhattan plot ------------------------------------------
         
-        bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>%
-          dplyr::select(Long,
-                        Lat,
-                        bio1,
-                        bio3,
-                        bio4)
-        # bioclim_rda_outliers = read_csv('AC_bioclim_partial_RDA_outlier_data_25.06.2022.csv') %>% 
-        #   rename(SNP = SNP...1) %>% 
-        #   filter(Axis == 1)
-        # bioclim_rda_normy_snps = read_csv('AC_bioclim_partial_RDA_Normysnp_data_25.01.2023.csv')
+        # bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>%
+        #   dplyr::select(Long,
+        #                 Lat,
+        #                 bio1,
+        #                 bio3,
+        #                 bio4)
+        
+        
+        # 
+        # bioclim_rda_outliers = read_csv('LAB_AC_bioclim_partial_RDA_outlier_data_01.02.2022.csv') %>%
+        #   rename(SNP = SNP...1) 
+        # bioclim_rda_normy_snps = read_csv('LAB_AC_bioclim_partial_RDA_Normysnp_data_01.02.2023.csv')
         # 
         # 
         # label = rep('RDA_outlier',
@@ -1273,7 +1275,7 @@ sdm_RDA_biplot = ggplot() +
         # out_snps_scores = bind_cols(bioclim_rda_outliers,
         #                             label) %>%
         #   as_tibble() %>%
-        #   rename(label = ...18, 
+        #   rename(label = ...18,
         #          SNP = SNP...1) %>%
         #   dplyr::select(1:8,
         #                 label,
@@ -1295,9 +1297,9 @@ sdm_RDA_biplot = ggplot() +
         # 
         # bind_rows(out_snps_scores,
         #           normy_snps_scores) %>%
-        #   write_csv('AC_RDA_Bioclim_finaldf_25.01.2023.csv')
-        
-        bioclim_rda_df = read_csv('AC_RDA_Bioclim_finaldf_25.01.2023.csv')
+        #   write_csv('LAB_AC_RDA_Bioclim_finaldf_01.02.2023.csv')
+
+        bioclim_rda_df = read_csv('LAB_AC_RDA_Bioclim_finaldf_01.02.2023.csv')
         
         bioclim_dist_cal = bioclim_rda_df %>% 
           group_by(Chromosome) %>% 
@@ -1403,7 +1405,67 @@ sdm_RDA_biplot = ggplot() +
         RDA_manhattan_Axis1
         
         
-        # Bioclim rda outlier prop ------------------------------------------------
+        bioclim_out_axis2 = bioclim_dist_cal %>% 
+          filter(label == 'RDA_outlier', 
+                 Axis == '2')
+        #
+        RDA_manhattan_Axis2 = ggplot(bioclim_non_outs, 
+                                     aes(x = BPcum, 
+                                         y = RDA_score_axis2_abs))+
+          # plot the non outliers in grey
+          geom_point(aes(color = as.factor(Chromosome)), 
+                     alpha = 0.8, 
+                     size = 1.3)+
+          ## alternate colors per chromosome
+          scale_color_manual(values = rep(c("grey", "dimgrey"), 
+                                          39))+
+          new_scale_color()+
+          # scale_color_manual(values = c('#663F8C',
+          #                               '#D9965B',
+          #                               '#BF4B54'))+
+          scale_color_manual(values = c('#A6036D',
+                                                 '#F2D6A2',
+                                                 '#8DF2CD'))+
+                                                   ## plot the outliers on top of everything
+          ## currently digging this hot pink colour
+          geom_point(data = bioclim_out_axis2,
+                     inherit.aes = F,
+                     aes(x = BPcum, 
+                         y = RDA_score_abs, 
+                         col = predictor),
+                     # col = '#2D2059',
+                     alpha=0.8, 
+                     size = 2)+
+          # geom_point(data = num_df, 
+          #            aes(x = AC_CHR, 
+          #                y = proportion_outlier), 
+          #            col = 'black', 
+          #            size = 3)+
+          scale_x_continuous(label = bioclim_axisdf$Chromosome, 
+                             breaks = bioclim_axisdf$center)+
+          # scale_y_continuous(expand = c(0, 0))+
+          # scale_y_continuous(sec.axis = sec_axis(~., 
+          #                    name = 'Outlier proportion per chromosome'))+
+          ylim(0, 0.6)+
+          # remove space between plot area and x axis
+          labs(x = 'Cumulative base pair', 
+               y = 'RDA score', 
+               title = 'B)')+
+          theme(legend.position="none",
+                # panel.border = element_blank(),
+                # panel.grid = element_blank(),
+                panel.grid.major.x = element_blank(),
+                panel.grid.minor.x = element_blank(),
+                axis.text.x = element_text(size = 9, 
+                                           angle = 90), 
+                axis.title = element_text(size = 14), 
+                axis.text.y = element_text(size = 12),
+                plot.title = element_text(size = 15, 
+                                          hjust = 0))
+        RDA_manhattan_Axis2
+  
+        
+  # Bioclim rda outlier prop ------------------------------------------------
         
         
         # Calculate proportion of outliers per chromosome
