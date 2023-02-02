@@ -1253,7 +1253,7 @@ sdm_RDA_biplot = ggplot() +
         bioclim_RDA_biplot
         
         
-  # Bioclim partial manhattan plot ------------------------------------------
+# Bioclim partial manhattan plot ------------------------------------------
         
         # bioclim_rda_env_data = read_csv('bioclim_data_AC_AllPops.csv') %>%
         #   dplyr::select(Long,
@@ -1389,7 +1389,7 @@ sdm_RDA_biplot = ggplot() +
           ylim(0, 0.6)+
           # remove space between plot area and x axis
           labs(x = 'Cumulative base pair', 
-               y = 'RDA score', 
+               y = 'RDA score axis 1', 
                title = 'A)')+
           theme(legend.position="none",
                 # panel.border = element_blank(),
@@ -1449,7 +1449,7 @@ sdm_RDA_biplot = ggplot() +
           ylim(0, 0.6)+
           # remove space between plot area and x axis
           labs(x = 'Cumulative base pair', 
-               y = 'RDA score', 
+               y = 'RDA score axis 2', 
                title = 'B)')+
           theme(legend.position="none",
                 # panel.border = element_blank(),
@@ -1470,8 +1470,7 @@ sdm_RDA_biplot = ggplot() +
         
         # Calculate proportion of outliers per chromosome
         num_outlier = bioclim_dist_cal %>% 
-          filter(label == 'RDA_outlier', 
-                 Axis == '1') %>% 
+          filter(label == 'RDA_outlier') %>% 
           group_by(Chromosome) %>% 
           summarise(n_outlier = n()) %>% 
           arrange(-n_outlier)
@@ -1498,7 +1497,7 @@ sdm_RDA_biplot = ggplot() +
                    fill = 'black')+ 
           labs(x = 'Chromosome', 
                y = 'Proportion of outlier loci', 
-               title = 'B)')+
+               title = 'C)')+
           theme(legend.position="none",
                 # panel.border = element_blank(),
                 panel.grid = element_blank(),
@@ -1517,13 +1516,13 @@ sdm_RDA_biplot = ggplot() +
         
         
         
-        # Bioclim ggsave ----------------------------------------------------------
+  # Bioclim ggsave ----------------------------------------------------------
         
         
-        bioclim_plot_combo = RDA_manhattan_Axis1/bioclim_outlier_proportion
+bioclim_plot_combo = RDA_manhattan_Axis1/RDA_manhattan_Axis2/bioclim_outlier_proportion
         
         
-        ggsave(file = 'AC_Bioclim_RDA_Combined_Plot_25.01.2023.tiff', 
+ggsave(file = 'LAB_AC_Bioclim_RDA_Combined_Plot_02.02.2023.tiff', 
                path = '~/Bradbury_Postdoc/AC_SV_MS_Data/Figures/',
                plot = bioclim_plot_combo, 
                dpi = 'retina', 
