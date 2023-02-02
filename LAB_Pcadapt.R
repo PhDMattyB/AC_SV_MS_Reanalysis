@@ -79,17 +79,18 @@ meta_data = read_table2('Lab_Charr.ped',
 meta_data %>% 
   group_by(FID)
 
-meta_data %>%  
+meta_data  %>% 
   ggplot(aes(x = PC1, y = PC2))+
   # geom_point(aes(col = Location), 
   #            size = 2)+
-  geom_point(aes(col = FID), 
+  geom_point(aes(col = Lat), 
              size = 2)+
   # geom_point(aes(col = Population), 
   #            size = 2)+
   # scale_color_manual(values = cols)+
   # scale_color_manual(values = glacial_cols)+
   scale_color_viridis(option = 'magma')+
+  scale_fill_viridis(option = 'magma')+
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
         axis.title = element_text(size = 15), 
@@ -115,11 +116,11 @@ ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages.tiff',
 
 # detect sv per chr -------------------------------------------------------
 
-setwd('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/Per_Chr_NewChrSet/')
+setwd('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/LAB_PCA_per_Chr/')
 identifiers = read_csv('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/ggtree_labels.csv') %>% 
   rename(FID = Population)
 
-meta_data = read_table2('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/Charr_Poly_All_Fixed_notbed_2.ped', 
+meta_data = read_table2('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/Lab_Charr.ped', 
                         col_names = F) %>% 
   dplyr::select(X1:X2) %>% 
   rename(FID = X1, 
@@ -128,19 +129,9 @@ meta_data = read_table2('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/Charr_Poly_All
             identifiers, 
             by = 'FID')
 
-glacial_cols = c('#F23545',
-                          '#4E458C',
-                          '#4E94BF', 
-                          '#F29F05')
-                          
-##
-
-
-
-
 # Chr13 sv detect ----------------------------------------------------------
 
-Chr13 = read.pcadapt('AC_New_CHRSET_13.bed', 
+Chr13 = read.pcadapt('Lab_Charr_13.bed', 
                      type = 'bed')
 
 pca_Chr13 = pcadapt(Chr13, 
@@ -155,7 +146,7 @@ pca_Chr13_scores = as_tibble(pca_Chr13$scores) %>%
   dplyr::select(PC1,
                 PC2,
                 PC3) %>% 
-  write_csv('Charr_PCA_Chr13_scores.csv')
+  write_csv('Lab_Charr_PCA_Chr13_scores.csv')
 
 chr13_meta = bind_cols(meta_data, 
                        pca_Chr13_scores)
@@ -163,14 +154,17 @@ chr13_meta = bind_cols(meta_data,
 
 chr13_meta %>%  
   ggplot(aes(x = PC1, y = PC2))+
+  geom_point(aes(col = Lat), 
+             size = 2)+
   # geom_point(aes(col = Location), 
   #            size = 2)+
-  geom_point(aes(col = Glacial_lin), 
-             size = 2)+
+  # geom_point(aes(col = Glacial_lin), 
+  #            size = 2)+
   # geom_point(aes(col = Population), 
   #            size = 2)+
   # scale_color_manual(values = cols)+
-  scale_color_manual(values = glacial_cols)+
+  scale_colour_viridis(option = 'magma')+
+  # scale_color_manual(values = glacial_cols)+
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), 
         axis.title = element_text(size = 15), 
@@ -186,7 +180,7 @@ chr13_meta %>%
        col = 'Glacial lineages', 
        title = 'Chr13')
 
-ggsave(file = 'PCAdapt_all_pops_k4_Glacial_lineages_Chr13.tiff', 
+ggsave(file = 'LAB_PCAdapt__Chr13.tiff', 
        plot = last_plot(), 
        dpi = 'retina', 
        units = 'cm', 
