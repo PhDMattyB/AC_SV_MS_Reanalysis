@@ -1104,6 +1104,234 @@ invGenotypes(chr22_inver4) %>%
   write_csv('chr22_inver4_100SNPS_Inversion_genos.csv')
 
 
+# chr 11 ------------------------------------------------------------------
+chr13 = read.plink(bed = 'AC_New_CHRSET_13.bed', 
+                   bim = 'AC_New_CHRSET_13.bim', 
+                   fam = 'AC_New_CHRSET_13.fam')
+
+chr13_geno = chr13$genotypes
+chr13_map = chr13$map 
+identical(chr13_map[,2], 
+          colnames(chr13_geno))
+
+dim(chr13_map)
+
+## SNP cluster 1
+chr13_map %>% 
+  slice(1:100) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_1_chr13 = data.frame(chr = 13, 
+                         LBP = 2160257, 
+                         RBP = 15458850, 
+                         reg = 'inver1')
+
+chr13_inver1 = invClust(roi = ROI_1_chr13, 
+                        wh = 1, 
+                        geno = chr13_geno, 
+                        annot = chr13_map, 
+                        dim = 2)
+
+## SNP cluster 2
+chr13_map %>% 
+  slice(101:200) %>% 
+  as_tibble() %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_2_chr13 = data.frame(chr = 13, 
+                         LBP = 15596395, 
+                         RBP = 27043510, 
+                         reg = 'inver2')
+
+chr13_inver2 = invClust(roi = ROI_2_chr13, 
+                        wh = 1, 
+                        geno = chr13_geno, 
+                        annot = chr13_map, 
+                        dim = 2)
+
+## SNP cluster 3
+chr13_map %>% 
+  slice(201:300) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_3_chr13 = data.frame(chr = 13, 
+                         LBP = 27087947, 
+                         RBP = 34353691, 
+                         reg = 'inver3')
+
+chr13_inver3 = invClust(roi = ROI_3_chr13, 
+                        wh = 1, 
+                        geno = chr13_geno, 
+                        annot = chr13_map, 
+                        dim = 2)
+
+## SNP cluster 4
+chr13_map %>% 
+  slice(301:400) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_4_chr13 = data.frame(chr = 13,
+                         LBP = 34461185,
+                         RBP = 43021722,
+                         reg = 'inver4')
+
+chr13_inver4 = invClust(roi = ROI_4_chr13,
+                        wh = 1,
+                        geno = chr13_geno,
+                        annot = chr13_map,
+                        dim = 2)
+
+
+## SNP cluster 5
+chr13_map %>% 
+  slice(401:nrow(chr13_map)) %>% 
+  summarize(start = first(position), 
+            end = last(position))
+
+ROI_5_chr13 = data.frame(chr = 13,
+                         LBP = 43024881,
+                         RBP = 52839822,
+                         reg = 'inver5')
+
+chr13_inver5 = invClust(roi = ROI_5_chr13,
+                        wh = 1,
+                        geno = chr13_geno,
+                        annot = chr13_map,
+                        dim = 2)
+
+
+## inversion plots per SNP cluster on the CHR
+plot(chr13_inver1)
+plot(chr13_inver2) 
+plot(chr13_inver3) ## Only inversions
+plot(chr13_inver4) 
+plot(chr13_inver5) 
+
+## chr13 sv size 
+
+# chr13_map %>% 
+#   slice(101:200) %>% 
+#   summarize(start = first(position),
+#             end = last(position)) %>% 
+#   mutate(sv_size = end-start, 
+#          sv_size_mb = sv_size/1000000)
+# 
+# chr13_inver2$datin$y %>% 
+#   as_tibble() %>% 
+#   write_csv('chr13_inver2_100SNPS_MDS.csv')
+# 
+# invGenotypes(chr13_inver2) %>% 
+#   as_tibble() %>% 
+#   write_csv('chr13_inver2_100SNPS_Inversion_genos.csv')
+
+chr13_map %>%
+  slice(201:300) %>%
+  summarize(start = first(position),
+            end = last(position)) %>%
+  mutate(sv_size = end-start,
+         sv_size_mb = sv_size/1000000)
+
+chr13_inver3$datin$y %>%
+  as_tibble() %>%
+  write_csv('chr13_inver3_100SNPS_MDS.csv')
+
+invGenotypes(chr13_inver3) %>%
+  as_tibble() %>%
+  write_csv('chr13_inver3_100SNPS_Inversion_genos.csv')
+# 
+# 
+# chr13_map %>% 
+#   slice(301:400) %>% 
+#   summarize(start = first(position),
+#             end = last(position)) %>% 
+#   mutate(sv_size = end-start, 
+#          sv_size_mb = sv_size/1000000)
+# 
+# chr13_inver4$datin$y %>% 
+#   as_tibble() %>% 
+#   write_csv('chr13_inver4_100SNPS_MDS.csv')
+# 
+# invGenotypes(chr13_inver4) %>% 
+#   as_tibble() %>% 
+#   write_csv('chr13_inver4_100SNPS_Inversion_genos.csv')
+# 
+# 
+# chr13_map %>% 
+#   slice(401:500) %>% 
+#   summarize(start = first(position),
+#             end = last(position)) %>% 
+#   mutate(sv_size = end-start, 
+#          sv_size_mb = sv_size/1000000)
+# 
+# chr13_inver5$datin$y %>% 
+#   as_tibble() %>% 
+#   write_csv('chr13_inver5_100SNPS_MDS.csv')
+# 
+# invGenotypes(chr13_inver5) %>% 
+#   as_tibble() %>% 
+#   write_csv('chr13_inver5_100SNPS_Inversion_genos.csv')
+# 
+
+# chr13 data formatting ---------------------------------------------------
+
+
+chr13_ped = read_table2('AC_New_CHRSET_5.ped', 
+                        col_names = F) %>% 
+  dplyr::select(1:2)
+
+chr13_mds3 = read_csv('chr13_inver3_100SNPS_MDS.csv')
+chr13_inver_geno3 = read_csv('chr13_inver3_100SNPS_Inversion_genos.csv')
+
+chr13_inver3 = bind_cols(chr13_ped,
+                         chr13_mds3,
+                         chr13_inver_geno3)
+
+# plot chr13  sv --------------------------------------------------------------
+
+shades_of_BigD = c('#0583F2', 
+                            '#F28705',
+                            '#F20530')
+                            
+# View(North_chr1_Big_D_Energy)
+chr13_Big_Plot_Energy = ggplot(data = chr13_inver3, 
+                               aes(x = V1, 
+                                   y = V2, 
+                                   col = value))+
+  geom_point()+
+  scale_colour_manual(values = shades_of_BigD)+
+  # facet_grid(.~inversion)+
+  labs(x = 'MDS axis 1', 
+       y = 'MDS axis 2', 
+       col = 'Inversion genotypes', 
+       title = 'chr13 7.3 Mb')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_text(size = 14), 
+        axis.text.y = element_text(size = 12), 
+        axis.text.x = element_text(size = 10, 
+                                   angle = 45, 
+                                   hjust = 1, 
+                                   vjust = 1),
+        legend.title = element_text(size = 14), 
+        legend.text = element_text(size = 12), 
+        strip.background = element_rect(fill = 'white'),
+        strip.text = element_text(size = 12, 
+                                  face = 'bold'))
+
+chr13_Big_Plot_Energy
+
+ggsave('chr13_putate_sv.tiff', 
+       plot = chr13_Big_Plot_Energy, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20, 
+       height = 15)
+
+
 # plot chr22  sv --------------------------------------------------------------
 
 chr22_mds = read_csv('chr22_inver4_100SNPS_MDS.csv')

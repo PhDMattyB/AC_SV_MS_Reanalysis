@@ -1465,7 +1465,7 @@ sdm_RDA_biplot = ggplot() +
         RDA_manhattan_Axis2
   
         
-  # Bioclim rda outlier prop ------------------------------------------------
+# Bioclim rda outlier prop ------------------------------------------------
         
         
         # Calculate proportion of outliers per chromosome
@@ -1516,7 +1516,7 @@ sdm_RDA_biplot = ggplot() +
         
         
         
-  # Bioclim ggsave ----------------------------------------------------------
+# Bioclim ggsave ----------------------------------------------------------
         
         
 bioclim_plot_combo = RDA_manhattan_Axis1/RDA_manhattan_Axis2/bioclim_outlier_proportion
