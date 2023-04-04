@@ -24,19 +24,13 @@ setwd('~/Bradbury_Postdoc/AC_SV_MS_Data/RFmix/')
 
 map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map', 
                col_names = F) %>% 
-  rename(CHROMOSOME = X1, 
+  rename(`#CHROMOSOME` = X1, 
          MARKERID = X2, 
          GENETIC_DIST = X3, 
          PHYSICAL_DIST = X4)
 
 data = read_table('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped', 
-                col_names = c('#FamilyID', 
-                              'IndividualID', 
-                              'PaternalID', 
-                              'MaternalID', 
-                              'Sex', 
-                              'Phenotype', 
-                              map$MARKERID))
+                  col_names = F)
 
 data %>% 
   select(IndividualID)
@@ -96,6 +90,145 @@ data %>%
 #          PHYSICAL_DIST) %>% 
 #   rename(`#Chromosome` = AC_CHR)
 
+
+
+
+# Make --keep files for admixed populations -------------------------------
+
+ped_test = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped', 
+                       col_names = F)
+
+ped_ids = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95.fam', 
+                      col_names = F) %>%
+  dplyr::select(X1,
+                X2)
+
+set.seed(666)
+
+ATL = ped_test %>% 
+  filter(X1 %in% c('VTG', 
+                            'FLJ', 
+                            'GAL', 
+                            'MJO',
+                            'SVI', 
+                            'THI', 
+                            'VAT', 
+                            'LBN', 
+                            'DUG'))
+
+Iceland_sample = ATL %>% 
+  filter(X1 %in% c('FLJ',
+                            'GAL', 
+                            'MJO', 
+                            'SVI', 
+                            'THI', 
+                            'VAT')) %>% 
+  sample_n(size = 30, 
+           replace = F)
+
+ATL = ATL %>% 
+  filter(X1 %in% c('VTG', 
+                            'LBN', 
+                            'DUG')) %>% 
+  bind_rows(Iceland_sample) %>% 
+  sample_n(size = 20, 
+           replace = F)
+
+ACD = data %>% 
+  filter(X1 %in% c('GNL', 
+                            'PEN')) %>% 
+  sample_n(size = 20, 
+           replace = F)
+
+ARC = data %>% 
+  filter(X1 %in% c('BTR', 
+                            'HAB', 
+                            'IPI', 
+                            'SGL', 
+                            'AUP', 
+                            'BRT',
+                            'FMI')) %>% 
+  sample_n(size = 20, 
+           replace = F)
+
+
+
+dim(ATL)
+dim(ACD)
+dim(ARC)
+
+## Filter the data to be the admixed populations
+admixed = anti_join(data, 
+                    ATL, 
+                    by = '#FamilyID')
+
+admixed = anti_join(admixed, 
+                    ACD, 
+                    by = '#FamilyID')
+admixed = anti_join(admixed, 
+                    ARC, 
+                    by = '#FamilyID')
+dim(admixed)
+
+
+## Need to split based on each comparison 
+## ASHW vs ASHC
+## MYVW vs MYVC
+## SKRW vs SKRC
+## GTS vs CSWY
+
+# ped_ids %>% 
+#   filter(type %in% c('Warm', 
+#                          'Cold')) %>%
+#   select(X1, 
+#          X2, 
+#          type) %>% 
+#   rename(`#population` = 1, 
+#          individual_id = 2) %>% 
+#   write_tsv('Warm_cold_Fst_grouping.txt')
+
+## Holy fuck!! Make sure to use the actual family and individual
+## identifiers in the fucking ped file. WOW
+
+
+
+## Need to make a ped and map file for each of these comparisons
+## the ped file is waaaay to big to open in R
+## use the --keep or --keep-fam flags in plink to filter the 
+## populations out. 
+## the --keep file needs to be a text file with family and individual
+## identifiers
+
+# temp = read_tsv('temp.env', 
+#                 col_names = 'temp')
+# 
+# ped_ids = bind_cols(ped_ids, 
+#                     temp)
+
+# ped_ids %>% 
+#   filter(population %in% c('GTS', 
+#                            'CSWY')) %>% 
+#   dplyr::select(temp) %>% 
+#   write_tsv('GTS_CSWY_temp_var.env', 
+#             col_names = F)
+
+ped_ids %>% 
+  filter(population %in% c('MYVC', 
+                           'MYVW', 
+                           'ASHNC', 
+                           'ASHNW', 
+                           'SKRC', 
+                           'SKRW')) %>% 
+  # filter(population %in% c('GTS', 
+  #                          'CSWY')) %>% 
+  # filter(type %in% c('Warm', 
+  #                          'Cold')) %>%
+  dplyr::select(X1, 
+                X2) %>% 
+  # rename(`#population` = population, 
+  # individual_ID = X1) %>% 
+  write_tsv('Warm_Cold_No_GTS_CSWY_keep.txt', 
+            col_names = F)
 
 # Separate by reference and admixed populations ---------------------------
 
@@ -559,7 +692,13 @@ ACD %>%
 ARC %>% 
   write_tsv('ARC_ref_20.ped')
 admixed %>%
-  write_tsv('Admixed_populations.ped')
+  write_tsv('Admixed_populations.ped', 
+            col_names = F)
+
+admixed %>% 
+  dplyr::select(1:15) %>% 
+  slice(1:6) %>% 
+  View()
 
 map %>%
   write_tsv('ATL_ref_20.map')
