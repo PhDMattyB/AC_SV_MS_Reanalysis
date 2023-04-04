@@ -195,9 +195,10 @@ admixed %>%
  
   dplyr::select(X1, 
                 X2) %>% 
-  filter(X1 ) %>% 
-  write_tsv('admixed_pops_keep.txt', 
-            col_names = F)
+  filter(! X1 %in% c('SVI', 
+                     'THI', 
+                     'GAL', 
+                     'FLJ')) 
 
 ind_sample = data %>% 
   dplyr::select(X2)
@@ -206,50 +207,72 @@ pop_sample = data %>%
 
 sample_map = bind_cols(ind_sample, 
                        pop_sample) 
+
+ACD %>% 
+  dplyr::select(X1) %>% 
+  distinct() %>% 
+  arrange()
 # %>% 
 #   write_tsv('rfmix_sample_map.txt')
 data = mutate(.data = sample_map,
               pop = as.factor(case_when(
-                                X1 == 'ANA' ~ '1',
-                                X1 == 'IKI' ~ '2',
-                                X1 == 'IKA' ~ '3',
-                                X1 == 'KIN' ~ '4',
-                                X1 == 'PAL' ~ '5',
-                                X1 == 'STV' ~ '6',
-                                X1 == 'R103' ~ '7',
-                                X1 == 'KIY' ~ '8',
-                                X1 == 'R78' ~ '9',
-                                X1 == 'GDL' ~ '10',
-                                X1 == 'BLD' ~ '11',
-                                X1 == 'KOM' ~ '12',
-                                X1 == 'FRD' ~ '13',
-                                X1 == 'NC_036851.1' ~ '14',
-                                X1 == 'NC_036852.1' ~ '15',
-                                X1 == 'NC_036853.1' ~ '16',
-                                X1 == 'NC_036854.1' ~ '17',
-                                X1 == 'NC_036855.1' ~ '18',
-                                X1 == 'NC_036856.1' ~ '19',
-                                X1 == 'NC_036857.1' ~ '20',
-                                X1 == 'NC_036858.1' ~ '21',
-                                X1 == 'NC_036859.1' ~ '22',
-                                X1 == 'NC_036860.1' ~ '23',
-                                X1 == 'NC_036861.1' ~ '24',
-                                X1 == 'NC_036862.1' ~ '25',
-                                X1 == 'NC_036863.1' ~ '26',
-                                X1 == 'NC_036864.1' ~ '27',
-                                X1 == 'NC_036865.1' ~ '28',
-                                X1 == 'NC_036866.1' ~ '29',
-                                X1 == 'NC_036867.1' ~ '30',
-                                X1 == 'NC_036868.1' ~ '31',
-                                X1 == 'NC_036869.1' ~ '32',
-                                X1 == 'NC_036870.1' ~ '33',
-                                X1 == 'NC_036871.1' ~ '34',
-                                X1 == 'NC_036872.1' ~ '35',
-                                X1 == 'NC_036873.1' ~ '36',
-                                X1 == 'NC_036874.1' ~ '37',
-                                X1 == 'NC_036875.1' ~ '38',
-                                X1 == 'NC_036876.1' ~ '39',
-                                X1 > 'NC_036876.1' ~ '40')))
+                                X1 == 'ANA' ~ 'admixed',
+                                X1 == 'IKI' ~ 'admixed2',
+                                X1 == 'IKA' ~ 'admixed',
+                                X1 == 'KIN' ~ 'admixed',
+                                X1 == 'PAL' ~ 'admixed',
+                                X1 == 'STV' ~ 'admixed',
+                                X1 == 'R103' ~ 'admixed',
+                                X1 == 'KIY' ~ 'admixed',
+                                X1 == 'R78' ~ 'admixed',
+                                X1 == 'GDL' ~ 'admixed',
+                                X1 == 'BLD' ~ 'admixed',
+                                X1 == 'KOM' ~ 'admixed',
+                                X1 == 'FRD' ~ 'admixed',
+                                X1 == 'SWA' ~ 'admixed',
+                                X1 == 'PUT' ~ 'admixed',
+                                X1 == 'AVA' ~ 'admixed',
+                                X1 == 'R104' ~ 'admixed',
+                                X1 == 'KOG' ~ 'admixed',
+                                X1 == 'MBB' ~ 'admixed',
+                                X1 == 'R110' ~ 'admixed',
+                                X1 == 'FRS' ~ 'admixed',
+                                X1 == 'PAN' ~ 'admixed',
+                                X1 == 'NAK' ~ 'admixed',
+                                X1 == 'FRN' ~ 'admixed',
+                                X1 == 'R109' ~ 'admixed',
+                                X1 == 'NAC' ~ 'admixed',
+                                X1 == 'KAM' ~ 'admixed',
+                                X1 == 'ENG' ~ 'admixed',
+                                X1 == 'TOR' ~ 'admixed',
+                                X1 == 'KAN' ~ 'admixed',
+                                X1 == 'IKL' ~ 'admixed',
+                                X1 == 'MCC' ~ 'admixed',
+                                X1 == 'UNH' ~ 'admixed',
+                                X1 == 'NOR' ~ 'admixed',
+                                X1 == 'BRG' ~ 'admixed',
+                                X1 == 'REI' ~ 'admixed',
+                                X1 == 'R105' ~ 'admixed',
+                                X1 == 'PBP' ~ 'admixed',
+                                X1 == 'IGL' ~ 'admixed',
+                                X1 == 'SGL' ~ 'ARC',
+                                X1 == 'BRT' ~ 'ARC',
+                                X1 == 'IPI' ~ 'ARC',
+                                X1 == 'AUP' ~ 'ARC',
+                                X1 == 'HAB' ~ 'ARC',
+                                X1 == 'FMI' ~ 'ARC',
+                                X1 == 'BTR' ~ 'ARC',
+                                X1 == 'LBN' ~ 'ATL',
+                                X1 == 'VTG' ~ 'ATL',
+                                X1 == 'DUG' ~ 'ATL',
+                                X1 == 'VAT' ~ 'ATL', 
+                                X1 == 'MJO' ~ 'ATL',
+                                X1 == 'GNL' ~ 'ACD', 
+                                X1 == 'PEN' ~ 'ACD')))
+
+sample_map = data %>% 
+  dplyr::select(X2, 
+                pop)
 
 write.table(x = sample_map, 
             file = 'rfmix_sample_map.txt', 
