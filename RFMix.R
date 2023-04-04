@@ -43,58 +43,58 @@ data %>%
 ##
 # chr convert -------------------------------------------------------------
 
-Chr_convert = function(data){
-  data = mutate(.data = data,
-                AC_CHR = as.factor(case_when(
-                  CHROMOSOME == 'NC_036838.1' ~ '1',
-                  CHROMOSOME == 'NC_036839.1' ~ '2',
-                  CHROMOSOME == 'NC_036840.1' ~ '3',
-                  CHROMOSOME == 'NC_036841.1' ~ '4',
-                  CHROMOSOME == 'NC_036842.1' ~ '5',
-                  CHROMOSOME == 'NC_036843.1' ~ '6',
-                  CHROMOSOME == 'NC_036844.1' ~ '7',
-                  CHROMOSOME == 'NC_036845.1' ~ '8',
-                  CHROMOSOME == 'NC_036846.1' ~ '9',
-                  CHROMOSOME == 'NC_036847.1' ~ '10',
-                  CHROMOSOME == 'NC_036848.1' ~ '11',
-                  CHROMOSOME == 'NC_036849.1' ~ '12',
-                  CHROMOSOME == 'NC_036850.1' ~ '13',
-                  CHROMOSOME == 'NC_036851.1' ~ '14',
-                  CHROMOSOME == 'NC_036852.1' ~ '15',
-                  CHROMOSOME == 'NC_036853.1' ~ '16',
-                  CHROMOSOME == 'NC_036854.1' ~ '17',
-                  CHROMOSOME == 'NC_036855.1' ~ '18',
-                  CHROMOSOME == 'NC_036856.1' ~ '19',
-                  CHROMOSOME == 'NC_036857.1' ~ '20',
-                  CHROMOSOME == 'NC_036858.1' ~ '21',
-                  CHROMOSOME == 'NC_036859.1' ~ '22',
-                  CHROMOSOME == 'NC_036860.1' ~ '23',
-                  CHROMOSOME == 'NC_036861.1' ~ '24',
-                  CHROMOSOME == 'NC_036862.1' ~ '25',
-                  CHROMOSOME == 'NC_036863.1' ~ '26',
-                  CHROMOSOME == 'NC_036864.1' ~ '27',
-                  CHROMOSOME == 'NC_036865.1' ~ '28',
-                  CHROMOSOME == 'NC_036866.1' ~ '29',
-                  CHROMOSOME == 'NC_036867.1' ~ '30',
-                  CHROMOSOME == 'NC_036868.1' ~ '31',
-                  CHROMOSOME == 'NC_036869.1' ~ '32',
-                  CHROMOSOME == 'NC_036870.1' ~ '33',
-                  CHROMOSOME == 'NC_036871.1' ~ '34',
-                  CHROMOSOME == 'NC_036872.1' ~ '35',
-                  CHROMOSOME == 'NC_036873.1' ~ '36',
-                  CHROMOSOME == 'NC_036874.1' ~ '37',
-                  CHROMOSOME == 'NC_036875.1' ~ '38',
-                  CHROMOSOME == 'NC_036876.1' ~ '39',
-                  CHROMOSOME > 'NC_036876.1' ~ '40')))
-  return(data)  
-}
-
-map = Chr_convert(map) %>% 
-  select(AC_CHR, 
-         MARKERID, 
-         GENETIC_DIST, 
-         PHYSICAL_DIST) %>% 
-  rename(`#Chromosome` = AC_CHR)
+# Chr_convert = function(data){
+#   data = mutate(.data = data,
+#                 AC_CHR = as.factor(case_when(
+#                   CHROMOSOME == 'NC_036838.1' ~ '1',
+#                   CHROMOSOME == 'NC_036839.1' ~ '2',
+#                   CHROMOSOME == 'NC_036840.1' ~ '3',
+#                   CHROMOSOME == 'NC_036841.1' ~ '4',
+#                   CHROMOSOME == 'NC_036842.1' ~ '5',
+#                   CHROMOSOME == 'NC_036843.1' ~ '6',
+#                   CHROMOSOME == 'NC_036844.1' ~ '7',
+#                   CHROMOSOME == 'NC_036845.1' ~ '8',
+#                   CHROMOSOME == 'NC_036846.1' ~ '9',
+#                   CHROMOSOME == 'NC_036847.1' ~ '10',
+#                   CHROMOSOME == 'NC_036848.1' ~ '11',
+#                   CHROMOSOME == 'NC_036849.1' ~ '12',
+#                   CHROMOSOME == 'NC_036850.1' ~ '13',
+#                   CHROMOSOME == 'NC_036851.1' ~ '14',
+#                   CHROMOSOME == 'NC_036852.1' ~ '15',
+#                   CHROMOSOME == 'NC_036853.1' ~ '16',
+#                   CHROMOSOME == 'NC_036854.1' ~ '17',
+#                   CHROMOSOME == 'NC_036855.1' ~ '18',
+#                   CHROMOSOME == 'NC_036856.1' ~ '19',
+#                   CHROMOSOME == 'NC_036857.1' ~ '20',
+#                   CHROMOSOME == 'NC_036858.1' ~ '21',
+#                   CHROMOSOME == 'NC_036859.1' ~ '22',
+#                   CHROMOSOME == 'NC_036860.1' ~ '23',
+#                   CHROMOSOME == 'NC_036861.1' ~ '24',
+#                   CHROMOSOME == 'NC_036862.1' ~ '25',
+#                   CHROMOSOME == 'NC_036863.1' ~ '26',
+#                   CHROMOSOME == 'NC_036864.1' ~ '27',
+#                   CHROMOSOME == 'NC_036865.1' ~ '28',
+#                   CHROMOSOME == 'NC_036866.1' ~ '29',
+#                   CHROMOSOME == 'NC_036867.1' ~ '30',
+#                   CHROMOSOME == 'NC_036868.1' ~ '31',
+#                   CHROMOSOME == 'NC_036869.1' ~ '32',
+#                   CHROMOSOME == 'NC_036870.1' ~ '33',
+#                   CHROMOSOME == 'NC_036871.1' ~ '34',
+#                   CHROMOSOME == 'NC_036872.1' ~ '35',
+#                   CHROMOSOME == 'NC_036873.1' ~ '36',
+#                   CHROMOSOME == 'NC_036874.1' ~ '37',
+#                   CHROMOSOME == 'NC_036875.1' ~ '38',
+#                   CHROMOSOME == 'NC_036876.1' ~ '39',
+#                   CHROMOSOME > 'NC_036876.1' ~ '40')))
+#   return(data)  
+# }
+# 
+# map = Chr_convert(map) %>% 
+#   select(AC_CHR, 
+#          MARKERID, 
+#          GENETIC_DIST, 
+#          PHYSICAL_DIST) %>% 
+#   rename(`#Chromosome` = AC_CHR)
 
 
 # Separate by reference and admixed populations ---------------------------
@@ -164,7 +164,7 @@ admixed = anti_join(admixed,
 
 ## CHeck against our list to double check
 admixed %>% 
-  select(`#FamilyID`) %>% 
+  dplyr::select(`#FamilyID`) %>% 
   distinct() %>% 
   arrange(`#FamilyID`) %>% 
   View()
@@ -553,37 +553,37 @@ dim(admixed)
 
 ## write these plink files to the pcadmix folder
 ATL %>% 
-  write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_ATL_ref_20NoGreenland.ped')
+  write_tsv('ATL_ref_20.ped')
 ACD %>% 
-  write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_ACD_ref_20NoGreenland.ped')
+  write_tsv('ACD_ref_20.ped')
 ARC %>% 
-  write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_ARC_ref_20NoGreenland.ped')
-# admixed %>% 
-#   write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_Admixed_populations.ped')
+  write_tsv('ARC_ref_20.ped')
+admixed %>%
+  write_tsv('Admixed_populations.ped')
 
-# map %>% 
-#   write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_ATL_ref.map')
-# map %>% 
-#   write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_ACD_ref.map')
-# map %>% 
-#   write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_ARC_ref.map')
-# map %>% 
-#   write_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_Admixed_populations.map')
+map %>%
+  write_tsv('ATL_ref_20.map')
+map %>%
+  write_tsv('ACD_ref_20.map')
+map %>%
+  write_tsv('ARC_ref_20.map')
+map %>%
+  write_tsv('Admixed_populations.map')
 
 # Create Individual ID column to match vit --------------------------------
-admixed = read_tsv('~/Charr_Adaptive_Introgression/Charr_Project_1/PCAdmix/PCAdmix_Admixed_populations.ped')
+admixed = read_tsv('Admixed_populations.ped')
 
 adm = admixed %>% 
-  select(IndividualID) %>% 
+  dplyr::select(IndividualID) %>% 
   separate(col = IndividualID, 
            into = c('pop', 'id'), 
            sep = '_')
 
 pop = adm %>% 
-  select(pop) %>% 
+  dplyr::select(pop) %>% 
   as.data.frame()
 id = adm %>% 
-  select(id) %>% 
+  dplyr::select(id) %>% 
   as.data.frame()
 
 adm1 = paste0(pop[1:nrow(pop),], 
