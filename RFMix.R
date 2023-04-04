@@ -168,6 +168,10 @@ admixed = anti_join(admixed,
 admixed = anti_join(admixed, 
                     ARC, 
                     by = 'X1')
+
+admixed %>% dplyr::select(1) %>% 
+  distinct() %>% 
+  View()
 dim(admixed)
 
 ATL %>% 
@@ -191,8 +195,85 @@ admixed %>%
  
   dplyr::select(X1, 
                 X2) %>% 
+  filter(X1 ) %>% 
   write_tsv('admixed_pops_keep.txt', 
             col_names = F)
+
+ind_sample = data %>% 
+  dplyr::select(X2)
+pop_sample = data %>% 
+  dplyr::select(X1)
+
+sample_map = bind_cols(ind_sample, 
+                       pop_sample) 
+# %>% 
+#   write_tsv('rfmix_sample_map.txt')
+data = mutate(.data = sample_map,
+              pop = as.factor(case_when(
+                                X1 == 'ANA' ~ '1',
+                                X1 == 'IKI' ~ '2',
+                                X1 == 'IKA' ~ '3',
+                                X1 == 'KIN' ~ '4',
+                                X1 == 'PAL' ~ '5',
+                                X1 == 'STV' ~ '6',
+                                X1 == 'R103' ~ '7',
+                                X1 == 'KIY' ~ '8',
+                                X1 == 'R78' ~ '9',
+                                X1 == 'GDL' ~ '10',
+                                X1 == 'BLD' ~ '11',
+                                X1 == 'KOM' ~ '12',
+                                X1 == 'FRD' ~ '13',
+                                X1 == 'NC_036851.1' ~ '14',
+                                X1 == 'NC_036852.1' ~ '15',
+                                X1 == 'NC_036853.1' ~ '16',
+                                X1 == 'NC_036854.1' ~ '17',
+                                X1 == 'NC_036855.1' ~ '18',
+                                X1 == 'NC_036856.1' ~ '19',
+                                X1 == 'NC_036857.1' ~ '20',
+                                X1 == 'NC_036858.1' ~ '21',
+                                X1 == 'NC_036859.1' ~ '22',
+                                X1 == 'NC_036860.1' ~ '23',
+                                X1 == 'NC_036861.1' ~ '24',
+                                X1 == 'NC_036862.1' ~ '25',
+                                X1 == 'NC_036863.1' ~ '26',
+                                X1 == 'NC_036864.1' ~ '27',
+                                X1 == 'NC_036865.1' ~ '28',
+                                X1 == 'NC_036866.1' ~ '29',
+                                X1 == 'NC_036867.1' ~ '30',
+                                X1 == 'NC_036868.1' ~ '31',
+                                X1 == 'NC_036869.1' ~ '32',
+                                X1 == 'NC_036870.1' ~ '33',
+                                X1 == 'NC_036871.1' ~ '34',
+                                X1 == 'NC_036872.1' ~ '35',
+                                X1 == 'NC_036873.1' ~ '36',
+                                X1 == 'NC_036874.1' ~ '37',
+                                X1 == 'NC_036875.1' ~ '38',
+                                X1 == 'NC_036876.1' ~ '39',
+                                X1 > 'NC_036876.1' ~ '40')))
+
+write.table(x = sample_map, 
+            file = 'rfmix_sample_map.txt', 
+            row.names = F, 
+            col.names = F, 
+            quote = F, 
+            sep = '\t')
+
+
+chr = map %>% 
+  dplyr::select(1)
+phys = map %>% 
+  dplyr::select(4)
+genet = map %>% 
+  dplyr::select(3)
+
+genetic_map = bind_cols(chr, phys, genet) 
+
+write.table(x = genetic_map, 
+            file = 'rfmix_genetic_map.txt', 
+            row.names = F, 
+            col.names = F, 
+            quote = F, 
+            sep = '\t')
 
 ##
 # Separate by reference and admixed populations ---------------------------
