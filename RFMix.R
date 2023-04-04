@@ -160,76 +160,41 @@ dim(ARC)
 ## Filter the data to be the admixed populations
 admixed = anti_join(data, 
                     ATL, 
-                    by = '#FamilyID')
+                    by = 'X1')
 
 admixed = anti_join(admixed, 
                     ACD, 
-                    by = '#FamilyID')
+                    by = 'X1')
 admixed = anti_join(admixed, 
                     ARC, 
-                    by = '#FamilyID')
+                    by = 'X1')
 dim(admixed)
 
-
-## Need to split based on each comparison 
-## ASHW vs ASHC
-## MYVW vs MYVC
-## SKRW vs SKRC
-## GTS vs CSWY
-
-# ped_ids %>% 
-#   filter(type %in% c('Warm', 
-#                          'Cold')) %>%
-#   select(X1, 
-#          X2, 
-#          type) %>% 
-#   rename(`#population` = 1, 
-#          individual_id = 2) %>% 
-#   write_tsv('Warm_cold_Fst_grouping.txt')
-
-## Holy fuck!! Make sure to use the actual family and individual
-## identifiers in the fucking ped file. WOW
-
-
-
-## Need to make a ped and map file for each of these comparisons
-## the ped file is waaaay to big to open in R
-## use the --keep or --keep-fam flags in plink to filter the 
-## populations out. 
-## the --keep file needs to be a text file with family and individual
-## identifiers
-
-# temp = read_tsv('temp.env', 
-#                 col_names = 'temp')
-# 
-# ped_ids = bind_cols(ped_ids, 
-#                     temp)
-
-# ped_ids %>% 
-#   filter(population %in% c('GTS', 
-#                            'CSWY')) %>% 
-#   dplyr::select(temp) %>% 
-#   write_tsv('GTS_CSWY_temp_var.env', 
-#             col_names = F)
-
-ped_ids %>% 
-  filter(population %in% c('MYVC', 
-                           'MYVW', 
-                           'ASHNC', 
-                           'ASHNW', 
-                           'SKRC', 
-                           'SKRW')) %>% 
-  # filter(population %in% c('GTS', 
-  #                          'CSWY')) %>% 
-  # filter(type %in% c('Warm', 
-  #                          'Cold')) %>%
+ATL %>% 
   dplyr::select(X1, 
                 X2) %>% 
-  # rename(`#population` = population, 
-  # individual_ID = X1) %>% 
-  write_tsv('Warm_Cold_No_GTS_CSWY_keep.txt', 
+  write_tsv('ATL_ref_keep.txt', 
             col_names = F)
 
+ARC %>% 
+  dplyr::select(X1, 
+                X2) %>% 
+  write_tsv('ARC_ref_keep.txt', 
+            col_names = F)
+
+ACD %>% 
+  dplyr::select(X1, 
+                X2) %>% 
+  write_tsv('ACD_ref_keep.txt', 
+            col_names = F)
+admixed %>% 
+ 
+  dplyr::select(X1, 
+                X2) %>% 
+  write_tsv('admixed_pops_keep.txt', 
+            col_names = F)
+
+##
 # Separate by reference and admixed populations ---------------------------
 
 ## Making the ATL, ACD, ARC reference populations
