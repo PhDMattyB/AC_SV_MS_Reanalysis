@@ -19,3 +19,5 @@ qvalues = read_table('Charr_Poly_All_Fixed_coords_maf05_geno95.4.Q',
                                  'Q2', 
                                  'Q3', 
                                  'Q4'))
+
+
