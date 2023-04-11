@@ -24,18 +24,36 @@ ids = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped',
             col_names = F) %>% 
   dplyr::select(1:2)
 
-
 Clean_data = bind_cols(ids, 
-                       qvalues)
+                       qvalues) %>% 
+  rename(Population = X1, 
+         Individual = X2)
 
+latlong = read_csv('SampleSites_Coords_1June2020.csv')
+
+
+Clean_data = inner_join(Clean_data, 
+           latlong) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin, 
+                Lat, 
+                Long, 
+                Q1, 
+                Q2, 
+                Q3, 
+                Q4)
 
 # Graph admixture ---------------------------------------------------------
 
 
 melted_dwata = melt(Clean_data, 
-                   id.vars = c('X1', 
-                               'X2')) %>% 
-  as_tibble()
+                    id.vars = c('Population', 
+                                'Individual', 
+                                'Glacial_lin', 
+                                'Lat',
+                                'Long')) %>% 
+  as_tibble() 
 
 ## bw is the king of plots
 theme_set(theme_bw())
@@ -48,7 +66,8 @@ test_col = c( '#4E9EBF',
 
 
 admixture = ggplot(data = melted_dwata, 
-                      aes(x = X2,
+                      aes(x = reorder(Individual, 
+                                      Lat),
                           y = value, 
                           fill = variable))+
   geom_bar(stat = "identity", 
