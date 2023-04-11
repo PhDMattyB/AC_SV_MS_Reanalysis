@@ -90,3 +90,10 @@ admixture = ggplot(data = melted_dwata,
   scale_y_continuous(expand = c(0,0))
 
 admixture
+
+ggsave('admixture_k4_glacial_lineages.tiff',
+       plot = admixture, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 25, 
+       height = 15)
