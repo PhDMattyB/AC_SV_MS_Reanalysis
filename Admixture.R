@@ -83,7 +83,7 @@ admixture = ggplot(data = melted_dwata,
         # axis.text.x = element_text(angle = 90,
         #                            hjust = 1,
         #                            vjust = -0.09,
-        #                            size = 6,
+        #                            size = 8,
         #                            color = 'black'),
         legend.position = 'none')+
   scale_x_discrete(guide = guide_axis(n.dodge = 5))+
@@ -91,9 +91,9 @@ admixture = ggplot(data = melted_dwata,
 
 admixture
 
-ggsave('admixture_k4_glacial_lineages.tiff',
+ggsave('admixture_k4_glacial_lineages_xlabels.tiff',
        plot = admixture, 
        dpi = 'retina', 
        units = 'cm', 
-       width = 25, 
+       width = 60, 
        height = 15)
