@@ -145,9 +145,24 @@ fst_1kb = fst_1kb %>%
 
 
 # bioclim outlier ancestry ------------------------------------------------
+lab_atl_bioclim = read_tsv('Lab_ATL_Fst_bioclim_outs.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_arc_bioclim = read_tsv('Lab_ARC_Fst_bioclim_outs.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_acd_bioclim = read_tsv('Lab_ACD_Fst_bioclim_outs.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
 
 
 
+
+
+
+##
 
 # sdm outlier ancestry ----------------------------------------------------
 
