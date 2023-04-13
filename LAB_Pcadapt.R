@@ -213,6 +213,10 @@ pca_loadings = pca_allpops$loadings %>%
   rename(PC1 = 1, 
          PC2 = 2)
 
+pca_loadings %>% 
+  summarize(max_load = max(PC1), 
+            min_load = min(PC1))
+
 map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map', 
                col_names = c('Chromosome', 
                              'SNP', 
@@ -267,7 +271,7 @@ pca_sdm_outs = inner_join(pca_data_BPcum,
 
 
 ## plot the pca loadings and the bioclim outliers
-ggplot(pca_data_BPcum, 
+bioclim_outs_pc1 = ggplot(pca_data_BPcum, 
        aes(x = BPcum, 
            y = PC1))+
   # plot the non outliers in grey
@@ -296,7 +300,57 @@ ggplot(pca_data_BPcum,
         axis.text.x = element_text(size = 9, 
                                    angle = 90), 
         axis.title = element_text(size = 14), 
-        axis.text.y = element_text(size = 12))
+        axis.text.y = element_text(size = 12), 
+        axis.title.x = element_blank())
+
+
+sdm_outs_pc1 = ggplot(pca_data_BPcum, 
+                          aes(x = BPcum, 
+                              y = PC1))+
+  # plot the non outliers in grey
+  geom_point(aes(color = as.factor(Chromosome)), 
+             alpha = 0.8, 
+             size = 1.3)+
+  ## alternate colors per chromosome
+  scale_color_manual(values = rep(c("grey", "dimgrey"), 40))+
+  ## plot the outliers on top of everything
+  ## currently digging this hot pink colour
+  geom_point(data = pca_sdm_outs,
+             col = '#219ebc',
+             alpha=0.8, 
+             size=1.3)+
+  scale_x_continuous(label = axisdf$Chromosome, 
+                     breaks = axisdf$center)+
+  scale_y_continuous(expand = c(0, 0))+     
+  # remove space between plot area and x axis
+  labs(x = 'Cumulative base pair', 
+       y = 'Principal component 1 loadings', 
+       title = 'B)')+
+  theme(legend.position="none",
+        # panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 9, 
+                                   angle = 90), 
+        axis.title = element_text(size = 14),
+        axis.title.y = element_blank(),
+        axis.text.y = element_text(size = 12), 
+        axis.title.x = element_blank())
+
+
+## combine the two plots 
+
+pca_loading_combo = bioclim_outs_pc1 + sdm_outs_pc1
+
+## save the plots
+
+ggsave('PCA_loadings_RDA_outliers.tiff', 
+       plot = pca_loading_combo, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 50, 
+       height = 10)
+
 
 ##
 # detect sv per chr -------------------------------------------------------
