@@ -61,8 +61,8 @@ theme_set(theme_bw())
 ## need a colour palette
 test_col = c( '#4E9EBF',
               '#4E458C',
-              '#F23545', 
-              '#F29F05')
+              '#F29F05',
+              '#F23545')
 
 
 admixture = ggplot(data = melted_dwata, 
@@ -91,12 +91,12 @@ admixture = ggplot(data = melted_dwata,
 
 admixture
 
-ggsave('admixture_k4_glacial_lineages_xlabels.tiff',
+ggsave('admixture_k4_glacial_lineages.tiff',
        plot = admixture, 
        dpi = 'retina', 
        units = 'cm', 
-       width = 60, 
-       height = 15)
+       width = 25, 
+       height = 10)
 
 
 # snmf data cleaning ---------------------------------------------------------------
