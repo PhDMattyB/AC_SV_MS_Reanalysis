@@ -149,10 +149,10 @@ snmf_melted = melt(snmf_data,
 theme_set(theme_bw())
 
 ## need a colour palette
-test_col = c( '#4E9EBF',
-              '#4E458C',
-              '#F23545', 
-              '#F29F05')
+test_col = c( '#F23545',
+              '#4E9EBF',
+              '#F29F05',
+              '#4E458C')
 
 
 snmf_k4 = ggplot(data = snmf_melted, 
@@ -181,10 +181,10 @@ snmf_k4 = ggplot(data = snmf_melted,
 
 snmf_k4
 
-ggsave('admixture_k4_glacial_lineages_xlabels.tiff',
-       plot = admixture, 
+ggsave('snmf_k4_glacial_lineages.tiff',
+       plot = snmf_k4, 
        dpi = 'retina', 
        units = 'cm', 
-       width = 60, 
+       width = 25, 
        height = 15)
 
