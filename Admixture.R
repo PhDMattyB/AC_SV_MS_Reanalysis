@@ -137,4 +137,54 @@ snmf_data = inner_join(snmf_data,
 
 # snmf plot ---------------------------------------------------------------
 
+snmf_melted = melt(snmf_data, 
+                    id.vars = c('Population', 
+                                'Individual', 
+                                'Genetic_group',
+                                'Glacial_lin', 
+                                'Lat',
+                                'Long')) %>% 
+  as_tibble() 
+## bw is the king of plots
+theme_set(theme_bw())
+
+## need a colour palette
+test_col = c( '#4E9EBF',
+              '#4E458C',
+              '#F23545', 
+              '#F29F05')
+
+
+snmf_k4 = ggplot(data = snmf_melted, 
+                   aes(x = reorder(Individual, 
+                                   Lat),
+                       y = value, 
+                       fill = variable))+
+  geom_bar(stat = "identity", 
+           width = 1)+
+  scale_fill_manual(values = test_col)+
+  # scale_fill_manual(values = magma(n = 4))+
+  labs(x = 'Individuals', 
+       y = 'Ancestry proportion')+
+  theme(axis.text.y = element_text(color = 'black'),
+        axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        ## can add xaxis labels if needed
+        # axis.text.x = element_text(angle = 90,
+        #                            hjust = 1,
+        #                            vjust = -0.09,
+        #                            size = 8,
+        #                            color = 'black'),
+        legend.position = 'none')+
+  scale_x_discrete(guide = guide_axis(n.dodge = 5))+
+  scale_y_continuous(expand = c(0,0))
+
+snmf_k4
+
+ggsave('admixture_k4_glacial_lineages_xlabels.tiff',
+       plot = admixture, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 60, 
+       height = 15)
 
