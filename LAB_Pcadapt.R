@@ -193,7 +193,7 @@ meta_data  %>%
        y = 'Principal component 2 (29.6%)', 
        col = 'Glacial lineages')
 
-ggsave(file = 'PCAdapt_Labrador.tiff',
+ggsave(file = 'PCAdapt_glacial_lineages.tiff',
        path = '~/Bradbury_Postdoc/AC_SV_MS_Data/Figures/', 
        plot = last_plot(), 
        dpi = 'retina', 
@@ -203,7 +203,7 @@ ggsave(file = 'PCAdapt_Labrador.tiff',
 
 
 
-
+##
 # detect sv per chr -------------------------------------------------------
 
 setwd('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/LAB_PCA_per_Chr/')
