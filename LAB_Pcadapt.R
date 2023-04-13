@@ -266,6 +266,38 @@ pca_sdm_outs = inner_join(pca_data_BPcum,
                           sdm_outs)
 
 
+## plot the pca loadings and the bioclim outliers
+ggplot(pca_data_BPcum, 
+       aes(x = BPcum, 
+           y = PC1))+
+  # plot the non outliers in grey
+  geom_point(aes(color = as.factor(Chromosome)), 
+             alpha = 0.8, 
+             size = 1.3)+
+  ## alternate colors per chromosome
+  scale_color_manual(values = rep(c("grey", "dimgrey"), 40))+
+  ## plot the outliers on top of everything
+  ## currently digging this hot pink colour
+  geom_point(data = pca_biolclim_outs,
+             col = '#e76f51',
+             alpha=0.8, 
+             size=1.3)+
+  scale_x_continuous(label = axisdf$Chromosome, 
+                     breaks = axisdf$center)+
+  scale_y_continuous(expand = c(0, 0))+     
+  # remove space between plot area and x axis
+  labs(x = 'Cumulative base pair', 
+       y = 'Principal component 1 loadings', 
+       title = 'A)')+
+  theme(legend.position="none",
+        # panel.border = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 9, 
+                                   angle = 90), 
+        axis.title = element_text(size = 14), 
+        axis.text.y = element_text(size = 12))
+
 ##
 # detect sv per chr -------------------------------------------------------
 
