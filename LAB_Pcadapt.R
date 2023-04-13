@@ -202,6 +202,25 @@ ggsave(file = 'PCAdapt_glacial_lineages.tiff',
        height = 13)
 
 
+# all pops pca loadings ------------------------------------------------------------
+
+## basically trying to make like a manhattan plot with pca loadings
+## probs going to make a plot for pc1 and pc2 separately
+
+pca_loadings = pca_allpops$loadings %>% 
+  as_tibble() %>% 
+  dplyr::select(1:2) %>% 
+  rename(PC1 = 1, 
+         PC2 = 2)
+
+map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map', 
+               col_names = c('Chromosome', 
+                             'SNP', 
+                             'Genetic_pos', 
+                             'BP'))
+
+pca_data = bind_cols(map, 
+                     pca_loadings)
 
 ##
 # detect sv per chr -------------------------------------------------------
