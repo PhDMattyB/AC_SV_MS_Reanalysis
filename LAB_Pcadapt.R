@@ -219,8 +219,52 @@ map = read_tsv('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.map',
                              'Genetic_pos', 
                              'BP'))
 
+bioclim_outs = read_csv('AC_bioclim_partial_RDA_outlier_data_25.06.2022.csv') %>% 
+  dplyr::select(Chromosome, 
+                SNP...1, 
+                Genetic_pos, 
+                Position) %>% 
+  rename(SNP = SNP...1, 
+         BP = Position) %>% 
+  arrange(Chromosome)
+
+sdm_outs = read_csv('AC_sdm_partial_RDA_outlier_data_25.01.2023.csv') %>% 
+  dplyr::select(Chromosome, 
+                SNP...1, 
+                Genetic_pos, 
+                Position) %>% 
+  rename(SNP = SNP...1, 
+         BP = Position) %>% 
+  arrange(Chromosome)
+
+
 pca_data = bind_cols(map, 
                      pca_loadings)
+
+pca_data_BPcum = pca_data %>% 
+  group_by(Chromosome) %>% 
+  summarise(chr_len = max(BP)) %>% 
+  mutate(total = cumsum(chr_len)-chr_len) %>% 
+  dplyr::select(-chr_len) %>% 
+  left_join(pca_data, 
+            ., 
+            by = c('Chromosome'='Chromosome')) %>%
+  arrange(Chromosome, 
+          BP) %>% 
+  mutate(BPcum = BP+ total) 
+
+## calculate the center of the chromosome
+axisdf = pca_data_BPcum %>% 
+  group_by(Chromosome) %>% 
+  summarize(center=(max(BPcum) + min(BPcum))/2 )  
+
+
+pca_biolclim_outs = inner_join(pca_data_BPcum, 
+           bioclim_outs)
+
+pca_sdm_outs = inner_join(pca_data_BPcum, 
+                          sdm_outs)
+
 
 ##
 # detect sv per chr -------------------------------------------------------
