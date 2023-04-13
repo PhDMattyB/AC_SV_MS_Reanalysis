@@ -26,26 +26,28 @@ Data = inner_join(ped_ids,
                         latlong) %>% 
   dplyr::select(Population, 
                 Individual, 
-                Glacial_lin, 
-                Lat, 
-                Long)
+                Glacial_lin)
 
-ATL %>% 
-  dplyr::select(X1, 
-                X2) %>% 
-  write_tsv('ATL_ref_keep.txt', 
+Data %>% 
+  filter(Glacial_lin %in% c('Hybrid', 
+                            'ATL')) %>% 
+  dplyr::select(Population, 
+                Individual) %>% 
+  write_tsv('Lab_ATL_keep.txt', 
             col_names = F)
 
-ARC %>% 
-  dplyr::select(X1, 
-                X2) %>% 
-  write_tsv('ARC_ref_keep.txt', 
+Data %>% 
+  filter(Glacial_lin %in% c('Hybrid', 
+                            'ARC')) %>% 
+  dplyr::select(Population, 
+                Individual) %>% 
+  write_tsv('Lab_ARC_keep.txt', 
             col_names = F)
 
-ACD %>% 
-  dplyr::select(X1, 
-                X2) %>% 
-  write_tsv('ACD_ref_keep.txt', 
+Data %>% 
+  filter(Glacial_lin %in% c('Hybrid', 
+                            'ACD')) %>% 
+  dplyr::select(Population, 
+                Individual) %>% 
+  write_tsv('Lab_ACD_keep.txt', 
             col_names = F)
-
-##
