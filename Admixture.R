@@ -186,5 +186,5 @@ ggsave('snmf_k4_glacial_lineages.tiff',
        dpi = 'retina', 
        units = 'cm', 
        width = 25, 
-       height = 15)
+       height = 10)
 
