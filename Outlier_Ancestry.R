@@ -81,3 +81,46 @@ Data %>%
                 Glacial_lin) %>% 
   write_tsv('Lab_ACD_Fst_Grouping.txt', 
             col_names = F)
+
+
+
+# Fst setup outlier loci filter -------------------------------------------
+
+read_csv('AC_bioclim_partial_RDA_outlier_data_25.06.2022.csv') %>% 
+  dplyr::select(Chromosome, 
+                SNP...1, 
+                Genetic_pos, 
+                Position) %>% 
+  rename(SNP = SNP...1, 
+         BP = Position) %>% 
+  arrange(Chromosome) %>% 
+  dplyr::select(SNP) %>% 
+  write_tsv('bioclim_outlier_keep.txt')
+  
+
+read_csv('AC_sdm_partial_RDA_outlier_data_25.01.2023.csv') %>% 
+  dplyr::select(Chromosome, 
+                SNP...1, 
+                Genetic_pos, 
+                Position) %>% 
+  rename(SNP = SNP...1, 
+         BP = Position) %>% 
+  arrange(Chromosome) %>%
+  dplyr::select(SNP) %>% 
+  write_tsv('sdm_outlier_keep.txt')
+
+
+
+# Genomewide ancestry -----------------------------------------------------
+
+
+
+
+# bioclim outlier ancestry ------------------------------------------------
+
+
+
+
+# sdm outlier ancestry ----------------------------------------------------
+
+
