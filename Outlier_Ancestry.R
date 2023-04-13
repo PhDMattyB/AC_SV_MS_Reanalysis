@@ -7,6 +7,9 @@
 ##
 ##############################
 
+library(tidyverse)
+library(windowscanr)
+
 # Make --keep files for plink -------------------------------
 
 # ped_test = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped', 
@@ -111,9 +114,34 @@ read_csv('AC_sdm_partial_RDA_outlier_data_25.01.2023.csv') %>%
 
 
 
-# Genomewide ancestry -----------------------------------------------------
+# Genomewide fst sliding window -----------------------------------------------------
+
+lab_atl_fst = read_tsv('Lab_ATL_Fst.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_arc_fst = read_tsv('Lab_ARC_Fst.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_acd_fst = read_tsv('Lab_ACd_Fst.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
 
 
+
+fst_1kb = winScan(x = lab_atl_fst, 
+                          groups = 'CHR', 
+                          position = 'POS',
+                          values = 'FST_zero', 
+                          win_size = 1000, 
+                          win_step = 999, 
+                          funs = c('mean', 'sd'))
+
+fst_1kb = fst_1kb %>%
+  as_tibble() %>% 
+  filter(FST_n >= 3) %>% 
+  write_tsv('lab_atl_genomewide_fst_1kb.txt')
 
 
 # bioclim outlier ancestry ------------------------------------------------
