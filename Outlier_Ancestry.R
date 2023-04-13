@@ -51,3 +51,33 @@ Data %>%
                 Individual) %>% 
   write_tsv('Lab_ACD_keep.txt', 
             col_names = F)
+
+
+# Fst set up Plink ---------------------------------------------------------------
+
+Data %>% 
+  filter(Glacial_lin %in% c('Hybrid', 
+                            'ATL')) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin) %>% 
+  write_tsv('Lab_ATL_Fst_Grouping.txt', 
+            col_names = F)
+
+Data %>% 
+  filter(Glacial_lin %in% c('Hybrid', 
+                            'ARC')) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin) %>% 
+  write_tsv('Lab_ARC_Fst_Grouping.txt', 
+            col_names = F)
+
+Data %>% 
+  filter(Glacial_lin %in% c('Hybrid', 
+                            'ACD')) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin) %>% 
+  write_tsv('Lab_ACD_Fst_Grouping.txt', 
+            col_names = F)
