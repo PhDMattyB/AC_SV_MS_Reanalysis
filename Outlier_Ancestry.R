@@ -144,6 +144,45 @@ fst_1kb = fst_1kb %>%
   write_tsv('lab_atl_genomewide_fst_1kb.txt')
 
 
+
+# Genomewide fst  -----------------------------------------------------
+
+lab_atl_fst = read_tsv('Lab_ATL_Fst.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_arc_fst = read_tsv('Lab_ARC_Fst.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_acd_fst = read_tsv('Lab_ACd_Fst.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+genomewide_fst = ggplot() +
+  geom_density(data = lab_atl_fst, 
+               aes(x = FST_zero), 
+               fill="#219ebc",
+               alpha=0.8)+
+  geom_density(data = lab_arc_fst, 
+               aes(x = FST_zero), 
+               fill = '#ff006e', 
+               alpha = 0.8)+
+  geom_density(data = lab_acd_fst, 
+               aes(x = FST_zero), 
+               fill = '#fb8500', 
+               alpha = 0.8)+
+  labs(x = 'Per locus Fst', 
+       y = 'Density', 
+       title = 'A)')+
+  theme(panel.grid = element_blank(), 
+        axis.text = element_text(size = 12), 
+        axis.title = element_text(size = 14), 
+        axis.title.x = element_blank(), 
+        axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank())
+
+
 # bioclim outlier ancestry ------------------------------------------------
 lab_atl_bioclim = read_tsv('Lab_ATL_Fst_bioclim_outs.fst') %>% 
   # na.omit() %>%  ##pull out na's
@@ -157,8 +196,29 @@ lab_acd_bioclim = read_tsv('Lab_ACD_Fst_bioclim_outs.fst') %>%
   # na.omit() %>%  ##pull out na's
   mutate(FST_zero = if_else(FST < 0, 0, FST))
 
+theme_set(theme_bw())
 
-
+bioclim_outlier_fst = ggplot(data = lab_atl_bioclim, 
+       aes(x = FST_zero)) +
+  geom_density(fill="#219ebc",
+               alpha=0.8)+
+  geom_density(data = lab_arc_bioclim, 
+              aes(x = FST_zero), 
+              fill = '#ff006e', 
+              alpha = 0.8)+
+  geom_density(data = lab_acd_bioclim, 
+               aes(x = FST_zero), 
+               fill = '#fb8500', 
+               alpha = 0.8)+
+  labs(x = 'Per locus Fst', 
+       y = 'Density', 
+       title = 'B)')+
+  theme(panel.grid = element_blank(), 
+        axis.text = element_text(size = 12), 
+        axis.title = element_text(size = 14), 
+        axis.title.x = element_blank(), 
+        axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank())
 
 
 
@@ -166,4 +226,51 @@ lab_acd_bioclim = read_tsv('Lab_ACD_Fst_bioclim_outs.fst') %>%
 
 # sdm outlier ancestry ----------------------------------------------------
 
+lab_atl_sdm = read_tsv('Lab_ATL_Fst_sdm_outs.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_arc_sdm = read_tsv('Lab_ARC_Fst_sdm_outs.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+lab_acd_sdm = read_tsv('Lab_ACD_Fst_sdm_outs.fst') %>% 
+  # na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
+
+theme_set(theme_bw())
+
+sdm_outlier_fst = 
+  ggplot() +
+  geom_density(data = lab_arc_sdm, 
+               aes(x = FST_zero), 
+               fill = '#ff006e', 
+               alpha = 0.8)+
+  geom_density(data = lab_atl_sdm, 
+               aes(x = FST_zero), 
+               fill="#219ebc",
+               alpha=0.8)+
+  geom_density(data = lab_acd_sdm, 
+               aes(x = FST_zero), 
+               fill = '#fb8500', 
+               alpha = 0.8)+
+  labs(x = 'Per locus Fst', 
+       y = 'Density', 
+       title = 'C)')+
+  theme(panel.grid = element_blank(), 
+        axis.text = element_text(size = 12), 
+        axis.title = element_text(size = 14))
+
+
+# combine plots -----------------------------------------------------------
+
+fst_plots = genomewide_fst/bioclim_outlier_fst/sdm_outlier_fst  
+
+
+ggsave('Fst_patterns_genomewide_outliers.tiff', 
+       plot = fst_plots, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 15, 
+       height = 15)
 
