@@ -99,7 +99,7 @@ ggsave('admixture_k4_glacial_lineages_xlabels.tiff',
        height = 15)
 
 
-# snmf plot ---------------------------------------------------------------
+# snmf data cleaning ---------------------------------------------------------------
 
 snmf_qvalues = read_csv('Charr_Poly_snmf_K4_qvalues.csv')
 
@@ -121,10 +121,11 @@ snmf_data = bind_cols(ids,
 latlong = read_csv('SampleSites_Coords_1June2020.csv')
 
 
-Clean_data = inner_join(Clean_data, 
+snmf_data = inner_join(snmf_data, 
                         latlong) %>% 
   dplyr::select(Population, 
                 Individual, 
+                Genetic_group,
                 Glacial_lin, 
                 Lat, 
                 Long, 
@@ -132,4 +133,8 @@ Clean_data = inner_join(Clean_data,
                 Q2, 
                 Q3, 
                 Q4)
+
+
+# snmf plot ---------------------------------------------------------------
+
 
