@@ -85,5 +85,15 @@ Data %>%
                 Glacial_lin) %>% 
   write_tsv('ARC_ATL_Fst_Grouping.txt', 
             col_names = F)
+ 
+
+
+# Fst data ----------------------------------------------------------------
+
+
+
+
+# sliding window analysis -------------------------------------------------
+
 
 
