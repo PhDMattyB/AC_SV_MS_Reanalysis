@@ -180,5 +180,5 @@ ggsave('Glacial_lineage_Fst_100Kb.tiff',
        plot = glacial_lin_compare, 
        dpi = 'retina', 
        units = 'cm', 
-       width = 15, 
+       width = 20, 
        height = 15)
