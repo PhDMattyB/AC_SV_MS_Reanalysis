@@ -104,7 +104,7 @@ ARC_ATL  = read_tsv('ARC_ATL_Fst.fst') %>%
 # sliding window analysis -------------------------------------------------
 
 
-fst_100Kb = winScan(x = ARC_ACD, 
+fst_100Kb = winScan(x = ARC_ATL, 
                           groups = 'CHR', 
                           position = 'POS',
                           values = 'FST_zero', 
@@ -115,4 +115,14 @@ fst_100Kb = winScan(x = ARC_ACD,
 fst_100Kb = fst_100Kb %>%
   as_tibble() %>% 
   filter(FST_zero_n >= 3) %>% 
-  write_tsv('ARC_ACD_Fst_100kb.txt')
+  write_tsv('ARC_ATL_Fst_100kb.txt')
+
+
+
+# Fst violin plot ---------------------------------------------------------
+
+ATL_ACD = read_tsv('ATL_ACD_Fst_100kb.txt')
+ARC_ACD = read_tsv('ARC_ACD_Fst_100kb.txt')
+ARC_ATL = read_tsv('ARC_ATL_Fst_100kb.txt')
+
+
