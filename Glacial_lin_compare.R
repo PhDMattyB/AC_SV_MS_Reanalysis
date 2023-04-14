@@ -31,27 +31,27 @@ Data = inner_join(ped_ids,
                 Glacial_lin)
 
 Data %>% 
-  filter(Glacial_lin %in% c('Hybrid', 
-                            'ATL')) %>% 
-  dplyr::select(Population, 
-                Individual) %>% 
-  write_tsv('Lab_ATL_keep.txt', 
-            col_names = F)
-
-Data %>% 
-  filter(Glacial_lin %in% c('Hybrid', 
-                            'ARC')) %>% 
-  dplyr::select(Population, 
-                Individual) %>% 
-  write_tsv('Lab_ARC_keep.txt', 
-            col_names = F)
-
-Data %>% 
-  filter(Glacial_lin %in% c('Hybrid', 
+  filter(Glacial_lin %in% c('ATL', 
                             'ACD')) %>% 
   dplyr::select(Population, 
                 Individual) %>% 
-  write_tsv('Lab_ACD_keep.txt', 
+  write_tsv('ATL_ACD_keep.txt', 
+            col_names = F)
+
+Data %>% 
+  filter(Glacial_lin %in% c('ARC', 
+                            'ACD')) %>% 
+  dplyr::select(Population, 
+                Individual) %>% 
+  write_tsv('ARC_ACD_keep.txt', 
+            col_names = F)
+
+Data %>% 
+  filter(Glacial_lin %in% c('ARC', 
+                            'ATL')) %>% 
+  dplyr::select(Population, 
+                Individual) %>% 
+  write_tsv('ARC_ATL_keep.txt', 
             col_names = F)
 
 
@@ -60,30 +60,30 @@ Data %>%
 # Make Fst files for plink ------------------------------------------------
 
 Data %>% 
-  filter(Glacial_lin %in% c('Hybrid', 
-                            'ATL')) %>% 
-  dplyr::select(Population, 
-                Individual, 
-                Glacial_lin) %>% 
-  write_tsv('Lab_ATL_Fst_Grouping.txt', 
-            col_names = F)
-
-Data %>% 
-  filter(Glacial_lin %in% c('Hybrid', 
-                            'ARC')) %>% 
-  dplyr::select(Population, 
-                Individual, 
-                Glacial_lin) %>% 
-  write_tsv('Lab_ARC_Fst_Grouping.txt', 
-            col_names = F)
-
-Data %>% 
-  filter(Glacial_lin %in% c('Hybrid', 
+  filter(Glacial_lin %in% c('ATL', 
                             'ACD')) %>% 
   dplyr::select(Population, 
                 Individual, 
                 Glacial_lin) %>% 
-  write_tsv('Lab_ACD_Fst_Grouping.txt', 
+  write_tsv('ATL_ACD_Fst_Grouping.txt', 
+            col_names = F)
+
+Data %>% 
+  filter(Glacial_lin %in% c('ARC', 
+                            'ACD')) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin) %>% 
+  write_tsv('ARC_ACD_Fst_Grouping.txt', 
+            col_names = F)
+
+Data %>% 
+  filter(Glacial_lin %in% c('ARC', 
+                            'ATL')) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin) %>% 
+  write_tsv('ARC_ATL_Fst_Grouping.txt', 
             col_names = F)
 
 
