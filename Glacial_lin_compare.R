@@ -89,11 +89,30 @@ Data %>%
 
 
 # Fst data ----------------------------------------------------------------
+ATL_ACD  = read_tsv('ATL_ACD_Fst.fst') %>% 
+  na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
 
+ARC_ACD  = read_tsv('ARC_ACD_Fst.fst') %>% 
+  na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
 
-
+ARC_ATL  = read_tsv('ARC_ATL_Fst.fst') %>% 
+  na.omit() %>%  ##pull out na's
+  mutate(FST_zero = if_else(FST < 0, 0, FST))
 
 # sliding window analysis -------------------------------------------------
 
 
+fst_100Kb = winScan(x = ARC_ACD, 
+                          groups = 'CHR', 
+                          position = 'POS',
+                          values = 'FST_zero', 
+                          win_size = 100000, 
+                          win_step = 99999, 
+                          funs = c('mean', 'sd'))
 
+fst_100Kb = fst_100Kb %>%
+  as_tibble() %>% 
+  filter(FST_zero_n >= 3) %>% 
+  write_tsv('ARC_ACD_Fst_100kb.txt')
