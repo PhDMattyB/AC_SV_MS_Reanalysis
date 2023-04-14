@@ -122,7 +122,63 @@ fst_100Kb = fst_100Kb %>%
 # Fst violin plot ---------------------------------------------------------
 
 ATL_ACD = read_tsv('ATL_ACD_Fst_100kb.txt')
+label1 = rep('ATL-ACD', nrow(ATL_ACD))
+ATL_ACD = bind_cols(ATL_ACD, 
+          label1) %>% 
+  rename(comparison = ...8)
+
 ARC_ACD = read_tsv('ARC_ACD_Fst_100kb.txt')
+label2 = rep('ARC-ACD', nrow(ARC_ACD))
+ARC_ACD = bind_cols(ARC_ACD, 
+                    label2) %>% 
+  rename(comparison = ...8)
+
 ARC_ATL = read_tsv('ARC_ATL_Fst_100kb.txt')
+label3 = rep('ARC-ATL', nrow(ARC_ATL))
+ARC_ATL = bind_cols(ARC_ATL, 
+                    label3) %>% 
+  rename(comparison = ...8)
 
 
+glacial_lin_compare = ggplot() +
+  geom_violin(data = ATL_ACD, 
+              aes(y = FST_zero_mean, 
+                  x = comparison), 
+              fill = '#ff006e', 
+              col = '#ff006e')+
+  geom_point(data = ATL_ACD, 
+             aes(y = 0.175105, 
+                 x = comparison), 
+             size = 3)+
+  geom_violin(data = ARC_ACD, 
+              aes(y = FST_zero_mean, 
+                  x = comparison), 
+              fill = '#fb8500', 
+              col = '#fb8500')+
+  geom_point(data = ARC_ACD, 
+             aes(y = 0.397116, 
+                 x = comparison), 
+             size = 3)+
+  geom_violin(data = ARC_ATL, 
+              aes(y = FST_zero_mean, 
+                  x = comparison), 
+              fill = '#219ebc', 
+              col = '#219ebc')+
+  geom_point(data = ARC_ATL, 
+             aes(y = 0.430073, 
+                 x = comparison), 
+             size = 3)+
+  labs(y = 'Mean Fst per 100Kb')+
+  theme_bw()+
+  theme(panel.grid = element_blank(), 
+        axis.title.y = element_text(size = 14),
+        axis.title.x = element_blank(), 
+        axis.text = element_text(size = 12))
+
+
+ggsave('Glacial_lineage_Fst_100Kb.tiff', 
+       plot = glacial_lin_compare, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 15, 
+       height = 15)
