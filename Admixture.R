@@ -95,7 +95,7 @@ ggsave('admixture_k4_glacial_lineages.tiff',
        plot = admixture, 
        dpi = 'retina', 
        units = 'cm', 
-       width = 25, 
+       width = 35, 
        height = 10)
 
 
@@ -185,6 +185,6 @@ ggsave('snmf_k4_glacial_lineages.tiff',
        plot = snmf_k4, 
        dpi = 'retina', 
        units = 'cm', 
-       width = 25, 
+       width = 35, 
        height = 10)
 
