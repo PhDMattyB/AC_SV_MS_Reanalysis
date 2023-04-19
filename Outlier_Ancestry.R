@@ -10,6 +10,8 @@
 library(tidyverse)
 library(windowscanr)
 
+setwd('~/Bradbury_Postdoc/AC_SV_MS_Data/Pcadapt/')
+
 # Make --keep files for plink -------------------------------
 
 # ped_test = read_table2('Charr_Poly_All_Fixed_coords_maf05_geno95_notbed.ped', 
@@ -159,18 +161,21 @@ lab_acd_fst = read_tsv('Lab_ACd_Fst.fst') %>%
   # na.omit() %>%  ##pull out na's
   mutate(FST_zero = if_else(FST < 0, 0, FST))
 
+# test_col = c('#4E9EBF',
+#              '#F23545',
+#              '#4E458C')
 genomewide_fst = ggplot() +
   geom_density(data = lab_atl_fst, 
                aes(x = FST_zero), 
-               fill="#219ebc",
+               fill="#4E9EBF",
                alpha=0.8)+
   geom_density(data = lab_arc_fst, 
                aes(x = FST_zero), 
-               fill = '#ff006e', 
+               fill = '#4E458C', 
                alpha = 0.8)+
   geom_density(data = lab_acd_fst, 
                aes(x = FST_zero), 
-               fill = '#fb8500', 
+               fill = '#F23545', 
                alpha = 0.8)+
   labs(x = 'Per locus Fst', 
        y = 'Density', 
@@ -198,17 +203,21 @@ lab_acd_bioclim = read_tsv('Lab_ACD_Fst_bioclim_outs.fst') %>%
 
 theme_set(theme_bw())
 
+# test_col = c('#4E9EBF',
+#              '#F23545',
+#              '#4E458C')
+
 bioclim_outlier_fst = ggplot(data = lab_atl_bioclim, 
        aes(x = FST_zero)) +
-  geom_density(fill="#219ebc",
+  geom_density(fill="#4E9EBF",
                alpha=0.8)+
   geom_density(data = lab_arc_bioclim, 
               aes(x = FST_zero), 
-              fill = '#ff006e', 
+              fill = '#4E458C', 
               alpha = 0.8)+
   geom_density(data = lab_acd_bioclim, 
                aes(x = FST_zero), 
-               fill = '#fb8500', 
+               fill = '#F23545', 
                alpha = 0.8)+
   labs(x = 'Per locus Fst', 
        y = 'Density', 
@@ -240,19 +249,22 @@ lab_acd_sdm = read_tsv('Lab_ACD_Fst_sdm_outs.fst') %>%
 
 theme_set(theme_bw())
 
+test_col = c('#4E9EBF',
+             '#F23545',
+             '#4E458C')
 sdm_outlier_fst = 
   ggplot() +
   geom_density(data = lab_arc_sdm, 
                aes(x = FST_zero), 
-               fill = '#ff006e', 
+               fill = '#4E458C', 
                alpha = 0.8)+
   geom_density(data = lab_atl_sdm, 
                aes(x = FST_zero), 
-               fill="#219ebc",
+               fill="#4E9EBF",
                alpha=0.8)+
   geom_density(data = lab_acd_sdm, 
                aes(x = FST_zero), 
-               fill = '#fb8500', 
+               fill = '#F23545', 
                alpha = 0.8)+
   labs(x = 'Per locus Fst', 
        y = 'Density', 
@@ -271,6 +283,6 @@ ggsave('Fst_patterns_genomewide_outliers.tiff',
        plot = fst_plots, 
        dpi = 'retina', 
        units = 'cm', 
-       width = 15, 
+       width = 20, 
        height = 15)
 

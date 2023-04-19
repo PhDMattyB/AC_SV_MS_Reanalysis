@@ -101,11 +101,10 @@ ggsave('admixture_k4_glacial_lineages.tiff',
 
 # admixture bioclim outliers ----------------------------------------------
 
-bioclim_admix = read_table2('bioclim_outlier_snps.4.Q', 
+bioclim_admix = read_table2('bioclim_outlier_snps.3.Q', 
                          col_names = c('Q1', 
                                        'Q2', 
-                                       'Q3', 
-                                       'Q4'))
+                                       'Q3'))
 
 bioclim_data = bind_cols(ids, 
                          bioclim_admix) %>% 
@@ -121,8 +120,7 @@ bioclim_data = inner_join(bioclim_data,
                 Long, 
                 Q1, 
                 Q2, 
-                Q3, 
-                Q4)
+                Q3)
 
 
 bioclim_melted = melt(bioclim_data, 
@@ -137,14 +135,14 @@ bioclim_melted = melt(bioclim_data,
 theme_set(theme_bw())
 
 ## need a colour palette
-test_col = c( '#4E458C',
-              '#4E9EBF',
-              '#F23545',
-              '#F29F05')
+# test_col = c( '#4E458C',
+#               '#4E9EBF',
+#               '#F23545',
+#               '#F29F05')
 
-# test_col = c('#4E9EBF',
-#              '#F23545',
-#              '#4E458C')
+test_col = c('#4E9EBF',
+             '#F23545',
+             '#4E458C')
 
 bioclim_melted %>% View()
 
