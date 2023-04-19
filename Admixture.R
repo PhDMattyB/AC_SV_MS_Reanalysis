@@ -101,11 +101,165 @@ ggsave('admixture_k4_glacial_lineages.tiff',
 
 # admixture bioclim outliers ----------------------------------------------
 
+bioclim_admix = read_table2('bioclim_outlier_snps.4.Q', 
+                         col_names = c('Q1', 
+                                       'Q2', 
+                                       'Q3', 
+                                       'Q4'))
 
+bioclim_data = bind_cols(ids, 
+                         bioclim_admix) %>% 
+  rename(Population = X1, 
+         Individual = X2)
+
+bioclim_data = inner_join(bioclim_data, 
+                         latlong) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin, 
+                Lat, 
+                Long, 
+                Q1, 
+                Q2, 
+                Q3, 
+                Q4)
+
+
+bioclim_melted = melt(bioclim_data, 
+                    id.vars = c('Population', 
+                                'Individual', 
+                                'Glacial_lin', 
+                                'Lat',
+                                'Long')) %>% 
+  as_tibble() 
+
+## bw is the king of plots
+theme_set(theme_bw())
+
+## need a colour palette
+test_col = c( '#4E458C',
+              '#4E9EBF',
+              '#F23545',
+              '#F29F05')
+
+# test_col = c('#4E9EBF',
+#              '#F23545',
+#              '#4E458C')
+
+bioclim_melted %>% View()
+
+bioclim_admixture = ggplot(data = bioclim_melted, 
+                   aes(x = reorder(Individual, 
+                                   Lat),
+                       y = value, 
+                       fill = variable))+
+  geom_bar(stat = "identity", 
+           width = 1)+
+  scale_fill_manual(values = test_col)+
+  # scale_fill_manual(values = magma(n = 4))+
+  labs(x = 'Individuals', 
+       y = 'Ancestry proportion')+
+  theme(axis.text.y = element_text(color = 'black'),
+        axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        ## can add xaxis labels if needed
+        # axis.text.x = element_text(angle = 90,
+        #                            hjust = 1,
+        #                            vjust = -0.09,
+        #                            size = 8,
+        #                            color = 'black'),
+        legend.position = 'none')+
+  scale_x_discrete(guide = guide_axis(n.dodge = 5))+
+  scale_y_continuous(expand = c(0,0))
+
+bioclim_admixture
+
+ggsave('admixture_k4_bioclim_outliers.tiff',
+       plot = bioclim_admixture, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 35, 
+       height = 10)
 
 # admixture smd outleirs --------------------------------------------------
 
+sdm_admix = read_table2('sdm_outlier_snps.3.Q', 
+                            col_names = c('Q1', 
+                                          'Q2', 
+                                          'Q3'))
 
+sdm_data = bind_cols(ids, 
+                         sdm_admix) %>% 
+  rename(Population = X1, 
+         Individual = X2)
+
+sdm_data = inner_join(sdm_data, 
+                          latlong) %>% 
+  dplyr::select(Population, 
+                Individual, 
+                Glacial_lin, 
+                Lat, 
+                Long, 
+                Q1, 
+                Q2, 
+                Q3)
+
+
+sdm_melted = melt(sdm_data, 
+                      id.vars = c('Population', 
+                                  'Individual', 
+                                  'Glacial_lin', 
+                                  'Lat',
+                                  'Long')) %>% 
+  as_tibble() 
+
+## bw is the king of plots
+theme_set(theme_bw())
+
+## need a colour palette
+# test_col = c( '#F23545',
+#               '#F29F05',
+#               '#4E9EBF',
+#               '#4E458C')
+
+test_col = c('#4E9EBF',
+             '#F23545',
+             '#4E458C')
+
+sdm_melted %>% View()
+
+sdm_admixture = ggplot(data = sdm_melted, 
+                           aes(x = reorder(Individual, 
+                                           Lat),
+                               y = value, 
+                               fill = variable))+
+  geom_bar(stat = "identity", 
+           width = 1)+
+  scale_fill_manual(values = test_col)+
+  # scale_fill_manual(values = magma(n = 4))+
+  labs(x = 'Individuals', 
+       y = 'Ancestry proportion')+
+  theme(axis.text.y = element_text(color = 'black'),
+        axis.text.x = element_blank(),
+        axis.title.x = element_blank(),
+        ## can add xaxis labels if needed
+        # axis.text.x = element_text(angle = 90,
+        #                            hjust = 1,
+        #                            vjust = -0.09,
+        #                            size = 8,
+        #                            color = 'black'),
+        legend.position = 'none')+
+  scale_x_discrete(guide = guide_axis(n.dodge = 5))+
+  scale_y_continuous(expand = c(0,0))
+
+sdm_admixture
+
+ggsave('admixture_k3_sdm_outliers.tiff',
+       plot = sdm_admixture, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 35, 
+       height = 10)
 
 
 # snmf data cleaning ---------------------------------------------------------------
