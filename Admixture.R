@@ -99,6 +99,15 @@ ggsave('admixture_k4_glacial_lineages.tiff',
        height = 10)
 
 
+# admixture bioclim outliers ----------------------------------------------
+
+
+
+# admixture smd outleirs --------------------------------------------------
+
+
+
+
 # snmf data cleaning ---------------------------------------------------------------
 
 snmf_qvalues = read_csv('Charr_Poly_snmf_K4_qvalues.csv')
